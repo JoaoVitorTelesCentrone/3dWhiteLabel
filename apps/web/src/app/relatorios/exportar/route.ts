@@ -25,6 +25,6 @@ export async function GET(request: Request) {
   );
   const csv = "metrica,valor\r\n" + rows.map(([name, value]) => name + "," + value).join("\r\n") + "\r\n";
   return new Response("\uFEFF" + csv, {
-    headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=forja-relatorio.csv", "Cache-Control": "private, no-store" },
+    headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=agencia3d-relatorio.csv", "Cache-Control": "private, no-store" },
   });
 }

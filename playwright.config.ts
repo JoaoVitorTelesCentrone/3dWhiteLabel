@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 
 const localChromium = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 process.env.AGENCIA3D_E2E_RUN_ID ??= randomUUID();
-process.env.AGENCIA3D_E2E_FIXTURE_PATH ??= resolve(process.cwd(), ".tmp", `forja-e2e-${process.env.AGENCIA3D_E2E_RUN_ID}.json`);
+process.env.AGENCIA3D_E2E_FIXTURE_PATH ??= resolve(process.cwd(), ".tmp", `agencia3d-e2e-${process.env.AGENCIA3D_E2E_RUN_ID}.json`);
 
 export default defineConfig({
   testDir: "./apps/web/e2e",

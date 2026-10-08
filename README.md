@@ -6,6 +6,8 @@ Este repositório documenta e implementa a Agencia 3D: uma plataforma white labe
 
 Cada empresa cliente roda o mesmo core, mas enxerga exclusivamente a própria marca, domínio, cores, usuários e dados.
 
+Os buckets de Storage ainda usam IDs técnicos `forja-*`, e o projeto Supabase local mantém o identificador `forja-local` para preservar migrations e volumes existentes. Esses nomes não aparecem para os clientes.
+
 ---
 
 ## Índice da documentação

@@ -20,7 +20,7 @@ export type E2EFixture = {
 export function getFixturePath() {
   const runId = process.env.AGENCIA3D_E2E_RUN_ID;
   if (!runId || !/^[\da-f-]{36}$/i.test(runId)) throw new Error("Playwright did not provide a valid E2E run id.");
-  return resolve(process.cwd(), ".tmp", `forja-e2e-${runId}.json`);
+  return resolve(process.cwd(), ".tmp", `agencia3d-e2e-${runId}.json`);
 }
 
 export function assertLocalSupabaseUrl(url: string) {
@@ -50,7 +50,7 @@ export async function executeLocalSql(sql: string, label: string) {
   const runId = process.env.AGENCIA3D_E2E_RUN_ID;
   if (!runId || !/^[\da-f-]{36}$/i.test(runId) || !/^[a-z0-9-]+$/i.test(label)) throw new Error("Refusing SQL without a valid E2E run id and file label.");
   const directory = resolve(process.cwd(), ".tmp");
-  const sqlPath = resolve(directory, `forja-e2e-${runId}-${label}.sql`);
+  const sqlPath = resolve(directory, `agencia3d-e2e-${runId}-${label}.sql`);
   await mkdir(directory, { recursive: true });
   await writeFile(sqlPath, sql, { encoding: "utf8", mode: 0o600 });
   try {
