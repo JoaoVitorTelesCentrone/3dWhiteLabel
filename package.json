@@ -1,0 +1,41 @@
+{
+  "name": "agencia3d",
+  "private": true,
+  "packageManager": "pnpm@10.12.0",
+  "engines": {
+    "node": ">=20.19.0",
+    "pnpm": ">=10.12.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:e2e": "playwright test",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:diff": "supabase db diff",
+    "db:types": "supabase gen types typescript --local > packages/db/src/database.generated.types.ts",
+    "tenant:create": "pnpm --filter @agencia3d/web tenant:create",
+    "demo:seed": "pnpm --filter @agencia3d/web demo:seed",
+    "platform:admin:add": "pnpm --filter @agencia3d/web platform:admin:add",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.7",
+    "@playwright/test": "1.51.1",
+    "@types/node": "22.15.30",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.6",
+    "eslint": "9.39.1",
+    "eslint-config-next": "15.5.27",
+    "prettier": "3.9.9",
+    "supabase": "2.119.0",
+    "turbo": "2.11.7",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}

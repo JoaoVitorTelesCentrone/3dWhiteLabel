@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.next-e2e/
+dist/
+coverage/
+*.tsbuildinfo
+.turbo/
+.tmp/
+.env
+.env.*
+!.env.example
+supabase/.branches/
+supabase/.temp/
+playwright-report/
+test-results/

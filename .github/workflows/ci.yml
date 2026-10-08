@@ -1,0 +1,42 @@
+name: Agencia 3D CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Agencia 3D
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm db:start
+      - run: pnpm db:reset
+      - run: pnpm exec supabase test db
+      - name: Configure local Supabase credentials for E2E
+        shell: bash
+        run: |
+          pnpm exec supabase status -o env > .tmp-supabase-env
+          node --input-type=module -e 'import fs from "node:fs"; const values = Object.fromEntries(fs.readFileSync(".tmp-supabase-env", "utf8").split(/\r?\n/).filter((line) => line.includes("=")).map((line) => { const index = line.indexOf("="); return [line.slice(0, index), line.slice(index + 1).replace(/^\"|\"$/g, "")]; })); const url = values.API_URL; const publishable = values.PUBLISHABLE_KEY || values.ANON_KEY; const secret = values.SECRET_KEY || values.SERVICE_ROLE_KEY; if (!url || !publishable || !secret) throw new Error("Supabase CLI did not return the local API keys required by E2E."); fs.writeFileSync(".env.local", `NEXT_PUBLIC_SUPABASE_URL=${url}\nNEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${publishable}\nSUPABASE_SECRET_KEY=${secret}\nNEXT_PUBLIC_APP_BASE_DOMAIN=localhost\nAGENCIA3D_APP_URL=http://e2e.localhost:3007\nAGENCIA3D_ADMIN_HOST=admin.localhost:3007\n`, { mode: 0o600 }); fs.rmSync(".tmp-supabase-env");'
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - name: Upload Playwright report and failure artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-e2e-${{ github.run_id }}
+          path: |
+            project-root/playwright-report/
+            project-root/test-results/e2e/
+          if-no-files-found: ignore
