@@ -27,7 +27,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   return <main className="management-page management-page--sections"><header className="page-head management-page-head"><div className="page-head-main"><p className="page-context">Gestão · {context.tenantName}</p><h1 className="page-title">Relatórios</h1><p className="page-desc">Resumo do período com pedidos, produção e, para quem tem acesso financeiro, valores previstos e recebidos.</p>
       <nav className="report-period-tabs" aria-label="Visão rápida do relatório">{reportPresetRanges().map((option) => <Link key={option.id} href={`/relatorios?period=${option.id}`} className={preset === option.id ? "report-period-tab report-period-tab--active" : "report-period-tab"} aria-current={preset === option.id ? "page" : undefined}>{option.label}</Link>)}</nav></div>
     <form method="get" className="report-period-form"><label>Início <input type="date" name="start" defaultValue={start} required /></label>
-      <label>Fim <input type="date" name="end" defaultValue={end} required /></label><Button type="submit">Aplicar datas</Button></form></header>
+      <label>Fim <input type="date" name="end" defaultValue={end} required /></label><Button className="report-period-submit" type="submit">Aplicar datas</Button></form></header>
     {error || !report ? <p className="error" role="alert">Não foi possível gerar o relatório. Use um intervalo de até 366 dias.</p> : <>
       <section className="panel"><header className="panel-head"><h2 className="panel-title">Operação</h2><span className="report-range">{formatDate(start)} a {formatDate(end)}</span></header>
         <dl className="report-grid">
