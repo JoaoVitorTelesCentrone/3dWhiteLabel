@@ -45,7 +45,7 @@ export function QuoteForm({ customers, opportunities, variants, revisions, linke
 export function QuoteTransitionForm({ id, transition, label }: { id: string; transition: "sent" | "rejected" | "approved"; label: string }) {
   const [state, action, pending] = useActionState(changeQuoteStatus, initial);
   return <form action={action} className={transition === "rejected" ? "action-form action-form-danger" : "action-form"}><input type="hidden" name="id" value={id} /><input type="hidden" name="transition" value={transition} />
-    <Button disabled={pending}>{pending ? "Salvando…" : label}</Button>
+    <Button type="submit" disabled={pending}>{pending ? "Salvando…" : label}</Button>
     {state.error ? <p className="error" role="alert">{state.error}</p> : null}{state.success ? <p role="status">{state.success}</p> : null}
   </form>;
 }

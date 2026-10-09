@@ -11,7 +11,7 @@ function Feedback({ state }: { state: ProductionState }) {
 }
 export function ReleaseOrderForm({ orderId }: { orderId: string }) {
   const [state, action, pending] = useActionState(releaseOrder, initial);
-  return <form action={action} className="action-form"><input name="orderId" type="hidden" value={orderId} /><Button disabled={pending}>{pending ? "Enviando…" : "Enviar para produção"}</Button><Feedback state={state} /></form>;
+  return <form action={action} className="action-form"><input name="orderId" type="hidden" value={orderId} /><Button type="submit" disabled={pending}>{pending ? "Enviando…" : "Enviar para produção"}</Button><Feedback state={state} /></form>;
 }
 export function JobForm({ requestId, productionOrderId, remaining, estimatedMinutes, estimatedG, spools }: { requestId: string; productionOrderId: string; remaining: number; estimatedMinutes?: number; estimatedG?: number; spools: Option[] }) {
   const [state, action, pending] = useActionState(createJob, initial);
@@ -32,7 +32,7 @@ export function CancelQueuedJobForm({ jobId }: { jobId: string }) {
 }
 export function StartJobForm({ jobId }: { jobId: string }) {
   const [state, action, pending] = useActionState(startJob, initial);
-  return <form action={action} className="action-form"><input name="jobId" type="hidden" value={jobId} /><Button disabled={pending}>{pending ? "Iniciando…" : "Iniciar impressão"}</Button><Feedback state={state} /></form>;
+  return <form action={action} className="action-form"><input name="jobId" type="hidden" value={jobId} /><Button type="submit" disabled={pending}>{pending ? "Iniciando…" : "Iniciar impressão"}</Button><Feedback state={state} /></form>;
 }
 export function CompleteJobForm({ jobId, quantity, estimatedMinutes, estimatedG }: { jobId: string; quantity: number; estimatedMinutes: number; estimatedG: number }) {
   const [state, action, pending] = useActionState(completeJob, initial);
@@ -41,7 +41,7 @@ export function CompleteJobForm({ jobId, quantity, estimatedMinutes, estimatedG 
     <label>Consumo real (g) <input name="consumedG" type="number" min={0} max={estimatedG} defaultValue={estimatedG} required /></label>
     <label>Peças boas <input name="goodQty" type="number" min={0} max={quantity} defaultValue={quantity} required /></label>
     <label>Peças defeituosas <input name="badQty" type="number" min={0} max={quantity} defaultValue={0} required /></label>
-    <Button disabled={pending}>{pending ? "Concluindo…" : "Concluir job"}</Button><Feedback state={state} />
+    <Button type="submit" disabled={pending}>{pending ? "Concluindo…" : "Concluir job"}</Button><Feedback state={state} />
   </form>;
 }
 export function FailJobForm({ jobId, running, estimatedMinutes, estimatedG }: { jobId: string; running: boolean; estimatedMinutes: number; estimatedG: number }) {
@@ -50,6 +50,6 @@ export function FailJobForm({ jobId, running, estimatedMinutes, estimatedG }: { 
     <label>Motivo da falha <input name="reason" required minLength={2} maxLength={500} /></label>
     <label>Tempo utilizado (min) <input name="actualMinutes" type="number" min={running ? 1 : 0} max={1000000} defaultValue={running ? estimatedMinutes : 0} required /></label>
     <label>Material consumido (g) <input name="consumedG" type="number" min={0} max={running ? estimatedG : 0} defaultValue={running ? estimatedG : 0} required /></label>
-    <Button disabled={pending}>{pending ? "Registrando…" : "Registrar falha"}</Button><Feedback state={state} />
+    <Button type="submit" disabled={pending}>{pending ? "Registrando…" : "Registrar falha"}</Button><Feedback state={state} />
   </form>;
 }

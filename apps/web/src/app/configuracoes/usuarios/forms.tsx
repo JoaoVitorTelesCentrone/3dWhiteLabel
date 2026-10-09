@@ -25,6 +25,6 @@ export function UserAccessForm({ user }: { user: { id: string; role: string; act
     <label>Papel <select name="role" defaultValue={user.role}>{roles.map(([role, label]) => <option key={role} value={role}>{label}</option>)}</select></label>
     <label>Acesso <select name="active" defaultValue={String(user.active)}><option value="true">Ativo</option><option value="false">Desativado</option></select></label>
     {state.error ? <p className="error" role="alert">{state.error}</p> : null}{state.success ? <p role="status">{state.success}</p> : null}
-    <Button disabled={pending}>{pending ? "Salvando…" : "Atualizar acesso"}</Button>
+    <Button type="submit" disabled={pending}>{pending ? "Salvando…" : "Atualizar acesso"}</Button>
   </form>;
 }

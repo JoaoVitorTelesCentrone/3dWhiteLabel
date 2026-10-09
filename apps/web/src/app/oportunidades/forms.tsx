@@ -27,6 +27,6 @@ export function OpportunityMoveForm({ id, stage }: { id: string; stage: string }
     <label>Etapa <select name="stage" defaultValue={stage}>{Object.entries(stageLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
     <label>Motivo da perda (quando aplicável) <input name="lostReason" maxLength={500} /></label>
     {state.error ? <p className="error" role="alert">{state.error}</p> : null}{state.success ? <p role="status">{state.success}</p> : null}
-    <Button disabled={pending}>{pending ? "Salvando…" : "Atualizar etapa"}</Button>
+    <Button type="submit" disabled={pending}>{pending ? "Salvando…" : "Atualizar etapa"}</Button>
   </form>;
 }
