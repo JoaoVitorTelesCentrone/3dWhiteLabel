@@ -343,6 +343,27 @@ p { max-width: 68ch; line-height: 1.58; }
 .dashboard-financials > div { display: grid; gap: .3rem; min-width: 0; padding: 1.1rem 1.2rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .dashboard-financials span, .dashboard-financials small { color: var(--text-muted); font-size: .76rem; }
 .dashboard-financials strong { font: 700 clamp(1.2rem, 2vw, 1.65rem)/1.15 var(--font-heading); font-variant-numeric: tabular-nums; letter-spacing: -.025em; }
+.dashboard-insights { margin-top: 2rem; }
+.dashboard-insights-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+.dashboard-insights-heading h2 { font-size: 1.45rem; }
+.dashboard-section-kicker { margin: 0 0 .35rem !important; color: var(--brand-accent-text) !important; font: 700 .68rem var(--font-heading) !important; letter-spacing: .12em; text-transform: uppercase; }
+.dashboard-chart-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(17rem, .75fr); gap: 1rem; }
+.dashboard-chart-card { min-width: 0; padding: 1.25rem 1.25rem .8rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-surface); overflow: hidden; }
+.dashboard-chart-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: .6rem; }
+.dashboard-chart-header h3 { margin: 0 0 .25rem; font: 700 .96rem var(--font-heading); letter-spacing: -.015em; }
+.dashboard-chart-header p { margin: 0; color: var(--text-muted); font-size: .74rem; }
+.dashboard-chart-legend { display: flex; align-items: center; gap: .85rem; color: var(--text-muted); font-size: .68rem; white-space: nowrap; }
+.dashboard-chart-legend span { display: inline-flex; align-items: center; gap: .35rem; }
+.dashboard-chart-legend i { width: .52rem; height: .52rem; border-radius: 999px; background: var(--chart-1); }
+.dashboard-chart-legend i.is-received { background: var(--chart-2); }
+.dashboard-revenue-chart { width: 100%; height: 18rem; aspect-ratio: auto; }
+.dashboard-status-chart { width: 100%; height: 18rem; aspect-ratio: auto; }
+.dashboard-chart-total { display: grid; flex: 0 0 auto; color: var(--text-muted); font-size: .68rem; font-weight: 500; text-align: right; }
+.dashboard-chart-total span { color: var(--text-primary); font: 750 1.35rem/1 var(--font-heading); }
+.dashboard-pie-label { color: var(--text-muted); font-size: .68rem; }
+.dashboard-chart-empty { display: grid; place-items: center; align-content: center; gap: .75rem; min-height: 18rem; padding: 2rem; text-align: center; }
+.dashboard-chart-empty span { width: 5.5rem; height: 2.5rem; border-radius: 999px 999px .6rem .6rem; background: linear-gradient(140deg, color-mix(in srgb, var(--chart-1) 30%, transparent), color-mix(in srgb, var(--chart-2) 12%, transparent)); }
+.dashboard-chart-empty p { max-width: 22rem; margin: 0; color: var(--text-muted); font-size: .78rem; line-height: 1.5; }
 .dashboard-section-heading { margin-bottom: .9rem; }
 .dashboard-section-heading h2 { margin: 0 0 .2rem; font: 700 1.1rem var(--font-heading); }
 .dashboard-section-heading p { margin: 0; color: var(--text-muted); font-size: .8rem; }
@@ -395,6 +416,7 @@ p { max-width: 68ch; line-height: 1.58; }
   .dashboard-flow-list { grid-template-columns: 1fr; gap: .65rem; }
   .dashboard-financials { grid-template-columns: 1fr; }
   .dashboard-financials > div { border-right: 0; }
+  .dashboard-chart-grid { grid-template-columns: 1fr; }
   .dashboard-flow-item { min-height: 4.8rem; }
   .dashboard-lower-grid { grid-template-columns: 1fr; }
   .page-head { align-items: flex-start; flex-direction: column; gap: .9rem; margin-bottom: 1.25rem; }

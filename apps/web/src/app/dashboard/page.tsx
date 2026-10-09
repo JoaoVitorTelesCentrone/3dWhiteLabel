@@ -4,6 +4,7 @@ import { formatCents } from "@/lib/pricing";
 import { requireTenantContext } from "@/lib/auth/guards";
 import { roleAllows } from "@/lib/auth/permissions";
 import { createClient } from "@/lib/supabase/server";
+import { DashboardCharts, type OrderStatusPoint, type RevenuePoint } from "./dashboard-charts";
 
 export const dynamic = "force-dynamic";
 
@@ -72,6 +73,34 @@ export default async function DashboardPage() {
   const grossProfitCents = salesCents - costsCents;
   const operatingResultCents = grossProfitCents - expensesCents;
   const dateLabel = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long", timeZone: "America/Sao_Paulo" }).format(now);
+  const chartMonths: Array<RevenuePoint & { key: string }> = Array.from({ length: 6 }, (_, index) => {
+    const date = new Date(Date.UTC(Number(monthParts.year), monthNumber - 6 + index, 1));
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const label = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: "UTC" }).format(date).replace(".", "");
+    return { key: `${year}-${month}`, month: label.charAt(0).toUpperCase() + label.slice(1), sales: 0, received: 0 };
+  });
+  const revenueByMonth = new Map(chartMonths.map((item) => [item.key, item]));
+  ordersResult.data?.forEach((order) => {
+    const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit" })
+      .formatToParts(new Date(order.created_at)).reduce<Record<string, string>>((values, part) => ({ ...values, [part.type]: part.value }), {});
+    const point = revenueByMonth.get(`${parts.year}-${parts.month}`);
+    if (point) point.sales += Number(order.total_price_cents) / 100;
+  });
+  if (canFinance) paymentsResult.data?.forEach((payment) => {
+    const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit" })
+      .formatToParts(new Date(payment.received_at)).reduce<Record<string, string>>((values, part) => ({ ...values, [part.type]: part.value }), {});
+    const point = revenueByMonth.get(`${parts.year}-${parts.month}`);
+    if (point) point.received += Number(payment.amount_cents) / 100;
+  });
+  const revenueChartData = chartMonths.map(({ month, sales, received }) => ({ month, sales, received }));
+  const statusChartOrder = ["open", "in_production", "ready", "shipped", "delivered"];
+  const orderStatusChartData: OrderStatusPoint[] = statusChartOrder.map((status) => ({
+    key: status,
+    label: orderStatus[status],
+    value: monthOrders.filter((order) => order.status === status).length,
+    fill: `var(--color-${status})`,
+  })).filter((item) => item.value > 0);
 
   return (
     <main className="dashboard-page">
@@ -94,6 +123,8 @@ export default async function DashboardPage() {
         <div><span>Vendas no mês</span><strong>{ordersResult.error ? "—" : formatCents(salesCents)}</strong><small>{monthOrders.length} pedido{monthOrders.length === 1 ? "" : "s"} cadastrado{monthOrders.length === 1 ? "" : "s"}</small></div>
         {canFinance ? <><div><span>Recebido no mês</span><strong>{paymentsResult.error ? "—" : formatCents(receivedCents)}</strong><small>pagamentos registrados no período</small></div><div><span>Gastos operacionais</span><strong>{expensesResult.error ? "—" : formatCents(expensesCents)}</strong><small>despesas lançadas no período</small></div>{canViewCosts ? <div><span>Resultado estimado</span><strong>{ordersResult.error || expensesResult.error ? "—" : formatCents(operatingResultCents)}</strong><small>margem prevista menos gastos</small></div> : null}</> : null}
       </section> : null}
+
+      {canOrders && !ordersResult.error ? <DashboardCharts revenue={revenueChartData} orderStatuses={orderStatusChartData} showReceived={canFinance && !paymentsResult.error} /> : null}
 
       {flow.length > 0 ? <section className="dashboard-flow" aria-labelledby="dashboard-flow-title">
         <div className="dashboard-section-heading"><div><h2 id="dashboard-flow-title">Operação agora</h2><p>Acompanhe pedidos, produção e catálogo.</p></div></div>
