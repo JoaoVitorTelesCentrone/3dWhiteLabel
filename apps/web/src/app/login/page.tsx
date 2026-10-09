@@ -11,7 +11,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="auth-shell">
+    <main className="auth-shell login-shell">
       <span className="eyebrow">Acesso seguro</span>
       <h1>Entre na sua operação.</h1>
       <p>Contas são criadas por convite do administrador da empresa.</p>
