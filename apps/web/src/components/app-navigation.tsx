@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Factory, LayoutDashboard, Package, UsersRound, Wallet } from "lucide-react";
+import { ChevronDown, Factory, LayoutDashboard, LogOut, Package, UsersRound, Wallet } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton,
@@ -44,6 +45,29 @@ function BrandLink({ brandName, logo }: { brandName: string; logo: string | null
       <span className="sidebar-brand-name">{brandName}</span>
     </Link>
   );
+}
+
+function SignOutButton() {
+  const { setOpenMobile } = useSidebar();
+  const [isPending, startTransition] = useTransition();
+
+  function signOut() {
+    startTransition(async () => {
+      const supabase = createBrowserSupabaseClient();
+      await supabase.auth.signOut();
+      setOpenMobile(false);
+      window.location.assign("/login");
+    });
+  }
+
+  return <SidebarMenu>
+    <SidebarMenuItem>
+      <SidebarMenuButton type="button" onClick={signOut} disabled={isPending} className="agencia3d-sign-out">
+        <LogOut aria-hidden="true" />
+        <span>{isPending ? "Saindo..." : "Sair"}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  </SidebarMenu>;
 }
 
 function NavigationSections({ groups, pathname, theme }: {
@@ -113,6 +137,7 @@ function NavigationSections({ groups, pathname, theme }: {
         </nav>
       </SidebarContent>
       <SidebarFooter className="agencia3d-sidebar-footer">
+        <SignOutButton />
         <div className="sidebar-theme-control"><span>Aparência</span><ThemeToggle initialTheme={theme} /></div>
       </SidebarFooter>
     </>
