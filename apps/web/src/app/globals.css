@@ -690,15 +690,17 @@ input[type="hidden"] { display: none; }
 .payment-after-error { color: var(--danger); }
 .payment-after-error > svg { color: var(--danger); }
 .empty-inline { margin: 0; padding: .9rem .65rem; color: var(--text-muted); font-size: .84rem; }
-.report-period-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .85fr); align-items: end; gap: 1.25rem 2rem; }
-.report-period-quick { display: grid; gap: .85rem; }
+.report-period-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .85fr); align-items: end; gap: 1.25rem 2rem; padding: 0; border: 0; background: transparent; box-shadow: none; }
+.report-period-quick { display: grid; gap: .75rem; }
 .report-period-quick .panel-description { margin: .25rem 0 0; }
-.report-period-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .35rem; padding: .25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-inset); }
-.report-period-tab { display: grid; min-height: 2.25rem; place-items: center; border-radius: 5px; color: var(--text-muted); font-size: .78rem; font-weight: 650; text-decoration: none; transition: background-color .15s ease, color .15s ease, box-shadow .15s ease; }
-.report-period-tab:hover { color: var(--text-primary); background: color-mix(in srgb, var(--bg-elevated) 78%, transparent); }
+.report-period-tabs { display: flex; align-items: center; gap: 1.15rem; min-height: 2.25rem; border-bottom: 1px solid var(--line); }
+.report-period-tab { position: relative; display: inline-grid; min-height: 2.25rem; place-items: center; color: var(--text-muted); font-size: .78rem; font-weight: 650; text-decoration: none; transition: color .15s ease; }
+.report-period-tab::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; background: transparent; content: ""; transition: background-color .15s ease; }
+.report-period-tab:hover { color: var(--text-primary); }
 .report-period-tab:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-.report-period-tab--active { color: var(--text-primary); background: var(--bg-surface); box-shadow: 0 1px 4px color-mix(in srgb, #000 24%, transparent); }
-.report-period-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: .5rem .75rem; }
+.report-period-tab--active { color: var(--text-primary); }
+.report-period-tab--active::after { background: var(--brand-primary); }
+.report-period-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: .5rem .75rem; padding-left: 2rem; border-left: 1px solid var(--line); }
 .report-period-form button { grid-column: 1 / -1; justify-self: start; }
 .report-range { color: var(--text-muted); font-size: .78rem; }
 .report-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; margin: 0; }
@@ -1163,7 +1165,7 @@ input[type="color"] { min-height: 2.75rem; padding: .25rem; cursor: pointer; }
   .payment-order-metrics > div:last-child { padding-bottom: 0; border-bottom: 0; }
   .report-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .report-period-panel { grid-template-columns: minmax(0, 1fr); }
-  .report-period-form { grid-template-columns: minmax(0, 1fr); }
+  .report-period-form { grid-template-columns: minmax(0, 1fr); padding: 1rem 0 0; border-top: 1px solid var(--line); border-left: 0; }
   .spool-measurements { grid-template-columns: 1fr; }
   .brand-form { grid-template-columns: minmax(0, 1fr); }
 }
