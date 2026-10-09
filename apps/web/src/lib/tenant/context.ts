@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import type { Role } from "@/lib/auth/permissions";
 import { getEnabledModules, type ModuleKey, type Plan } from "./modules";
@@ -49,8 +49,16 @@ export function resolveRequestHost(requestHeaders: Pick<Headers, "get">): string
 
 export const getRequestTenantDomain = cache(async (): Promise<{ tenant_id: string } | null> => {
   const host = resolveRequestHost(await headers());
-  if (!host) return null;
   const supabase = await createClient();
+  const selectedTenantId = (await cookies()).get("agencia3d_selected_tenant")?.value;
+
+  if (selectedTenantId && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(selectedTenantId)) {
+    const { data, error } = await supabase.from("tenant_domains")
+      .select("tenant_id").eq("tenant_id", selectedTenantId).eq("status", "active").maybeSingle();
+    if (!error && data) return data;
+  }
+
+  if (!host) return null;
   const { data, error } = await supabase.from("tenant_domains")
     .select("tenant_id").eq("host", host).eq("status", "active").maybeSingle();
   return error ? null : data;
