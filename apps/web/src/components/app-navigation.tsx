@@ -4,9 +4,8 @@ import { useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Factory, LayoutDashboard, Package, Settings2, UsersRound, Wallet } from "lucide-react";
+import { ChevronDown, Factory, LayoutDashboard, Package, UsersRound, Wallet } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { RouteProgress } from "@/components/route-progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton,
@@ -16,7 +15,7 @@ import {
 
 export type NavigationLink = { href: string; label: string };
 export type NavigationGroup = {
-  id: "overview" | "commercial" | "production" | "catalog" | "management";
+  id: "overview" | "commercial" | "production" | "catalog" | "stock" | "management";
   label: string;
   links: NavigationLink[];
 };
@@ -25,6 +24,7 @@ const icons = {
   commercial: UsersRound,
   production: Factory,
   catalog: Package,
+  stock: Package,
   management: Wallet,
 };
 
@@ -46,15 +46,13 @@ function BrandLink({ brandName, logo }: { brandName: string; logo: string | null
   );
 }
 
-function NavigationSections({ groups, settings, pathname, theme }: {
+function NavigationSections({ groups, pathname, theme }: {
   groups: NavigationGroup[];
-  settings: NavigationLink[];
   pathname: string;
   theme: "dark" | "light";
 }) {
   const activeGroup = groups.find((group) => group.links.some((link) => isLinkActive(pathname, link)))?.id;
   const [openGroup, setOpenGroup] = useState<string | null>(activeGroup ?? null);
-  const [settingsOpen, setSettingsOpen] = useState(settings.some((link) => isActive(pathname, link.href)));
   const { setOpenMobile } = useSidebar();
   const closeMobile = () => setOpenMobile(false);
 
@@ -115,47 +113,14 @@ function NavigationSections({ groups, settings, pathname, theme }: {
         </nav>
       </SidebarContent>
       <SidebarFooter className="agencia3d-sidebar-footer">
-        {settings.length > 0 && (
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <Collapsible open={settingsOpen} onOpenChange={setSettingsOpen} className="agencia3d-menu-group">
-                <CollapsibleTrigger render={<SidebarMenuButton isActive={settings.some((link) => isActive(pathname, link.href))} className="agencia3d-menu-button" />}>
-                  <Settings2 aria-hidden="true" />
-                  <span>Configurações</span>
-                  <ChevronDown className="agencia3d-menu-chevron" aria-hidden="true" />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="agencia3d-menu-panel">
-                  <SidebarMenuSub>
-                    {settings.map((link) => {
-                      const linkActive = isActive(pathname, link.href);
-                      return (
-                        <SidebarMenuSubItem key={link.href}>
-                          <SidebarMenuSubButton
-                            render={<Link href={link.href} onClick={closeMobile} />}
-                            isActive={linkActive}
-                            aria-current={linkActive ? "page" : undefined}
-                            className="agencia3d-submenu-button"
-                          >
-                            <span>{link.label}</span>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      );
-                    })}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </Collapsible>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        )}
         <div className="sidebar-theme-control"><span>Aparência</span><ThemeToggle initialTheme={theme} /></div>
       </SidebarFooter>
     </>
   );
 }
 
-export function AppNavigation({ groups, settings, brandName, logo, fullName, theme, children }: {
+export function AppNavigation({ groups, brandName, logo, fullName, theme, children }: {
   groups: NavigationGroup[];
-  settings: NavigationLink[];
   brandName: string;
   logo: string | null;
   fullName: string;
@@ -166,14 +131,13 @@ export function AppNavigation({ groups, settings, brandName, logo, fullName, the
 
   return (
     <SidebarProvider>
-      <RouteProgress />
       <a href="#main-content" className="skip-link">Pular para o conteúdo</a>
       <Sidebar side="left" aria-label="Navegação da plataforma">
         <SidebarHeader className="agencia3d-sidebar-header">
           <BrandLink brandName={brandName} logo={logo} />
           <span className="sidebar-user" title={fullName}>{fullName}</span>
         </SidebarHeader>
-        <NavigationSections key={pathname} pathname={pathname} groups={groups} settings={settings} theme={theme} />
+        <NavigationSections key={pathname} pathname={pathname} groups={groups} theme={theme} />
       </Sidebar>
       <div className="workspace-content">
         <div className="mobile-navigation-bar">

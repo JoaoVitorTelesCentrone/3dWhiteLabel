@@ -1,11 +1,11 @@
 "use client";
 
 import { useActionState } from "react";
-import { Button } from "@/components/watermelon-ui/button";
+import { Button } from "@/components/base-ui/button";
 import { createTenant, requestCustomDomain, setTenantModule, updateTenant, type PlatformState } from "./actions";
 
 const initial: PlatformState = {};
-const modules = ["crm","quotes","orders","catalog","stock","printers","production","maintenance","quality","qr_codes","actual_costs","planner","advanced_reports","customer_portal","api","integrations","ai","multiunit","remove_branding"];
+const modules = ["crm","quotes","orders","catalog","stock","production","quality","qr_codes","actual_costs","planner","advanced_reports","customer_portal","api","integrations","ai","multiunit","remove_branding"];
 function Feedback({ state }: { state: PlatformState }) {
   return <>{state.error ? <p className="error" role="alert">{state.error}</p> : null}{state.success ? <p role="status">{state.success}</p> : null}</>;
 }
@@ -25,7 +25,7 @@ export function TenantSettingsForm({ id, plan, license }: { id: string; plan: st
   return <form action={action}><input name="id" type="hidden" value={id} />
     <label>Plano <select name="plan" defaultValue={plan}><option value="start">Start</option><option value="pro">Pro</option><option value="business">Business</option></select></label>
     <label>Licença <select name="license" defaultValue={license}><option value="active">Ativa</option><option value="past_due">Em atraso</option><option value="suspended">Suspensa</option></select></label>
-    <button disabled={pending}>{pending ? "Salvando…" : "Atualizar plano e licença"}</button><Feedback state={state} />
+    <Button disabled={pending}>{pending ? "Salvando…" : "Atualizar plano e licença"}</Button><Feedback state={state} />
   </form>;
 }
 export function TenantModuleForm({ id }: { id: string }) {
@@ -33,7 +33,7 @@ export function TenantModuleForm({ id }: { id: string }) {
   return <form action={action}><input name="id" type="hidden" value={id} />
     <label>Módulo <select name="moduleKey">{modules.map((module) => <option key={module}>{module}</option>)}</select></label>
     <label>Override <select name="enabled"><option value="true">Habilitar</option><option value="false">Desabilitar</option></select></label>
-    <button disabled={pending}>{pending ? "Salvando…" : "Aplicar módulo"}</button><Feedback state={state} />
+    <Button disabled={pending}>{pending ? "Salvando…" : "Aplicar módulo"}</Button><Feedback state={state} />
   </form>;
 }
 export function CustomDomainForm({ id }: { id: string }) {

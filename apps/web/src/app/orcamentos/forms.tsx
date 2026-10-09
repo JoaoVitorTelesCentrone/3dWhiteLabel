@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Button } from "@/components/watermelon-ui/button";
+import { Button } from "@/components/base-ui/button";
 import { changeQuoteStatus, createQuote, type QuoteState } from "./actions";
 
 const initial: QuoteState = {};
@@ -45,7 +45,7 @@ export function QuoteForm({ customers, opportunities, variants, revisions, linke
 export function QuoteTransitionForm({ id, transition, label }: { id: string; transition: "sent" | "rejected" | "approved"; label: string }) {
   const [state, action, pending] = useActionState(changeQuoteStatus, initial);
   return <form action={action} className={transition === "rejected" ? "action-form action-form-danger" : "action-form"}><input type="hidden" name="id" value={id} /><input type="hidden" name="transition" value={transition} />
-    <button disabled={pending}>{pending ? "Salvando…" : label}</button>
+    <Button disabled={pending}>{pending ? "Salvando…" : label}</Button>
     {state.error ? <p className="error" role="alert">{state.error}</p> : null}{state.success ? <p role="status">{state.success}</p> : null}
   </form>;
 }

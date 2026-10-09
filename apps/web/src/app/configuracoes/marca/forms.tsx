@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/base-ui/button";
+
 import { useActionState, useState } from "react";
 import type { CSSProperties } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
@@ -21,7 +23,7 @@ export function BrandingForm({ brand }: { brand: { display_name: string; primary
       <div className="brand-preview-actions"><span className="brand-preview-primary">Ação principal</span><span className="brand-preview-accent">Destaque e foco</span></div>
     </div>
     {state.error ? <p className="error" role="alert">{state.error}</p> : null}{state.success ? <p role="status">{state.success}</p> : null}
-    <button disabled={pending}>{pending ? "Salvando…" : "Salvar marca"}</button>
+    <Button disabled={pending}>{pending ? "Salvando…" : "Salvar marca"}</Button>
   </form>;
 }
 export function LogoUploader({ tenantId, currentPath }: { tenantId: string; currentPath: string | null }) {
@@ -51,7 +53,7 @@ export function LogoUploader({ tenantId, currentPath }: { tenantId: string; curr
   }
   return <form action={upload} className="panel"><h2>Logo</h2>
     <label>Imagem (PNG, JPG ou WebP, até 2 MB) <input name="logo" type="file" accept=".png,.jpg,.jpeg,.webp" required /></label>
-    <button disabled={pending}>{pending ? "Enviando…" : "Atualizar logo"}</button>
+    <Button disabled={pending}>{pending ? "Enviando…" : "Atualizar logo"}</Button>
     {message ? <p role="status">{message}</p> : null}
   </form>;
 }

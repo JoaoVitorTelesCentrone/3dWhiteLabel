@@ -47,17 +47,23 @@ export function resolveRequestHost(requestHeaders: Pick<Headers, "get">): string
   return host ? resolveTenantHost(host) : null;
 }
 
-export const getTenantContext = cache(async function getTenantContext(userId: string): Promise<TenantContext | null> {
-  const requestHeaders = await headers();
-  const host = resolveRequestHost(requestHeaders);
+export const getRequestTenantDomain = cache(async (): Promise<{ tenant_id: string } | null> => {
+  const host = resolveRequestHost(await headers());
   if (!host) return null;
   const supabase = await createClient();
-  const [{ data: domain, error: domainError }, { data: profile, error: profileError }] = await Promise.all([
-    supabase.from("tenant_domains").select("tenant_id").eq("host", host).eq("status", "active").maybeSingle(),
+  const { data, error } = await supabase.from("tenant_domains")
+    .select("tenant_id").eq("host", host).eq("status", "active").maybeSingle();
+  return error ? null : data;
+});
+
+export const getTenantContext = cache(async function getTenantContext(userId: string): Promise<TenantContext | null> {
+  const supabase = await createClient();
+  const [domain, { data: profile, error: profileError }] = await Promise.all([
+    getRequestTenantDomain(),
     supabase.from("profiles").select("id, tenant_id, full_name, role, active").eq("id", userId).maybeSingle(),
   ]);
 
-  if (domainError || profileError || !domain || !profile || !profile.active) return null;
+  if (profileError || !domain || !profile || !profile.active) return null;
   if (domain.tenant_id !== profile.tenant_id) return null;
 
   const [{ data: tenant, error: tenantError }, { data: overrides, error: modulesError }] = await Promise.all([

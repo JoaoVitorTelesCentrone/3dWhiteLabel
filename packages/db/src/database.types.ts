@@ -119,6 +119,18 @@ export type Database = {
         Update: Partial<Pick<Database["public"]["Tables"]["product_variants"]["Row"], "name" | "sku" | "attributes" | "price_cents" | "cost_cents" | "active">>;
         Relationships: [];
       };
+      finished_goods_stock: {
+        Row: { tenant_id: string; product_variant_id: string; quantity: number; updated_at: string };
+        Insert: { tenant_id: string; product_variant_id: string; quantity?: number; updated_at?: string };
+        Update: never;
+        Relationships: [];
+      };
+      finished_goods_movements: {
+        Row: { id: string; tenant_id: string; product_variant_id: string; kind: string; delta_quantity: number; quantity_after: number; reason: string; actor_id: string; created_at: string };
+        Insert: never;
+        Update: never;
+        Relationships: [];
+      };
       designs: {
         Row: { id: string; tenant_id: string; name: string; description: string | null; category: string | null; active: boolean; created_by: string; created_at: string; updated_at: string };
         Insert: { id?: string; tenant_id: string; name: string; description?: string | null; category?: string | null; active?: boolean; created_by?: string; created_at?: string; updated_at?: string };
@@ -189,7 +201,7 @@ export type Database = {
         Insert: never; Update: never; Relationships: [];
       };
       production_jobs: {
-        Row: { id: string; tenant_id: string; production_order_id: string; design_revision_id: string | null; printer_id: string; spool_id: string; quantity: number; estimated_minutes: number; estimated_g: number; material_cost_per_kg_cents: number | null; status: string; actual_minutes: number | null; consumed_g: number | null; good_qty: number | null; bad_qty: number | null; created_by: string; operator_id: string | null; created_at: string; started_at: string | null; completed_at: string | null };
+        Row: { id: string; tenant_id: string; production_order_id: string; design_revision_id: string | null; printer_id: string | null; spool_id: string; quantity: number; estimated_minutes: number; estimated_g: number; material_cost_per_kg_cents: number | null; status: string; actual_minutes: number | null; consumed_g: number | null; good_qty: number | null; bad_qty: number | null; created_by: string; operator_id: string | null; created_at: string; started_at: string | null; completed_at: string | null };
         Insert: never; Update: never; Relationships: [];
       };
       material_reservations: {
@@ -258,6 +270,7 @@ export type Database = {
       };
     };
     Functions: {
+      list_sales_orders_page: { Args: { p_tenant_id: string; p_page?: number; p_page_size?: number; p_search?: string; p_status?: string; p_selected_order_id?: string | null }; Returns: Json };
     create_product_with_default_variant: { Args: { p_product_id: string; p_name: string; p_price_cents: number; p_cost_cents: number; p_image_path: string }; Returns: string };
       provision_tenant_with_owner: {
         Args: {
@@ -281,9 +294,11 @@ export type Database = {
       delete_sales_order: { Args: { p_order_id: string }; Returns: void };
       receive_spool: { Args: { p_material_id: string; p_code: string; p_gross_g: number; p_tare_g: number }; Returns: string };
       adjust_spool_weight: { Args: { p_spool_id: string; p_new_gross_g: number; p_reason: string }; Returns: void };
+      set_spool_available_quantity: { Args: { p_spool_id: string; p_available_g: number }; Returns: void };
+      set_finished_goods_quantity: { Args: { p_product_variant_id: string; p_quantity: number; p_reason: string }; Returns: void };
       release_order_to_production: { Args: { p_order_id: string }; Returns: void };
-      create_production_job: { Args: { p_production_order_id: string; p_printer_id: string; p_spool_id: string; p_quantity: number; p_estimated_minutes: number; p_estimated_g: number }; Returns: string };
-      create_production_job_once: { Args: { p_request_key: string; p_production_order_id: string; p_printer_id: string; p_spool_id: string; p_quantity: number; p_estimated_minutes: number; p_estimated_g: number }; Returns: string };
+      create_production_job: { Args: { p_production_order_id: string; p_printer_id: string | null; p_spool_id: string; p_quantity: number; p_estimated_minutes: number; p_estimated_g: number }; Returns: string };
+      create_production_job_once: { Args: { p_request_key: string; p_production_order_id: string; p_printer_id: string | null; p_spool_id: string; p_quantity: number; p_estimated_minutes: number; p_estimated_g: number }; Returns: string };
       start_next_production_job: { Args: { p_production_order_id: string }; Returns: string };
       cancel_queued_production_job: { Args: { p_job_id: string; p_reason: string }; Returns: void };
       start_production_job: { Args: { p_job_id: string }; Returns: void };

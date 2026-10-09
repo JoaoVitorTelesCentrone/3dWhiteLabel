@@ -57,3 +57,22 @@ export async function adjustSpool(_previous: StockState, formData: FormData): Pr
   revalidatePath("/materiais");
   return { success: "Peso atualizado e ajuste registrado." };
 }
+
+export async function setSpoolAvailable(_previous: StockState, formData: FormData): Promise<StockState> {
+  const parsed = z.object({
+    id: z.uuid(),
+    available: z.string().regex(/^\d+$/).transform(Number).pipe(z.number().int().min(0).max(100000)),
+  }).safeParse({ id: formData.get("id"), available: formData.get("available") });
+  if (!parsed.success) return { error: "Informe uma quantidade válida em gramas." };
+
+  await requireModulePermission("stock", "stock.adjust", { write: true });
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("set_spool_available_quantity", {
+    p_spool_id: parsed.data.id,
+    p_available_g: parsed.data.available,
+  });
+  if (error) return { error: "Não foi possível atualizar o saldo. Confira a bobina e tente novamente." };
+  revalidatePath("/materiais");
+  revalidatePath("/producao");
+  return { success: "Saldo disponível atualizado." };
+}

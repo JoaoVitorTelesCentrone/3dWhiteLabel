@@ -263,8 +263,6 @@ create table product_variants (
   price_cents bigint,                         -- migration inicial usa BRL em centavos inteiros
   cost_cents bigint,                          -- NULL para custos históricos sem origem confiável
   is_default boolean not null default false,  -- no máximo uma variação padrão por produto
-  stock_qty numeric default 0,               -- estoque de acabados
-  reserved_qty numeric default 0,            -- comprometido com pedidos
   unique (tenant_id, sku)
 );
 
@@ -286,6 +284,8 @@ create table production_recipes (            -- BOM + ficha técnica + roteiro
 ```
 
 O cadastro simples cria o produto com uma variação padrão. A tela de Produtos mostra preço e custo dessa variação; outros modelos continuam disponíveis nos detalhes. As migrations `20261007123042_products_catalog_data.sql` e `20261007125520_products_image_read_policy.sql` adicionam o bucket privado `forja-products`, políticas de Storage por tenant, módulo, papel e licença, e o RPC transacional `create_product_with_default_variant`. Produtos anteriores sem custo mantêm `cost_cents = NULL`.
+
+O saldo de produtos finalizados fica em `finished_goods_stock`, separado de matéria-prima e bobinas. Cada alteração grava um registro imutável em `finished_goods_movements`; o usuário informa o saldo físico por variação em Produtos prontos. A atualização é feita pelo RPC `set_finished_goods_quantity`, que valida tenant, permissão de estoque e licença antes de registrar o ajuste.
 
 ## 5. Materiais (bobina é indivíduo)
 

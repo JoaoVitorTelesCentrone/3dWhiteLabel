@@ -6,7 +6,7 @@ ERP + PCP/MES verticalizado para empresas de impressão 3D, vendido white label 
 
 ## ICP
 
-Print farms, empresas com 5+ impressoras, bureaus, lojas de impressão 3D e pequenos fabricantes com produção recorrente. Não focar no hobbyista com 1 impressora.
+Empresas de impressão 3D, bureaus, lojas e pequenos fabricantes com produção recorrente.
 
 ---
 
@@ -14,10 +14,9 @@ Print farms, empresas com 5+ impressoras, bureaus, lojas de impressão 3D e pequ
 
 **Objetivo:** responder em 10 segundos "como está minha operação hoje".
 
-- KPIs: faturamento do mês, lucro estimado, pedidos abertos/atrasados, jobs em andamento, máquinas disponíveis/em manutenção, horas impressas, taxa de falha, material disponível/reservado, estoque de acabados, capacidade, próximas manutenções.
+- KPIs: faturamento do mês, lucro estimado, pedidos abertos/atrasados, jobs em andamento, peças concluídas, taxa de falha, material disponível/reservado e estoque de acabados.
 - Seção **"Precisa da sua atenção"**: alertas acionáveis gerados por regras:
   - "PLA preto acabará em 4 dias" (previsão de consumo × estoque)
-  - "A1 #04 precisa de manutenção em 14h de uso"
   - "Pedido #184 próximo do prazo"
   - "3 falhas com a mesma bobina" (correlação)
   - "Margem do produto X caiu de 42% → 31%"
@@ -53,14 +52,12 @@ Margem          markup ou margem alvo configurável
 
 ## Módulo 5 — Produção (PCP/MES)
 
-No MVP, a pipeline tem etapas derivadas de jobs e quantidade boa: a planejar, na fila, imprimindo, concluído e atenção. Arrastar para outra etapa abre o comando necessário; apenas iniciar um job enfileirado executa diretamente. Produto sem receita pode ser vendido; planejamento coleta impressora, bobina e estimativas que faltarem. Um pedido só fica pronto quando todas as OPs atingem a quantidade boa solicitada.
+No MVP, a pipeline tem etapas derivadas de jobs e quantidade boa: a planejar, na fila, imprimindo, concluído e atenção. Arrastar para outra etapa abre o comando necessário; apenas iniciar um job enfileirado executa diretamente. Produto sem receita pode ser vendido; planejamento coleta bobina e estimativas que faltarem. Um pedido só fica pronto quando todas as OPs atingem a quantidade boa solicitada.
 
 - **Ordens de produção:** produto, quantidade, prioridade, prazo, materiais, instruções, responsável.
-- **Jobs de impressão:** execução real — impressora, bobina, revisão do arquivo, previsto × real (material, tempo, custo), resultado (OK/defeituosas).
+- **Jobs de produção:** execução real — material, previsto × real (consumo e tempo), resultado (peças boas/defeituosas).
 - **Fila Kanban:** Aguardando → Preparação → Pronto → Imprimindo → Pós-processamento → Qualidade → Concluído (drag-and-drop, realtime).
-- **Painel da fábrica:** status de todas as impressoras em tempo real.
-- **Planner inteligente (fase 2):** sugere melhor máquina por disponibilidade, material carregado, compatibilidade de nozzle, prazo e custo. **Planejamento noturno:** jobs longos sem operador.
-- **Falhas:** registro por causa (warping, spaghetti, layer shift, entupimento, adesão, material, arquivo, humano, energia, máquina) relacionado a impressora, bobina, lote, arquivo, produto, operador e perfil. Insights automáticos: "PLA branco marca X: 14% de falha vs média 3,8%".
+- **Falhas:** registro do motivo, tempo e material consumido; peças faltantes voltam ao planejamento.
 
 ## Módulo 6 — Qualidade
 
@@ -79,13 +76,6 @@ No MVP, a pipeline tem etapas derivadas de jobs e quantidade boa: a planejar, na
 - **Estoque comprometido:** total / reservado / disponível considerando pedidos e jobs futuros.
 - **Previsão:** "reposição recomendada: 20 kg de PLA preto; risco de ruptura em 5 dias" (consumo histórico + pedidos + produção planejada + lead time).
 - Genérico para FDM (filamento), SLA/MSLA (resina, lotes, validade), SLS/MJF (pó virgem/reutilizado, ciclos) e insumos (IPA, lixa, FEP, embalagens).
-
-## Módulo 9 — Impressoras e manutenção
-
-- Impressora como **ativo**: valor, garantia, horas totais, build volume, nozzle, potência, materiais compatíveis.
-- Dashboard por impressora: job atual, progresso, taxa de sucesso, receita gerada, custo de manutenção, R$/hora.
-- Planos preventivos por horas ("lubrificação a cada 300h"); alerta antecipado; opção de bloquear jobs longos perto do limite.
-- Histórico completo com custos, peças, técnico e fotos.
 
 ## Módulo 10 — Compras e fornecedores
 

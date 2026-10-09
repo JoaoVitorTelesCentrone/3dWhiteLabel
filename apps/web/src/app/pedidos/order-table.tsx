@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, ChevronDown, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,18 +8,24 @@ import { formatCents } from "@/lib/pricing";
 import { formatProductionProgress } from "@/lib/production-progress";
 import { InlineDisclosureMenu } from "@/components/inline-disclosure-menu";
 import { showToast } from "@/components/toast-center";
-import { TABLE_PAGE_SIZE, TableFilter, TablePagination, useTableControls } from "@/components/table-controls";
+import { TABLE_PAGE_SIZE, TableFilter, TablePagination } from "@/components/table-controls";
 import { changeOrderStatus, type CreateOrderState } from "./actions";
 import { OrderDeleteSheet, OrderDetailSheet, OrderEditSheet, type OrderRecord } from "./order-detail-sheet";
 
 type Option = { id: string; label: string };
 const initialState: CreateOrderState = {};
-function orderSearchText(order: OrderRecord) {
-  return `${order.number} ${order.customerName} ${order.statusLabel} ${order.items.map((item) => item.description).join(" ")}`;
-}
 const statusOptions = [
   ["open", "Aberto"], ["in_production", "Em produção"], ["ready", "Pronto para envio"], ["shipped", "Enviado"], ["delivered", "Entregue"],
 ] as const;
+
+function buildOrdersUrl(targetPage: number, targetSearch: string, targetStatus: string) {
+  const params = new URLSearchParams();
+  if (targetPage > 1) params.set("pagina", String(targetPage));
+  if (targetSearch.trim()) params.set("busca", targetSearch.trim());
+  if (targetStatus) params.set("status", targetStatus);
+  const suffix = params.toString();
+  return `/pedidos${suffix ? `?${suffix}` : ""}`;
+}
 
 function OrderStatusMenu({ order, disabled, canRelease }: { order: OrderRecord; disabled: boolean; canRelease: boolean }) {
   const [state, action, pending] = useActionState(changeOrderStatus, initialState);
@@ -50,7 +56,7 @@ function OrderStatusMenu({ order, disabled, canRelease }: { order: OrderRecord; 
   </div>;
 }
 
-export function OrderTable({ orders, customers, variants, canViewCosts, canChangeStatus, canRelease, selectedOrderId }: {
+export function OrderTable({ orders, customers, variants, canViewCosts, canChangeStatus, canRelease, selectedOrderId, page, totalCount, search, status }: {
   orders: OrderRecord[];
   customers: Option[];
   variants: Option[];
@@ -58,28 +64,41 @@ export function OrderTable({ orders, customers, variants, canViewCosts, canChang
   canChangeStatus: boolean;
   canRelease: boolean;
   selectedOrderId?: string;
+  page: number;
+  totalCount: number;
+  search: string;
+  status: string;
 }) {
-  const selectedIndex = orders.findIndex((order) => order.id === selectedOrderId);
-  const selectedPage = selectedIndex < 0 ? 1 : Math.floor(selectedIndex / TABLE_PAGE_SIZE) + 1;
-  const table = useTableControls(orders, orderSearchText, selectedPage);
-  const { setPage, setQuery } = table;
+  const router = useRouter();
+  const [query, setQuery] = useState(search);
+  const pageCount = Math.max(1, Math.ceil(totalCount / TABLE_PAGE_SIZE));
   useEffect(() => {
-    if (!selectedOrderId || selectedIndex < 0) return;
-    setQuery("");
-    setPage(selectedPage);
-  }, [selectedOrderId, selectedIndex, selectedPage, setPage, setQuery]);
+    const timer = window.setTimeout(() => {
+      if (query.trim() !== search) router.replace(buildOrdersUrl(1, query, status), { scroll: false });
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [query, search, status, router]);
+  useEffect(() => { setQuery(search); }, [search]);
   return <>
-  <TableFilter entity="pedidos" query={table.query} onQueryChange={table.setQuery} resultCount={table.filteredCount} />
+  <div className="order-filter-row">
+    <TableFilter entity="pedidos" query={query} onQueryChange={setQuery} resultCount={totalCount} />
+    <label className="order-status-filter">Status
+      <select value={status} onChange={(event) => router.replace(buildOrdersUrl(1, query, event.target.value), { scroll: false })}>
+        <option value="">Todos</option>
+        {[...statusOptions, ["canceled", "Cancelado"] as const].map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+      </select>
+    </label>
+  </div>
   <div className="order-table-shell">
   <table className="order-table">
     <thead><tr><th scope="col">Pedido</th><th scope="col">Cliente e itens</th><th scope="col">Status</th><th scope="col">Faturamento</th>{canViewCosts ? <th scope="col">Lucro estimado</th> : null}<th scope="col"><span className="sr-only">Ações</span></th></tr></thead>
-    <tbody>{table.visibleRows.map((order) => <OrderDetailSheet key={order.id} order={order} initialOpen={order.id === selectedOrderId} trigger={
+    <tbody>{orders.map((order) => <OrderDetailSheet key={order.id} order={order} initialOpen={order.id === selectedOrderId} trigger={
       <tr className="order-table-row-trigger" tabIndex={0} aria-label={`Abrir pedido #${order.number}`} onKeyDown={(event) => {
         if (event.target !== event.currentTarget) return;
         if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.currentTarget.click(); }
       }}>
         <td data-label="Pedido"><strong>Pedido #{order.number}</strong></td>
-        <td data-label="Cliente"><strong>{order.customerName}</strong><small>{order.items.map((item) => `${item.quantity} × ${item.description}`).join(", ")}</small></td>
+        <td data-label="Cliente"><strong>{order.customerName}</strong><small>{order.itemSummary}</small></td>
         <td data-label="Status"><OrderStatusMenu order={order} disabled={!canChangeStatus} canRelease={canRelease} />{order.production ? <small className="order-production-summary">{formatProductionProgress(order.production.completedQty, order.production.targetQty)}</small> : null}</td>
         <td data-label="Faturamento" className="order-money">{formatCents(BigInt(order.totalPriceCents))}</td>
         {canViewCosts ? <td data-label="Lucro" className="order-money">{formatCents(BigInt(order.totalPriceCents) - BigInt(order.totalCostCents))}</td> : null}
@@ -93,9 +112,9 @@ export function OrderTable({ orders, customers, variants, canViewCosts, canChang
           <OrderDeleteSheet order={order} disabled={!order.canDelete} />
         </td>
       </tr>
-    } />)}{table.filteredCount === 0 ? <tr><td colSpan={canViewCosts ? 6 : 5} className="table-no-results">Nenhum pedido corresponde ao filtro.</td></tr> : null}</tbody>
+    } />)}{totalCount === 0 ? <tr><td colSpan={canViewCosts ? 6 : 5} className="table-no-results">Nenhum pedido corresponde ao filtro.</td></tr> : null}</tbody>
   </table>
   </div>
-  <TablePagination entity="dos pedidos" firstResult={table.firstResult} lastResult={table.lastResult} resultCount={table.filteredCount} page={table.page} pageCount={table.pageCount} onPageChange={table.setPage} />
+  <TablePagination entity="dos pedidos" firstResult={totalCount ? (page - 1) * TABLE_PAGE_SIZE + 1 : 0} lastResult={Math.min(page * TABLE_PAGE_SIZE, totalCount)} resultCount={totalCount} page={page} pageCount={pageCount} onPageChange={(targetPage) => router.push(buildOrdersUrl(targetPage, search, status), { scroll: false })} />
   </>;
 }

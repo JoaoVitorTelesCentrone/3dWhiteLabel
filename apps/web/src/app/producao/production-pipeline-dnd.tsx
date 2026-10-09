@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronDown } from "lucide-react";
-import { createContext, useContext, useState, useTransition, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { InlineDisclosureMenu } from "@/components/inline-disclosure-menu";
 import { showToast } from "@/components/toast-center";
@@ -25,6 +25,18 @@ export function ProductionPipelineBoard({ children }: { children: ReactNode }) {
   const openTransitionDetails = (productionOrderId: string, stage: PipelineStage) => {
     window.dispatchEvent(new CustomEvent("agencia3d:production-open-order", { detail: { productionOrderId, stage } }));
   };
+
+  useEffect(() => {
+    const openOrder = (event: Event) => {
+      const { productionOrderId, stage } = (event as CustomEvent<{ productionOrderId: string; stage: PipelineStage }>).detail;
+      const params = new URLSearchParams(window.location.search);
+      params.set("ordem", productionOrderId);
+      params.set("etapa", stage);
+      router.push(`/producao?${params}`, { scroll: false });
+    };
+    window.addEventListener("agencia3d:production-open-order", openOrder);
+    return () => window.removeEventListener("agencia3d:production-open-order", openOrder);
+  }, [router]);
 
   const moveOrder: MoveOrder = (productionOrderId, fromStage, toStage) => {
     setError(null);
@@ -61,11 +73,13 @@ export function ProductionStageCard({
   productionOrderId,
   stage,
   canRun,
+  canAutoStart,
   children,
 }: {
   productionOrderId: string;
   stage: PipelineStage;
   canRun: boolean;
+  canAutoStart: boolean;
   children: ReactNode;
 }) {
   const moveOrder = useContext(PipelineMoveContext);
@@ -91,7 +105,15 @@ export function ProductionStageCard({
             icon: <span className={`production-stage-dot production-stage-dot--${option}`} aria-hidden="true" />,
             endIcon: option === stage ? <Check size={15} aria-hidden="true" /> : undefined,
             className: `order-status-menu-option${option === stage ? " order-status-menu-option--active" : ""}`,
-            onClick: () => moveOrder(productionOrderId, stage, option),
+            onClick: () => {
+              if (stage === "queued" && option === "running" && !canAutoStart) {
+                window.dispatchEvent(new CustomEvent("agencia3d:production-open-order", {
+                  detail: { productionOrderId, stage: "queued" },
+                }));
+                return;
+              }
+              moveOrder(productionOrderId, stage, option);
+            },
           }))}
         />
       </div> : <span className="production-stage-static"><span className={`production-stage-dot production-stage-dot--${stage}`} aria-hidden="true" />{stageLabels[stage]}</span>}

@@ -2,14 +2,15 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Scale, X } from "lucide-react";
+import { Pencil, Save, Scale, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Button as WatermelonButton } from "@/components/watermelon-ui/button";
+import { Button as BaseButton } from "@/components/base-ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { showToast } from "@/components/toast-center";
 import { useRecordCreateSheet } from "@/components/record-create-sheet";
-import { adjustSpool, createMaterial, receiveSpool, type StockState } from "./actions";
+import { adjustSpool, createMaterial, receiveSpool, setSpoolAvailable, type StockState } from "./actions";
 
 const initial: StockState = {};
 
@@ -90,4 +91,27 @@ export function SpoolAdjustSheet({ id, code, currentGross }: { id: string; code:
       </form>
     </SheetContent>
   </Sheet>;
+}
+
+export function SpoolAvailableForm({ id, code, availableG }: { id: string; code: string; availableG: number }) {
+  const [state, action, pending] = useActionState(setSpoolAvailable, initial);
+  const [value, setValue] = useState(String(availableG));
+  const router = useRouter();
+
+  useEffect(() => setValue(String(availableG)), [availableG]);
+  useEffect(() => {
+    if (state.success) router.refresh();
+  }, [state, router]);
+
+  const unchanged = Number(value) === availableG;
+  return <form action={action} className="material-available-form">
+    <input type="hidden" name="id" value={id} />
+    <label htmlFor={`available-${id}`} className="sr-only">Saldo disponível da bobina {code} em gramas</label>
+    <Input id={`available-${id}`} name="available" type="number" min={0} max={100000} step={1}
+      value={value} onChange={(event) => setValue(event.target.value)} required aria-label={`Saldo disponível da bobina ${code} em gramas`} />
+    <span aria-hidden="true">g</span>
+    <BaseButton type="submit" variant="ghost" size="icon-sm" disabled={pending || unchanged || value === ""}
+      aria-label={`Salvar saldo da bobina ${code}`} title="Salvar saldo disponível"><Save aria-hidden="true" /></BaseButton>
+    {state.error ? <small className="material-available-error" role="alert">{state.error}</small> : null}
+  </form>;
 }

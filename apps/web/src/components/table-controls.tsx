@@ -40,11 +40,12 @@ export function useTableControls<T>(rows: T[], getSearchText: (row: T) => string
   };
 }
 
-export function TableFilter({ entity, query, onQueryChange, resultCount }: {
+export function TableFilter({ entity, query, onQueryChange, resultCount, countText }: {
   entity: string;
   query: string;
   onQueryChange: (value: string) => void;
   resultCount: number;
+  countText?: string;
 }) {
   const inputId = useId();
   return <div className="table-filter-toolbar">
@@ -54,7 +55,7 @@ export function TableFilter({ entity, query, onQueryChange, resultCount }: {
       {query ? <Button type="button" variant="ghost" size="icon-sm" aria-label="Limpar filtro" onClick={() => onQueryChange("")}><X aria-hidden="true" /></Button> : null}
       <Search size={16} aria-hidden="true" />
     </div>
-    <span className="table-filter-count" aria-live="polite">{resultCount} {resultCount === 1 ? "resultado" : "resultados"}</span>
+    <span className="table-filter-count" aria-live="polite">{countText ?? `${resultCount} ${resultCount === 1 ? "resultado" : "resultados"}`}</span>
   </div>;
 }
 

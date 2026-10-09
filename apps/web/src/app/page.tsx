@@ -27,7 +27,7 @@ export default async function HomePage() {
       </section>
       <section className="landing-proof" aria-label="Áreas da plataforma">
         <section><h2>Comercial</h2><p>Clientes, oportunidades, orçamentos e pedidos conectados.</p></section>
-        <section><h2>Produção</h2><p>Jobs, impressoras e manutenção em um só lugar.</p></section>
+        <section><h2>Produção</h2><p>Acompanhe trabalhos, peças concluídas e consumo de material.</p></section>
         <section><h2>Materiais e financeiro</h2><p>Acompanhe bobinas, recebimentos e despesas operacionais.</p></section>
       </section>
     </main>

@@ -1,6 +1,11 @@
 import { requirePermission } from "@/lib/auth/guards";
 import { reportPeriod, reportSchema } from "@/lib/reports";
+import { formatCents } from "@/lib/pricing";
 import { createClient } from "@/lib/supabase/server";
+
+const numberFormat = new Intl.NumberFormat("pt-BR");
+const formatDate = (value: string) => new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR");
+const csvCell = (value: string | number) => `"${String(value).replaceAll('"', '""')}"`;
 
 export async function GET(request: Request) {
   await requirePermission("reports.export");
@@ -11,20 +16,29 @@ export async function GET(request: Request) {
   const parsed = reportSchema.safeParse(data);
   if (error || !parsed.success) return new Response("Relatório indisponível.", { status: 400 });
   const report = parsed.data;
-  const rows: [string, string | number][] = [
-    ["inicio", report.period_start], ["fim", report.period_end],
-    ["pedidos", report.orders_count], ["jobs_concluidos", report.jobs_completed],
-    ["jobs_falhos", report.jobs_failed], ["pecas_boas", report.good_qty],
-    ["pecas_defeituosas", report.bad_qty], ["minutos_impressao", report.print_minutes],
+  const rows: [string, string, string | number][] = [
+    ["Período", "Início", formatDate(report.period_start)],
+    ["Período", "Fim", formatDate(report.period_end)],
+    ["Operação", "Pedidos criados", numberFormat.format(report.orders_count)],
+    ["Operação", "Jobs concluídos", numberFormat.format(report.jobs_completed)],
+    ["Operação", "Jobs com falha", numberFormat.format(report.jobs_failed)],
+    ["Operação", "Peças boas", numberFormat.format(report.good_qty)],
+    ["Operação", "Peças defeituosas", numberFormat.format(report.bad_qty)],
+    ["Operação", "Tempo de impressão", `${Math.floor(report.print_minutes / 60)} h ${report.print_minutes % 60} min`],
   ];
   if (report.finance) rows.push(
-    ["vendas_centavos", report.finance.sales_cents], ["custo_previsto_centavos", report.finance.planned_cost_cents],
-    ["margem_prevista_centavos", report.finance.planned_gross_margin_cents],
-    ["recebido_centavos", report.finance.received_cents], ["despesas_centavos", report.finance.expenses_cents],
-    ["material_real_centavos", report.finance.actual_material_cents],
+    ["Financeiro", "Vendas aprovadas", formatCents(BigInt(report.finance.sales_cents))],
+    ["Financeiro", "Custo previsto dos pedidos", formatCents(BigInt(report.finance.planned_cost_cents))],
+    ["Financeiro", "Margem bruta prevista", formatCents(BigInt(report.finance.planned_gross_margin_cents))],
+    ["Financeiro", "Recebimentos", formatCents(BigInt(report.finance.received_cents))],
+    ["Financeiro", "Despesas", formatCents(BigInt(report.finance.expenses_cents))],
+    ["Financeiro", "Material consumido", formatCents(BigInt(report.finance.actual_material_cents))],
   );
-  const csv = "metrica,valor\r\n" + rows.map(([name, value]) => name + "," + value).join("\r\n") + "\r\n";
+  const csv = [
+    ["Seção", "Indicador", "Valor"],
+    ...rows,
+  ].map((row) => row.map(csvCell).join(";")).join("\r\n") + "\r\n";
   return new Response("\uFEFF" + csv, {
-    headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": "attachment; filename=agencia3d-relatorio.csv", "Cache-Control": "private, no-store" },
+    headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename=agencia3d-relatorio-${start}-a-${end}.csv`, "Cache-Control": "private, no-store" },
   });
 }

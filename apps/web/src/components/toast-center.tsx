@@ -42,26 +42,6 @@ export function ToastCenter() {
     return () => window.removeEventListener(toastEvent, handleToast);
   }, [addToast]);
 
-  useEffect(() => {
-    const announce = (element: Element) => {
-      if (element.closest("[data-toast-viewport]")) return;
-      const role = element.getAttribute("role");
-      if (role !== "status" && role !== "alert") return;
-      addToast(element.textContent ?? "", role === "alert" ? "error" : "success");
-    };
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        for (const node of mutation.addedNodes) {
-          if (!(node instanceof Element)) continue;
-          announce(node);
-          node.querySelectorAll('[role="status"], [role="alert"]').forEach(announce);
-        }
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [addToast]);
-
   return <div className="toast-viewport" data-toast-viewport aria-live="polite" aria-atomic="false">
     {items.map((item) => <div className={`app-toast app-toast--${item.tone}`} role={item.tone === "error" ? "alert" : "status"} key={item.id}>
       {item.tone === "success" ? <CheckCircle2 aria-hidden="true" /> : <CircleAlert aria-hidden="true" />}

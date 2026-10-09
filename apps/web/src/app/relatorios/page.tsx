@@ -1,9 +1,10 @@
+import { Button } from "@/components/base-ui/button";
 import { requirePermission } from "@/lib/auth/guards";
 import { formatCents } from "@/lib/pricing";
 import { reportPeriod, reportSchema } from "@/lib/reports";
 import { createClient } from "@/lib/supabase/server";
 import { roleAllows } from "@/lib/auth/permissions";
-import Link from "next/link";
+import { ReportExportActions } from "./report-export-actions";
 
 export default async function ReportsPage({ searchParams }: { searchParams: Promise<{ start?: string; end?: string }> }) {
   const context = await requirePermission("reports.view");
@@ -15,7 +16,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const report = parsed.success ? parsed.data : null;
   return <main className="management-page management-page--sections"><header className="page-head management-page-head"><div className="page-head-main"><p className="page-context">Gestão · {context.tenantName}</p><h1 className="page-title">Relatórios</h1><p className="page-desc">Resumo do período com pedidos, produção e, para quem tem acesso financeiro, valores previstos e recebidos.</p></div></header>
     <form method="get" className="panel report-period-form"><h2>Período do relatório</h2><label>Início <input type="date" name="start" defaultValue={start} required /></label>
-      <label>Fim <input type="date" name="end" defaultValue={end} required /></label><button>Aplicar período</button></form>
+      <label>Fim <input type="date" name="end" defaultValue={end} required /></label><Button>Aplicar período</Button></form>
     {error || !report ? <p className="error" role="alert">Não foi possível gerar o relatório. Use um intervalo de até 366 dias.</p> : <>
       <section className="panel"><header className="panel-head"><h2 className="panel-title">Operação</h2><span className="report-range">{formatDate(start)} a {formatDate(end)}</span></header>
         <dl className="report-grid">
@@ -37,7 +38,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           <div><dt>Material consumido</dt><dd>{formatCents(BigInt(report.finance.actual_material_cents))}</dd></div>
         </dl>
       </section> : null}
-      {roleAllows(context.role, "reports.export") ? <div className="report-actions"><Link className="btn btn-secondary" href={"/relatorios/exportar?start=" + start + "&end=" + end}>Exportar CSV</Link></div> : null}
+      {roleAllows(context.role, "reports.export") ? <ReportExportActions
+        csvHref={`/relatorios/exportar?start=${start}&end=${end}`}
+        fileName={`Agencia3D-Relatorio-${start}-a-${end}`}
+      /> : null}
     </>}
   </main>;
 }

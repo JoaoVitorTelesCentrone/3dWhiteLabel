@@ -10,7 +10,7 @@ import { formatCents } from "@/lib/pricing";
 import { formatProductionProgress } from "@/lib/production-progress";
 import { ReleaseOrderForm } from "@/app/producao/forms";
 import { DeliverOrderForm, ShipOrderForm } from "./shipment-forms";
-import { deleteOrder, updateOrder, type CreateOrderState } from "./actions";
+import { deleteOrder, loadOrderDetails, updateOrder, type CreateOrderState, type OrderDetails } from "./actions";
 
 type Option = { id: string; label: string };
 export type OrderRecord = {
@@ -24,8 +24,8 @@ export type OrderRecord = {
   totalPriceCents: number;
   totalCostCents: number;
   createdAt: string;
+  itemSummary: string;
   items: Array<{ id: string; description: string; quantity: number; unitPriceCents: number; variantId: string | null; hasRevision: boolean }>;
-  shipments: Array<{ carrier: string | null; trackingCode: string | null; shippedAt: string; deliveredAt: string | null }>;
   canEdit: boolean;
   canDelete: boolean;
   canRelease: boolean;
@@ -82,9 +82,21 @@ export function OrderDeleteSheet({ order, disabled }: { order: OrderRecord; disa
 
 export function OrderDetailSheet({ order, trigger, initialOpen = false }: { order: OrderRecord; trigger: ReactElement; initialOpen?: boolean }) {
   const [open, setOpen] = useState(initialOpen);
+  const [details, setDetails] = useState<OrderDetails | null>(null);
+  const [detailError, setDetailError] = useState<string | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
+    loadOrderDetails(order.id).then((result) => {
+      if (!active) return;
+      setDetails(result.data ?? null);
+      setDetailError(result.error ?? null);
+    }).catch(() => { if (active) setDetailError("Não foi possível carregar os detalhes deste pedido."); });
+    return () => { active = false; setDetails(null); setDetailError(null); };
+  }, [open, order.id]);
   return <Sheet open={open} onOpenChange={setOpen}>
     <SheetTrigger render={trigger} nativeButton={false} />
-    <SheetContent className="order-detail-sheet-panel gap-0 overflow-y-auto p-0" aria-label={`Pedido #${order.number}`}>
+    {open ? <SheetContent className="order-detail-sheet-panel gap-0 overflow-y-auto p-0" aria-label={`Pedido #${order.number}`}>
       <SheetHeader className="border-b px-6 py-5 pr-14">
         <SheetTitle className="text-xl">Pedido #{order.number}</SheetTitle>
         <SheetDescription>{order.customerName} · {order.statusLabel} · {new Date(order.createdAt).toLocaleDateString("pt-BR")}</SheetDescription>
@@ -92,7 +104,9 @@ export function OrderDetailSheet({ order, trigger, initialOpen = false }: { orde
       <div className="order-detail-body">
         <section aria-label="Itens do pedido">
           <h3>Itens</h3>
-          {order.items.map((item) => <div className="record-line" key={item.id}><span>{item.quantity} × {item.description}</span><small>{formatCents(BigInt(item.unitPriceCents))} por unidade</small></div>)}
+          {!details && !detailError ? <p role="status">Carregando itens…</p> : null}
+          {detailError ? <p className="error" role="alert">{detailError}</p> : null}
+          {details?.items.map((item) => <div className="record-line" key={item.id}><span>{item.quantity} × {item.description}</span><small>{formatCents(BigInt(item.unitPriceCents))} por unidade</small></div>)}
         </section>
         <div className="order-detail-totals">
           <div><span>Faturamento</span><strong>{formatCents(BigInt(order.totalPriceCents))}</strong></div>
@@ -108,9 +122,9 @@ export function OrderDetailSheet({ order, trigger, initialOpen = false }: { orde
           {order.status === "delivered" ? <p>Pedido entregue e concluído.</p> : null}
         </section>
         {order.production ? <section className="order-detail-action"><h3>Produção do pedido</h3><p>{formatProductionProgress(order.production.completedQty, order.production.targetQty)}.</p><div className="production-progress" role="progressbar" aria-label={`Progresso do pedido #${order.number}`} aria-valuemin={0} aria-valuemax={order.production.targetQty} aria-valuenow={order.production.completedQty}><span style={{ "--progress": order.production.percent / 100 } as React.CSSProperties} /></div><Link className="order-production-link" href={`/producao?pedido=${order.id}`}>Ver na produção</Link></section> : null}
-        {order.shipments.map((shipment) => <p className="record-shipment" key={shipment.shippedAt}>Enviado em {new Date(shipment.shippedAt).toLocaleDateString("pt-BR")}{shipment.carrier ? ` · ${shipment.carrier}` : ""}{shipment.trackingCode ? ` · rastreio ${shipment.trackingCode}` : ""}{shipment.deliveredAt ? " · entregue" : ""}</p>)}
+        {details?.shipments.map((shipment) => <p className="record-shipment" key={shipment.shippedAt}>Enviado em {new Date(shipment.shippedAt).toLocaleDateString("pt-BR")}{shipment.carrier ? ` · ${shipment.carrier}` : ""}{shipment.trackingCode ? ` · rastreio ${shipment.trackingCode}` : ""}{shipment.deliveredAt ? " · entregue" : ""}</p>)}
         {!order.canEdit && order.status !== "open" ? <p className="order-history-note">Este pedido já avançou na operação. Seus valores ficam preservados no histórico.</p> : null}
       </div>
-    </SheetContent>
+    </SheetContent> : null}
   </Sheet>;
 }

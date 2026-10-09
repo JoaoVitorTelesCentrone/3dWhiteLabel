@@ -1,16 +1,14 @@
 import "server-only";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getTenantContext, type TenantContext } from "@/lib/tenant/context";
 import type { ModuleKey } from "@/lib/tenant/modules";
 import { roleAllows, type Permission } from "./permissions";
+import { getRequestUserId } from "./session";
 
 export async function requireTenantContext(): Promise<TenantContext> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-  const userId = data?.claims?.sub;
-  if (error || typeof userId !== "string") redirect("/login");
+  const userId = await getRequestUserId();
+  if (!userId) redirect("/login");
 
   const context = await getTenantContext(userId);
   if (!context) redirect("/login?error=tenant");

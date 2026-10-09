@@ -2,6 +2,8 @@
 
 ## Princípio
 
+Decisão atual: o produto não cadastra nem controla impressoras ou manutenção. A produção acompanha pedidos, jobs, tempo, material e peças concluídas sem exigir uma máquina. Modelos 3D e receitas estão desativados, inclusive por URL direta; quando não há dados técnicos prévios, o planejamento do job solicita as estimativas necessárias. O estoque de produtos prontos é informado por contagem manual.
+
 Não construir tudo. O MVP precisa ser **vendável** (licença Start), não completo. Multi-tenancy, branding, feature flags e RBAC nascem no primeiro commit — nunca depois.
 
 ---
@@ -15,11 +17,11 @@ Não construir tudo. O MVP precisa ser **vendável** (licença Start), não comp
 | 5–6 | Pedidos diretos: cliente, produto, quantidade, cópia de preço e custo, faturamento e lucro estimado |
 | 7–8 | Materiais: materiais, bobinas individuais, movimentações, estoque comprometido |
 | 9–10 | Produção: OPs, jobs (previsto × real), fila Kanban, painel da fábrica, falhas |
-| 11–12 | Impressoras + manutenção básica (planos por hora, logs, alertas) |
-| 13–14 | Dashboard (KPIs + "Precisa da sua atenção"), relatórios essenciais (vendas, produção, máquinas) |
+| 11–12 | Conexão entre produção, materiais e estoque de produtos prontos |
+| 13–14 | Dashboard e relatórios essenciais (vendas e produção) |
 | 15–16 | Console admin Agencia 3D (tenants, licenças, módulos), domínios customizados, seed demo, hardening, testes de vazamento multi-tenant |
 
-**MVP inclui:** login, multi-tenant, white label, usuários/permissões, dashboard, cadastro de clientes, pedidos diretos, produtos, modelos, arquivos, impressoras, filamentos, estoque, OPs, jobs, falhas, manutenção básica, relatórios.
+**MVP inclui:** login, multi-tenant, white label, usuários/permissões, dashboard, cadastro de clientes, pedidos diretos, produtos, materiais, estoque, OPs, jobs, falhas e relatórios.
 
 **MVP exclui (propositalmente):** QR Code, portal do cliente, integrações, IA, planner, multiunidade, fiscal.
 
@@ -29,7 +31,7 @@ Não construir tudo. O MVP precisa ser **vendável** (licença Start), não comp
 
 ### Contrato vigente do fluxo MVP
 
-O caminho obrigatório é venda direta → produção → expedição/entrega → recebimentos e gestão. Orçamentos são opcionais; produto sem receita continua vendável e recebe dados técnicos no planejamento. Não há estoque de acabados no MVP. Status de pedido é resultado de comandos auditáveis, e a pipeline deriva do estado de jobs e da quantidade boa. Consulte `PLANO-INTEGRACAO-PONTA-A-PONTA.md` para migrations, testes e critérios executáveis.
+O caminho obrigatório é venda direta → produção → expedição/entrega → recebimentos e gestão. Orçamentos são opcionais; produto sem receita continua vendável e recebe dados técnicos no planejamento. O estoque de acabados é ajustado manualmente e ainda não é atualizado automaticamente pela produção ou venda. Status de pedido é resultado de comandos auditáveis, e a pipeline deriva do estado de jobs e da quantidade boa. Consulte `PLANO-INTEGRACAO-PONTA-A-PONTA.md` para migrations, testes e critérios executáveis.
 
 - QR Code de bobinas (scanner mobile)
 - Previsão de estoque + reposição recomendada

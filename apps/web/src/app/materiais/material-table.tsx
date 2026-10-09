@@ -1,7 +1,7 @@
 "use client";
 
 import { TableFilter, TablePagination, useTableControls } from "@/components/table-controls";
-import { SpoolAdjustSheet } from "./forms";
+import { SpoolAdjustSheet, SpoolAvailableForm } from "./forms";
 
 export type MaterialTableRow = {
   id: string;
@@ -35,7 +35,9 @@ export function MaterialTable({ rows, canAdjust, materialCount, spoolCount }: { 
           return <tr key={row.id}>
             <td data-label="Material"><div className="material-name-cell"><strong>{row.name}</strong><small>{row.details || "Sem detalhes adicionais"}</small></div></td>
             <td data-label="Bobina" className="material-code">{row.spool ? row.spool.code : <span className="material-value-muted">Nenhuma bobina</span>}</td>
-            <td data-label="Disponível" className="material-weight material-weight--available">{row.spool ? `${available.toLocaleString("pt-BR")} g` : "—"}</td>
+            <td data-label="Disponível" className="material-weight material-weight--available">{row.spool && canAdjust && row.spool.status !== "discarded"
+              ? <SpoolAvailableForm id={row.spool.id} code={row.spool.code} availableG={available} />
+              : row.spool ? `${available.toLocaleString("pt-BR")} g` : "—"}</td>
             <td data-label="Físico" className="material-weight">{row.spool ? `${physical.toLocaleString("pt-BR")} g` : "—"}</td>
             <td data-label="Reservado" className="material-weight">{row.spool ? `${row.reservedG.toLocaleString("pt-BR")} g` : "—"}</td>
             <td data-label="Status"><span className={`status-chip status-chip--${statusStyle}`}>{statusLabel}</span></td>

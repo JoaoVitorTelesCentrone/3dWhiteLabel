@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/base-ui/button";
+
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
@@ -41,8 +43,8 @@ export function DesignFileManager({ tenantId, designId, revisionId, files, canEd
   }
 
   return <div>
-    {files.length ? <ul>{files.map((file) => <li key={file.id}>{file.filename} · {file.format.toUpperCase()} · {(file.size_bytes / 1024 / 1024).toFixed(1)} MB <button type="button" onClick={() => void download(file.storage_path)}>Baixar</button></li>)}</ul> : <p>Nenhum arquivo nesta revisão.</p>}
-    {canEdit ? <form action={upload}><label>Arquivo 3D (máximo 100 MB) <input name="file" type="file" accept=".stl,.3mf,.step,.stp,.obj,.gcode" required /></label><button disabled={pending}>{pending ? "Enviando…" : "Enviar arquivo"}</button></form> : null}
+    {files.length ? <ul>{files.map((file) => <li key={file.id}>{file.filename} · {file.format.toUpperCase()} · {(file.size_bytes / 1024 / 1024).toFixed(1)} MB <Button type="button" onClick={() => void download(file.storage_path)}>Baixar</Button></li>)}</ul> : <p>Nenhum arquivo nesta revisão.</p>}
+    {canEdit ? <form action={upload}><label>Arquivo 3D (máximo 100 MB) <input name="file" type="file" accept=".stl,.3mf,.step,.stp,.obj,.gcode" required /></label><Button disabled={pending}>{pending ? "Enviando…" : "Enviar arquivo"}</Button></form> : null}
     {message ? <p role="status">{message}</p> : null}
   </div>;
 }

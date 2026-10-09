@@ -35,7 +35,7 @@ export default async function MaterialsPage() {
     <header className="page-head management-page-head">
       <div className="page-head-main">
         <h1 className="page-title">Materiais</h1>
-        <p className="page-desc">Acompanhe o saldo disponível e atualize o peso das bobinas.</p>
+        <p className="page-desc">Informe o saldo disponível por bobina e acompanhe o material reservado para produção.</p>
       </div>
       <div className="page-actions">
         {roleAllows(context.role, "stock.adjust") && context.licenseStatus !== "suspended" ? <RecordCreateSheet title="Cadastrar material" description="Defina o tipo e o custo do material usado na produção."><MaterialForm /></RecordCreateSheet> : null}

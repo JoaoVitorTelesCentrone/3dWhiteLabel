@@ -6,7 +6,8 @@ const workspaceEnv = resolve(process.cwd(), "../../.env.local");
 if (existsSync(workspaceEnv)) process.loadEnvFile(workspaceEnv);
 
 const nextConfig: NextConfig = {
-  distDir: process.env.AGENCIA3D_E2E === "true" ? ".next-e2e" : ".next",
+  distDir: process.env.AGENCIA3D_BENCH === "true" ? ".next-bench" : process.env.AGENCIA3D_E2E === "true" ? ".next-e2e" : ".next",
+  devIndicators: false,
   poweredByHeader: false,
   reactStrictMode: true,
   experimental: {
