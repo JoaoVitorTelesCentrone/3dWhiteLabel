@@ -699,7 +699,7 @@ input[type="hidden"] { display: none; }
 .report-period-tab--active::after { background: var(--brand-primary); }
 .report-period-form { display: grid; grid-template-columns: repeat(2, minmax(9rem, 12rem)) auto; align-items: end; flex: 0 0 auto; gap: .5rem .75rem; padding: 0; }
 .report-period-form button { justify-self: start; }
-.report-period-submit { align-self: end; min-height: 2.75rem; }
+.report-period-form .report-period-submit { align-self: end; height: 2.75rem; min-height: 2.75rem; margin: 0; }
 .report-range { color: var(--text-muted); font-size: .78rem; }
 .report-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; margin: 0; }
 .report-grid > div { display: grid; align-content: start; gap: .4rem; min-width: 0; padding: .9rem; border: 1px solid var(--line); border-radius: 7px; background: color-mix(in srgb, var(--bg) 35%, var(--bg-surface)); }
