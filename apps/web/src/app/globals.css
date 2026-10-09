@@ -551,6 +551,8 @@ button.password-visibility-toggle { position: absolute; inset-block: 0; inset-in
 button.password-visibility-toggle:hover { color: var(--brand-accent-text); }
 button.password-visibility-toggle:focus-visible { outline: 2px solid var(--brand-accent-text); outline-offset: -3px; box-shadow: none; }
 
+body:has(.offer-page) { color-scheme: dark; --bg: #0e1013; --bg-surface: #1a1d23; --bg-elevated: #242832; --bg-inset: #101216; --text-primary: #f4f5f7; --text-muted: #9ba1ab; --line: #30343c; --line-strong: #454a54; --success: #3ddc84; --warning: #ffc53d; --danger: #ff4d4d; --info: #4da3ff; --brand-accent-text: var(--brand-accent); --ring: var(--brand-accent); background: var(--bg); color: var(--text-primary); }
+body:has(.offer-page) .brand-header .theme-toggle { display: none; }
 .offer-page { --offer-ink: #09090b; --offer-panel: #111114; --offer-soft: #1b1b20; --offer-paper: #f4f2ec; --offer-orange: #ff5a1f; --offer-peach: #ffb07c; width: min(100% - 2rem, 88rem); padding: clamp(1.5rem, 4vw, 3.5rem) 0 5rem; color: var(--text-primary); }
 .offer-page h1, .offer-page h2, .offer-page h3, .offer-page p { margin-top: 0; }
 .offer-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(28rem, .98fr); align-items: center; gap: clamp(2.5rem, 5vw, 5rem); min-height: min(47rem, calc(100svh - 8rem)); padding: clamp(2rem, 5vw, 5.5rem); overflow: hidden; border: 1px solid color-mix(in srgb, var(--brand-primary) 24%, var(--line)); border-radius: 1.25rem; background: radial-gradient(circle at 78% 25%, color-mix(in srgb, var(--brand-primary) 17%, transparent), transparent 29%), linear-gradient(145deg, color-mix(in srgb, var(--bg-surface) 92%, #000), var(--bg)); isolation: isolate; }
