@@ -699,6 +699,7 @@ input[type="hidden"] { display: none; }
 .report-grid > div { display: grid; align-content: start; gap: .4rem; min-width: 0; padding: .9rem; border: 1px solid var(--line); border-radius: 7px; background: color-mix(in srgb, var(--bg) 35%, var(--bg-surface)); }
 .report-grid dt { color: var(--text-muted); font-size: .76rem; }
 .report-grid dd { margin: 0; color: var(--text-primary); font: 650 1rem/1.3 var(--font-heading); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.report-grid small, .panel-description { color: var(--text-muted); font-size: .72rem; }
 .report-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: 1.25rem; }
 .printer-runtime, .maintenance-summary { display: grid; gap: .15rem; padding: .75rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .printer-runtime span, .maintenance-summary span, .maintenance-summary small { color: var(--text-muted); font-size: .76rem; }

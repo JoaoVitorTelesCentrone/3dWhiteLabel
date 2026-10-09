@@ -33,6 +33,7 @@ export async function GET(request: Request) {
     ["Financeiro", "Recebimentos", formatCents(BigInt(report.finance.received_cents))],
     ["Financeiro", "Despesas", formatCents(BigInt(report.finance.expenses_cents))],
     ["Financeiro", "Material consumido", formatCents(BigInt(report.finance.actual_material_cents))],
+    ["Financeiro", "Saldo líquido do período", formatCents(BigInt(report.finance.net_profit_cents))],
   );
   const csv = [
     ["Seção", "Indicador", "Valor"],
