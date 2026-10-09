@@ -999,6 +999,7 @@ input[type="color"] { min-height: 2.75rem; padding: .25rem; cursor: pointer; }
 .table-filter-toolbar { display: flex; align-items: center; gap: 1rem; min-height: 3.25rem; padding: .5rem 1rem; border-bottom: 1px solid var(--line); }
 .table-filter-input { position: relative; display: block; width: min(100%, 23rem); min-height: 2.25rem; padding: 0; border: 0; background: transparent; color: var(--text-muted); }
 .table-filter-input input { height: 2.25rem; min-height: 0; font-size: .8rem; }
+.table-filter-input input::-webkit-search-cancel-button { display: none; }
 .table-filter-input > svg { position: absolute; top: 50%; right: .7rem; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
 .table-filter-input button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); color: var(--text-muted); }
 .table-filter-count, .table-pagination { color: var(--text-muted); font-size: .74rem; }
