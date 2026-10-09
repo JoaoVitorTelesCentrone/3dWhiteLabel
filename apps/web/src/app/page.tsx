@@ -76,9 +76,17 @@ export default async function HomePage() {
       </section>
 
       <section className="offer-price-strip" aria-label="Resumo da oferta">
-        <div><span>Você investe</span><strong>R$ 1.000</strong><small>no CRM</small></div>
+        <div className="offer-price-product">
+          <div><span>CRM Agencia 3D</span><small>Sistema completo para sua operação</small></div>
+          <strong>R$ 1.000</strong>
+          <small className="offer-price-condition">pagamento único</small>
+        </div>
         <span className="offer-plus" aria-hidden="true">+</span>
-        <div><span>Você recebe</span><strong>Landing page</strong><small>de brinde</small></div>
+        <div className="offer-price-bonus">
+          <span><Sparkles aria-hidden="true" /> Bônus incluso</span>
+          <strong>Landing page profissional</strong>
+          <small>personalizada para o seu negócio</small>
+        </div>
       </section>
 
       <section className="offer-section offer-transformation" aria-labelledby="transformation-title">
