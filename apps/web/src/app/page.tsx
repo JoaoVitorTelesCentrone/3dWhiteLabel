@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getRequestUserId } from "@/lib/auth/session";
 import { ArrowRight, Check, Factory, Gauge, PackageCheck, Sparkles, UsersRound, WalletCards } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -25,6 +26,8 @@ const workflow = [
 ];
 
 export default async function HomePage() {
+  if (await getRequestUserId()) redirect("/dashboard");
+
   const host = (await headers()).get("host")?.toLowerCase();
   if (process.env.NODE_ENV === "development" && process.env.AGENCIA3D_LOCAL_DEMO_AUTO_LOGIN === "true" && host === "demo.localhost:3005") {
     redirect("/dev-login");
