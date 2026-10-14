@@ -8,15 +8,15 @@ web
 
 ## Users
 
-Primary: owners and operators of 3D-printing businesses (print farms and bureaus) — people who quote, produce, ship, and bill physical parts. They use the app at the factory, often standing at a machine, in a dark room, with gloves on. Secondary: Agencia 3D platform operators, who provision tenants and manage licenses through an internal console (`/admin`).
+Primary: owners and operators of 3D-printing businesses (print farms and bureaus) — people who quote, produce, ship, and bill physical parts. They use the app at the factory, often standing at a machine, in a dark room, with gloves on. Secondary: Sua Empresa 3D platform operators, who provision tenants and manage licenses through an internal console (`/admin`).
 
 ## Product Purpose
 
-Agencia 3D is a multi-tenant, white-label ERP for 3D-printing businesses. It carries a sold item from direct order to delivered piece: catalog (products, 3D models, production recipes), customers, orders, production (jobs on printers), materials/spools, finance, and period reports. Success means the owner runs the whole business without spreadsheets, and the product carries the tenant's brand, not Agencia 3D's.
+Sua Empresa 3D is a multi-tenant, white-label ERP for 3D-printing businesses. It carries a sold item from direct order to delivered piece: catalog (products, 3D models, production recipes), customers, orders, production (jobs on printers), materials/spools, finance, and period reports. Success means the owner runs the whole business without spreadsheets, and the product carries the tenant's brand, not Sua Empresa 3D's.
 
 ## Positioning
 
-The mechanism a neighbor could not truthfully copy: every tenant gets the product as their own brand — the entire design system is themeable through CSS custom properties injected at runtime from `tenant_branding`, while Agencia 3D stays invisible except in the internal admin, the sales site, and a removable "Powered by" footer. The product speaks factory floor ("PLA preto acaba em 4 dias. Comprar 20 kg?"), not generic SaaS.
+The mechanism a neighbor could not truthfully copy: every tenant gets the product as their own brand — the entire design system is themeable through CSS custom properties injected at runtime from `tenant_branding`, while Sua Empresa 3D stays invisible except in the internal admin, the sales site, and a removable "Powered by" footer. The product speaks factory floor ("PLA preto acaba em 4 dias. Comprar 20 kg?"), not generic SaaS.
 
 ## Operating Context
 
@@ -40,7 +40,7 @@ The mechanism a neighbor could not truthfully copy: every tenant gets the produc
 
 ## Brand Commitments
 
-`IDENTIDADE-VISUAL.md` is binding: token palette (`--brand-primary #FF5A1F`, `--brand-accent #FFB25A`, `--bg #0E1013`, `--bg-surface #1A1D23`, `--bg-elevated #242832`, `--text-primary #F4F5F7`, `--text-muted #9BA1AB`), tagline "Do orçamento à peça entregue.", industrial-direct voice, logo usage rules (`assets/agencia3d-logo.png`), dark mode first. Agencia 3D logo appears only in the internal admin, the sales site, and a removable "Powered by" footer.
+`IDENTIDADE-VISUAL.md` is binding: token palette (`--brand-primary #FF5A1F`, `--brand-accent #FFB25A`, `--bg #0E1013`, `--bg-surface #1A1D23`, `--bg-elevated #242832`, `--text-primary #F4F5F7`, `--text-muted #9BA1AB`), tagline "Do orçamento à peça entregue.", industrial-direct voice, logo usage rules (`assets/agencia3d-logo.png`), dark mode first. Sua Empresa 3D logo appears only in the internal admin, the sales site, and a removable "Powered by" footer.
 
 ## Evidence on Hand
 
@@ -51,7 +51,7 @@ The mechanism a neighbor could not truthfully copy: every tenant gets the produc
 
 ## Product Principles
 
-1. The tenant's brand always wins inside the tenant's app; Agencia 3D is the invisible engine.
+1. The tenant's brand always wins inside the tenant's app; Sua Empresa 3D is the invisible engine.
 2. Tokens, never hardcoded values — the golden rule of the design system.
 3. Factory-floor clarity over marketing polish: dense, scannable, direct verbs.
 4. Kanban and Previsto × Real are the product's native visual language.

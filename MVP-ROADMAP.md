@@ -19,7 +19,7 @@ Não construir tudo. O MVP precisa ser **vendável** (licença Start), não comp
 | 9–10 | Produção: OPs, jobs (previsto × real), fila Kanban, painel da fábrica, falhas |
 | 11–12 | Conexão entre produção, materiais e estoque de produtos prontos |
 | 13–14 | Dashboard e relatórios essenciais (vendas e produção) |
-| 15–16 | Console admin Agencia 3D (tenants, licenças, módulos), domínios customizados, seed demo, hardening, testes de vazamento multi-tenant |
+| 15–16 | Console admin Sua Empresa 3D (tenants, licenças, módulos), domínios customizados, seed demo, hardening, testes de vazamento multi-tenant |
 
 **MVP inclui:** login, multi-tenant, white label, usuários/permissões, dashboard, cadastro de clientes, pedidos diretos, produtos, materiais, estoque, OPs, jobs, falhas e relatórios.
 

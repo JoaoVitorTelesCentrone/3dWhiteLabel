@@ -196,6 +196,7 @@ create table sales_orders (
   external_ref text,                         -- id no marketplace
   deadline date,
   total numeric(12,2),
+  delivery_address jsonb,                    -- snapshot do endereço acordado na venda
   created_at timestamptz default now()
 );
 

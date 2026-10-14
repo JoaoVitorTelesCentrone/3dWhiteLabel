@@ -1,8 +1,8 @@
-# IDENTIDADE-VISUAL.md — Brand book Agencia 3D
+# IDENTIDADE-VISUAL.md — Brand book Sua Empresa 3D
 
 ## 1. Nome e conceito
 
-**Agencia 3D** — plataforma white label para operações de impressão 3D. O nome da plataforma aparece na administração interna; cada operação cliente usa sua própria marca e domínio.
+**Sua Empresa 3D** — plataforma white label para operações de impressão 3D. O nome da plataforma aparece na administração interna; cada operação cliente usa sua própria marca e domínio.
 
 **Tagline principal:**
 > Do orçamento à peça entregue.
@@ -19,7 +19,7 @@ Arquivo: `assets/agencia3d-logo.png` — símbolo abstrato em camadas, em gradie
 - Área de respiro: altura da primeira camada do símbolo em todos os lados.
 - Nunca: esticar, rotacionar, aplicar sombras, usar sobre fotos claras sem scrim.
 
-**Por que o white label muda tudo:** o logo Agencia 3D aparece apenas no console admin interno, no site de vendas e no rodapé "Powered by" (removível no Business). Dentro do app do tenant, **a marca é sempre a do cliente** — o design system inteiro é tematizável por CSS vars.
+**Por que o white label muda tudo:** o logo Sua Empresa 3D aparece apenas no console admin interno, no site de vendas e no rodapé "Powered by" (removível no Business). Dentro do app do tenant, **a marca é sempre a do cliente** — o design system inteiro é tematizável por CSS vars.
 
 ## 3. Paleta
 
@@ -104,6 +104,6 @@ Escala: 12 / 14 / 16 / 20 / 24 / 32 / 48. Números de dashboard sempre em Sora B
 ## 8. Aplicações
 
 - **Site de vendas:** fundo escuro, gradiente laranja, screenshots do produto com dados reais de demo, CTA "Quero o sistema da minha empresa".
-- **E-mails transacionais:** header com logo do **tenant**, nunca da Agencia 3D.
+- **E-mails transacionais:** header com logo do **tenant**, nunca da Sua Empresa 3D.
 - **Favicon do tenant:** gerado automaticamente a partir do logo enviado (rota dinâmica).
 - **QR Code das bobinas:** etiqueta 50×30mm, código `FIL-01382` em mono, borda laranja.

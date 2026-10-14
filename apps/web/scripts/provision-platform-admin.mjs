@@ -49,7 +49,7 @@ async function main() {
     id: user.id, full_name: name, active: true,
   }, { onConflict: "id" });
   if (error) throw error;
-  console.log("Administrador Agencia 3D ativo: " + email);
+  console.log("Administrador Sua Empresa 3D ativo: " + email);
 }
 main().catch((error) => {
   console.error(error instanceof Error ? error.message : error);

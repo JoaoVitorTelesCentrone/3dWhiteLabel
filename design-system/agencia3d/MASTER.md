@@ -1,4 +1,4 @@
-# Design system da Agencia 3D
+# Design system da Sua Empresa 3D
 
 > Este arquivo descreve o sistema implementado em `apps/web/src/app/globals.css` e os componentes locais em `apps/web/src/components/ui`. A identidade documentada em `IDENTIDADE-VISUAL.md` prevalece sobre qualquer exemplo genérico do shadcn ou registro externo.
 
@@ -76,7 +76,7 @@ Interface de operação industrial: precisa, discreta e rápida de ler. A inform
 
 ## Componentes e distribuição
 
-shadcn/ui no estilo `base-nova` com Base UI é a base editável de controles. Watermelon UI é uma fonte opcional de padrões e blocos por meio do registro `@watermelon` em `apps/web/components.json`. Cada peça importada deve ser revisada, adaptada aos tokens Agencia 3D e avaliada por acessibilidade, dependências, responsividade e custo de renderização.
+shadcn/ui no estilo `base-nova` com Base UI é a base editável de controles. Watermelon UI é uma fonte opcional de padrões e blocos por meio do registro `@watermelon` em `apps/web/components.json`. Cada peça importada deve ser revisada, adaptada aos tokens Sua Empresa 3D e avaliada por acessibilidade, dependências, responsividade e custo de renderização.
 
 Primitivos locais ficam em `apps/web/src/components/ui`; padrões do produto ficam em componentes próprios. Evite introduzir uma nova cópia de botão, campo, painel ou status quando um padrão compartilhado já existe.
 

@@ -11,6 +11,7 @@ export type Permission =
   | "suppliers.view" | "suppliers.edit"
   | "finance.view" | "finance.edit" | "costs.view" | "margins.view"
   | "reports.view" | "reports.export"
+  | "ai.use"
   | "users.manage" | "settings.manage" | "branding.manage" | "modules.manage" | "license.view";
 
 const allTenantPermissions: readonly Permission[] = [
@@ -22,7 +23,7 @@ const allTenantPermissions: readonly Permission[] = [
   "stock.adjust", "stock.purchase", "stock.discard", "stock.consume", "suppliers.view",
   "suppliers.edit", "finance.view", "finance.edit", "costs.view", "margins.view",
   "reports.view", "reports.export", "users.manage", "settings.manage", "branding.manage",
-  "modules.manage", "license.view",
+  "modules.manage", "license.view", "ai.use",
 ];
 
 const rolePermissions: Record<Role, readonly Permission[]> = {

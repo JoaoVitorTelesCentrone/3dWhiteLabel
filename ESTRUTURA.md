@@ -79,7 +79,7 @@ project-root/
 │   ├── portal/                       # Portal do cliente final do tenant
 │   │   └── src/app/                  # pedidos, orçamentos, arquivos, status
 │   │
-│   └── admin/                        # Console INTERNO da Agencia 3D (não white label)
+│   └── admin/                        # Console INTERNO da Sua Empresa 3D (não white label)
 │       └── src/app/                  # tenants, licenças, planos, feature flags,
 │                                     # domínios, saúde da plataforma, billing
 │
@@ -100,7 +100,7 @@ project-root/
 │   │   ├── seed/
 │   │   └── src/                      # Client tipado (Supabase + RLS)
 │   │
-│   ├── ui/                           # Design system Agencia 3D (shadcn/ui extendido)
+│   ├── ui/                           # Design system Sua Empresa 3D (shadcn/ui extendido)
 │   │   └── src/                      # Componentes tematizáveis via CSS vars
 │   │                                 # (a marca do tenant entra aqui)
 │   ├── branding/                     # Resolver de tema: logo, cores, favicon,

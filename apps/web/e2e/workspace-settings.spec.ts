@@ -53,7 +53,7 @@ test("admin da plataforma pode entrar e suspender/restaurar uma licença", async
   await expect(page).toHaveURL(/\/admin$/);
   await expect(page.getByRole("heading", { name: "Tenants" })).toBeVisible();
 
-  const tenantCard = page.locator("section.panel").filter({ has: page.getByRole("heading", { name: `Agencia 3D E2E ${fixture.runTag}`, exact: true }) });
+  const tenantCard = page.locator("section.panel").filter({ has: page.getByRole("heading", { name: `Sua Empresa 3D E2E ${fixture.runTag}`, exact: true }) });
   await expect(tenantCard).toBeVisible();
   const licenseSelect = tenantCard.getByLabel("Licença");
   await licenseSelect.selectOption("suspended");
@@ -71,7 +71,7 @@ test("admin da plataforma pode entrar e suspender/restaurar uma licença", async
 
   await page.goto("http://admin.localhost:3007/admin");
   await expect(page.getByRole("heading", { name: "Tenants" })).toBeVisible();
-  const restoreCard = page.locator("section.panel").filter({ has: page.getByRole("heading", { name: `Agencia 3D E2E ${fixture.runTag}`, exact: true }) });
+  const restoreCard = page.locator("section.panel").filter({ has: page.getByRole("heading", { name: `Sua Empresa 3D E2E ${fixture.runTag}`, exact: true }) });
   await restoreCard.getByLabel("Licença").selectOption("active");
   await restoreCard.getByRole("button", { name: "Atualizar plano e licença" }).click();
   await expect(restoreCard).toContainText("licença active");

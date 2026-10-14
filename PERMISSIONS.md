@@ -43,11 +43,14 @@ margins.view
 # Relatórios
 reports.view / reports.export
 
+# Assistente IA
+ai.use                  ← consulta apenas áreas que o próprio perfil pode visualizar
+
 # Administração
 users.manage
 settings.manage
 branding.manage
-modules.manage          ← feature flags (admin Agencia 3D + owner)
+modules.manage          ← feature flags (admin Sua Empresa 3D + owner)
 license.view
 ```
 
@@ -64,6 +67,7 @@ license.view
 | finance.view | ● | ● | | | | | ● | |
 | costs.view | ● | ● | ○¹ | ● | | | ● | |
 | margins.view | ● | ● | | | | | ● | |
+| ai.use | ● | ● | | | | | | |
 | users.manage | ● | ● | | | | | | |
 | settings.manage | ● | ● | | | | | | |
 | branding.manage | ● | ● | | | | | | |
@@ -77,4 +81,4 @@ license.view
 2. UI esconde o que não é permitido, mas a segurança real está no servidor + RLS.
 3. Overrides por tenant em `role_permissions` (ex.: permitir desconto para vendedor sênior).
 4. Toda ação sensível (aprovar orçamento, ajuste de estoque, cancelar OP, editar financeiro) grava `audit_log` com antes/depois.
-5. O admin interno da Agencia 3D (app `admin`) usa roles próprios da plataforma, separados dos roles de tenant — suporte nunca vê dados financeiros do tenant sem autorização registrada.
+5. O admin interno da Sua Empresa 3D (app `admin`) usa roles próprios da plataforma, separados dos roles de tenant — suporte nunca vê dados financeiros do tenant sem autorização registrada.

@@ -22,6 +22,9 @@ type WorkspaceLink = NavigationLink & { module?: ModuleKey; permission: Permissi
 type WorkspaceGroup = { id: string; label: string; links: WorkspaceLink[] };
 
 const workspaceGroups: WorkspaceGroup[] = [
+  { id: "assistant", label: "Assistente", links: [
+    { href: "/assistente", label: "Assistente IA", module: "ai", permission: "ai.use" },
+  ] },
   { id: "products", label: "Produtos", links: [
     { href: "/catalogo/produtos", label: "Produtos", module: "catalog", permission: "catalog.view" },
     // Modelos 3D e receitas ficam fora do escopo atual do catálogo.
@@ -44,7 +47,7 @@ const workspaceGroups: WorkspaceGroup[] = [
 ];
 
 export const metadata: Metadata = {
-  title: "Agencia 3D — Gestão para impressão 3D",
+  title: "Sua Empresa 3D — Gestão para impressão 3D",
   description: "Do orçamento à peça entregue.",
 };
 
@@ -75,8 +78,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const availableLinks = availableGroups.flatMap((group) => group.links);
   const visibleLink = (href: string) => availableLinks.find((link) => link.href === href);
   const navigationLinks = (...links: (NavigationLink | null | undefined)[]) => links.filter((link): link is NavigationLink => Boolean(link));
+  const assistantLink = context && roleAllows(context.role, "ai.use")
+    ? { href: "/assistente", label: "Assistente IA" }
+    : null;
   const groups: NavigationGroup[] = [
     { id: "overview", label: "Visão geral", links: [{ href: "/dashboard", label: "Visão geral" }] },
+    { id: "assistant", label: "Assistente IA", links: navigationLinks(assistantLink) },
     { id: "commercial", label: "Comercial", links: navigationLinks(
       visibleLink("/clientes"), visibleLink("/pedidos"),
     ) },
@@ -98,10 +105,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="pt-BR" className={`${theme} ${agencia3dHeading.variable} ${agencia3dBody.variable} ${agencia3dMono.variable}`}>
       <body style={brandStyle} className={context ? "workspace-shell" : undefined}>
-        {context ? <AppNavigation groups={groups} brandName={branding?.display_name ?? "Agencia 3D"} logo={logo} fullName={context.fullName} theme={theme}>{children}</AppNavigation> : <>
+        {context ? <AppNavigation groups={groups} brandName={branding?.display_name ?? "Sua Empresa 3D"} logo={logo} fullName={context.fullName} theme={theme}>{children}</AppNavigation> : <>
           <header className="brand-header"><div className="brand-header-inner"><Link href="/" className="brand-link">
             {logo ? <Image src={logo} alt="" width={40} height={40} unoptimized /> : <span className="brand-mark" aria-hidden="true">A3</span>}
-            <span>{branding?.display_name ?? "Agencia 3D"}</span>
+            <span>{branding?.display_name ?? "Sua Empresa 3D"}</span>
           </Link><ThemeToggle initialTheme={theme} /></div></header>
           <div>{children}</div>
         </>}

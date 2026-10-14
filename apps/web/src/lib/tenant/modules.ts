@@ -4,10 +4,10 @@ export type Plan = TenantPlan;
 export type ModuleKey = TenantModuleKey;
 
 const modulesByPlan: Record<Plan, readonly ModuleKey[]> = {
-  start: ["crm", "quotes", "orders", "catalog", "stock", "production"],
+  start: ["crm", "quotes", "orders", "catalog", "stock", "production", "ai"],
   pro: [
     "crm", "quotes", "orders", "catalog", "stock", "production",
-    "quality", "qr_codes", "actual_costs", "planner", "advanced_reports",
+    "quality", "qr_codes", "actual_costs", "planner", "advanced_reports", "ai",
   ],
   business: [
     "crm", "quotes", "orders", "catalog", "stock", "production",

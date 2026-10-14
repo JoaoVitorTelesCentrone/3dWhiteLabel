@@ -1,4 +1,4 @@
-# Guia Definitivo de Implementação da Agencia 3D
+# Guia Definitivo de Implementação da Sua Empresa 3D
 
 Este documento transforma a visão, o PRD, a arquitetura, o schema, as permissões, a identidade e o roadmap em um plano único de execução. Ele cobre o produto completo, mas preserva a ordem comercial: primeiro um MVP vendável, depois crescimento e expansão.
 
@@ -8,10 +8,10 @@ Este documento transforma a visão, o PRD, a arquitetura, o schema, as permissõ
 
 O produto já implementado começa na venda confirmada: cliente, produto e quantidade. Orçamento e oportunidade não são pré-requisitos. Estoque de acabados, pós-processamento e qualidade independente ficam para uma fase futura. O contrato vigente de estados, snapshots, reservas, financeiro e testes de aceite está em `PLANO-INTEGRACAO-PONTA-A-PONTA.md`; ele prevalece sobre as jornadas antigas de orçamento deste guia.
 
-A Agencia 3D será um sistema multi-tenant para empresas de impressão 3D, com três interfaces:
+A Sua Empresa 3D será um sistema multi-tenant para empresas de impressão 3D, com três interfaces:
 
 - `apps/web`: operação white label do tenant;
-- `apps/admin`: console interno da Agencia 3D;
+- `apps/admin`: console interno da Sua Empresa 3D;
 - `apps/portal`: portal do cliente final, liberado no Business.
 
 O fluxo principal deve funcionar sem planilhas paralelas:
@@ -22,7 +22,7 @@ Lead → oportunidade → orçamento → pedido → ordem de produção → job
 → recebimento → indicadores
 ```
 
-O primeiro critério de sucesso é uma print farm real operar durante duas semanas apenas na Agencia 3D. O critério do produto completo é o fluxo acima, integrações e rastreabilidade funcionarem com segurança, auditoria e métricas em produção.
+O primeiro critério de sucesso é uma print farm real operar durante duas semanas apenas na Sua Empresa 3D. O critério do produto completo é o fluxo acima, integrações e rastreabilidade funcionarem com segurança, auditoria e métricas em produção.
 
 ## 2. Decisões consolidadas
 
@@ -164,7 +164,7 @@ Use paths `tenants/{tenant_id}/{resource}/{uuid}/{filename}`. Upload ocorre por 
 
 Implemente primeiro o onboarding transacional:
 
-1. operador Agencia 3D cria tenant e plano;
+1. operador Sua Empresa 3D cria tenant e plano;
 2. sistema reserva slug e subdomínio;
 3. cria branding padrão, módulos e papéis;
 4. envia convite ao owner;
@@ -173,7 +173,7 @@ Implemente primeiro o onboarding transacional:
 
 RBAC usa o catálogo de `PERMISSIONS.md` como base e overrides por tenant. Permissões são verificadas no servidor; esconder botões é apenas experiência de uso. Ações sensíveis registram ator, tenant, ação, entidade, antes/depois, IP/request ID e horário.
 
-O console interno precisa cobrir tenant, plano, licença, Care, módulos, domínios, saúde e auditoria. Contas administrativas da Agencia 3D ficam separadas das roles dos clientes.
+O console interno precisa cobrir tenant, plano, licença, Care, módulos, domínios, saúde e auditoria. Contas administrativas da Sua Empresa 3D ficam separadas das roles dos clientes.
 
 ## 7. Design system e white label
 
@@ -189,7 +189,7 @@ Componentes mínimos:
 - estados de loading, vazio, erro, read-only e sem permissão;
 - uploader de arquivo, timeline de auditoria e status badge.
 
-O tema é resolvido no servidor pelo host e injetado no primeiro HTML para evitar flash. Valide contraste, limites de tamanho e formato de logo. E-mails usam sempre a marca do tenant. O símbolo da Agencia 3D em `assets/agencia3d-logo.png` é reservado ao site, admin e “Powered by”.
+O tema é resolvido no servidor pelo host e injetado no primeiro HTML para evitar flash. Valide contraste, limites de tamanho e formato de logo. E-mails usam sempre a marca do tenant. O símbolo da Sua Empresa 3D em `assets/agencia3d-logo.png` é reservado ao site, admin e “Powered by”.
 
 ## 8. Regras centrais de domínio
 
@@ -378,7 +378,7 @@ Configure alertas para vazamento suspeito, erro de RLS, fila parada, webhook rep
 ## 14. Segurança e LGPD
 
 - menor privilégio em banco, storage, CI e provedores;
-- MFA obrigatório para administradores Agencia 3D;
+- MFA obrigatório para administradores Sua Empresa 3D;
 - rate limit por IP, usuário e tenant;
 - criptografia de credenciais de integração e rotação de chaves;
 - CSP, cookies seguros, proteção CSRF e validação de redirect;

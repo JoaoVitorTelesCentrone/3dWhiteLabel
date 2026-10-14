@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(4);
+select plan(8);
 
 insert into auth.users (id, email) values ('eac00158-f74f-4b2f-98e9-647515d9f7a0', 'orders-owner@example.test');
 insert into platform.tenants (id, name, slug, setup_status) values ('3103a46c-3d2f-426d-86ab-1c6cd5838a6a', 'Orders Test', 'orders-test', 'active');
@@ -11,9 +11,11 @@ select '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', key, true from unnest(array['orde
 insert into public.customers (id, tenant_id, name) values
   ('10000000-0000-4000-8000-000000000001', '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', 'Test Customer');
 insert into public.products (id, tenant_id, name, active) values
-  ('20000000-0000-4000-8000-000000000001', '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', 'Test Product', true);
+  ('20000000-0000-4000-8000-000000000001', '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', 'Test Product', true),
+  ('20000000-0000-4000-8000-000000000002', '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', 'Second Product', true);
 insert into public.product_variants (id, tenant_id, product_id, name, sku, price_cents, cost_cents, active, is_default) values
-  ('30000000-0000-4000-8000-000000000001', '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', '20000000-0000-4000-8000-000000000001', 'Padrão', 'TEST-1', 4500, 1300, true, true);
+  ('30000000-0000-4000-8000-000000000001', '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', '20000000-0000-4000-8000-000000000001', 'Padrão', 'TEST-1', 4500, 1300, true, true),
+  ('30000000-0000-4000-8000-000000000002', '3103a46c-3d2f-426d-86ab-1c6cd5838a6a', '20000000-0000-4000-8000-000000000002', 'Padrão', 'TEST-2', 2500, 700, true, true);
 
 set local role authenticated;
 set local request.jwt.claim.sub = 'eac00158-f74f-4b2f-98e9-647515d9f7a0';
@@ -22,5 +24,17 @@ select lives_ok($$select public.create_sales_order('10000000-0000-4000-8000-0000
 select lives_ok($$select public.update_sales_order((select id from public.sales_orders where tenant_id='3103a46c-3d2f-426d-86ab-1c6cd5838a6a'), '10000000-0000-4000-8000-000000000001','30000000-0000-4000-8000-000000000001',4)$$, 'open untouched order can be edited');
 select is((select total_price_cents from public.sales_orders where tenant_id='3103a46c-3d2f-426d-86ab-1c6cd5838a6a'), 18000::bigint, 'edit recalculates order total');
 select lives_ok($$select public.delete_sales_order((select id from public.sales_orders where tenant_id='3103a46c-3d2f-426d-86ab-1c6cd5838a6a'))$$, 'open order can be deleted');
+select lives_ok($$select public.create_sales_order(
+  '10000000-0000-4000-8000-000000000001',
+  '[{"variantId":"30000000-0000-4000-8000-000000000001","quantity":2},{"variantId":"30000000-0000-4000-8000-000000000002","quantity":3}]'::jsonb,
+  '{"postalCode":"01310-100","street":"Avenida Paulista","number":"1000","neighborhood":"Bela Vista","city":"São Paulo","state":"SP","country":"BR"}'::jsonb
+)$$, 'direct order can be created with multiple products');
+select is((select count(*) from public.sales_order_items), 2::bigint, 'multi-product order creates one row per item');
+select is((select delivery_address ->> 'city' from public.sales_orders), 'São Paulo', 'delivery address is snapshotted on the order');
+select results_eq(
+  $$select total_price_cents, total_cost_cents from public.sales_orders$$,
+  $$values (16500::bigint, 4700::bigint)$$,
+  'multi-product order totals include every item'
+);
 select * from finish();
 rollback;

@@ -8,6 +8,12 @@ export async function createOrder(page: Page, fixture: E2EFixture, quantity: num
   await dialog.getByLabel("Cliente").selectOption(fixture.ids.customerId);
   await dialog.getByLabel("Produto").selectOption(fixture.ids.variantId);
   await dialog.getByLabel("Quantidade").fill(String(quantity));
+  await dialog.getByLabel("CEP").fill("01310-100");
+  await dialog.getByLabel("Rua ou avenida").fill("Avenida Paulista");
+  await dialog.getByLabel("Número").fill("1000");
+  await dialog.getByLabel("Bairro").fill("Bela Vista");
+  await dialog.getByLabel("Cidade").fill("São Paulo");
+  await dialog.getByLabel("UF").fill("SP");
   await dialog.getByRole("button", { name: "Cadastrar pedido" }).click();
   await expect(dialog).toBeHidden();
   const row = page.locator("tr.order-table-row-trigger").filter({ hasText: `Cliente E2E ${fixture.runTag}` }).filter({ hasText: `${quantity} ×` }).first();

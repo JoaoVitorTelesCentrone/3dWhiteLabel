@@ -14,7 +14,7 @@ export type E2EFixture = {
     secondary: { id: string; slug: string; host: string };
   };
   users: Partial<Record<"owner" | "otherOwner" | "sales" | "production" | "operator" | "stock" | "finance" | "viewer" | "platformAdmin", E2EUser>>;
-  ids: { customerId: string; productId: string; variantId: string; materialId: string; printerId: string; spoolId: string; designId: string; revisionId: string; recipeId: string; foreignCustomerId: string };
+  ids: { customerId: string; productId: string; variantId: string; secondProductId: string; secondVariantId: string; materialId: string; printerId: string; spoolId: string; designId: string; revisionId: string; recipeId: string; foreignCustomerId: string };
 };
 
 export function getFixturePath() {

@@ -164,7 +164,7 @@ export type Database = {
         Insert: never; Update: never; Relationships: [];
       };
       sales_orders: {
-        Row: { id: string; tenant_id: string; number: number; customer_id: string; quote_id: string | null; status: string; total_price_cents: number; total_cost_cents: number; created_by: string; created_at: string; updated_at: string };
+        Row: { id: string; tenant_id: string; number: number; customer_id: string; quote_id: string | null; status: string; total_price_cents: number; total_cost_cents: number; delivery_address: Json | null; created_by: string; created_at: string; updated_at: string };
         Insert: never; Update: never; Relationships: [];
       };
       sales_order_items: {
@@ -289,7 +289,13 @@ export type Database = {
       };
       set_quote_status: { Args: { p_quote_id: string; p_next_status: string }; Returns: void };
       approve_quote: { Args: { p_quote_id: string }; Returns: string };
-      create_sales_order: { Args: { p_customer_id: string; p_product_variant_id: string; p_quantity: number }; Returns: string };
+      create_sales_order: {
+        Args:
+          | { p_customer_id: string; p_product_variant_id: string; p_quantity: number }
+          | { p_customer_id: string; p_items: Json }
+          | { p_customer_id: string; p_items: Json; p_delivery_address: Json };
+        Returns: string;
+      };
       update_sales_order: { Args: { p_order_id: string; p_customer_id: string; p_product_variant_id: string; p_quantity: number }; Returns: void };
       delete_sales_order: { Args: { p_order_id: string }; Returns: void };
       receive_spool: { Args: { p_material_id: string; p_code: string; p_gross_g: number; p_tare_g: number }; Returns: string };

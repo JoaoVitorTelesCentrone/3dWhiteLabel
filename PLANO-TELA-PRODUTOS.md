@@ -42,7 +42,7 @@ Imagem   Produto                         Preço          Custo
 
 O botão superior abre um `Sheet` shadcn/Base UI à direita no desktop e em tela cheia no celular. O foco entra no título do painel e retorna ao botão ao fechar.
 
-1. **Imagem do produto:** área de upload de uma imagem com prévia e opção de substituir antes de salvar. PNG, JPG ou WebP, até 5 MB. Usar um bloco de File Upload da Watermelon como base visual e adaptar o código local para os tokens Agencia 3D, teclado, leitor de tela e apenas um arquivo.
+1. **Imagem do produto:** área de upload de uma imagem com prévia e opção de substituir antes de salvar. PNG, JPG ou WebP, até 5 MB. Usar um bloco de File Upload da Watermelon como base visual e adaptar o código local para os tokens Sua Empresa 3D, teclado, leitor de tela e apenas um arquivo.
 2. **Nome do produto:** obrigatório, com limite e exemplo curto.
 3. **Preço de venda** e **Custo:** campos lado a lado no desktop, empilhados no celular, com prefixo `R$` e validação junto ao campo.
 4. Rodapé fixo do painel com **Cancelar** e **Cadastrar produto**. Durante o envio, bloquear duplicidade e informar o andamento. Em sucesso, fechar o painel, atualizar a lista e anunciar **Produto cadastrado**.

@@ -2,6 +2,31 @@ import { expect, test } from "@playwright/test";
 import { signIn } from "./support/auth.js";
 import { createOrder } from "./support/orders.js";
 
+test("pedido pode ser criado com mais de um produto", async ({ page }) => {
+  const fixture = await signIn(page);
+  await page.goto(`http://${fixture.tenants.primary.host}:3007/pedidos`);
+  await page.getByRole("button", { name: "Novo pedido", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Novo pedido" });
+  await dialog.getByLabel("Cliente").selectOption(fixture.ids.customerId);
+  await dialog.getByLabel("Produto").selectOption(fixture.ids.variantId);
+  await dialog.getByLabel("Quantidade").fill("2");
+  await dialog.getByRole("button", { name: "Adicionar produto" }).click();
+  await dialog.getByLabel("Produto").nth(1).selectOption(fixture.ids.secondVariantId);
+  await dialog.getByLabel("Quantidade").nth(1).fill("3");
+  await dialog.getByLabel("CEP").fill("01310-100");
+  await dialog.getByLabel("Rua ou avenida").fill("Avenida Paulista");
+  await dialog.getByLabel("Número").fill("1000");
+  await dialog.getByLabel("Bairro").fill("Bela Vista");
+  await dialog.getByLabel("Cidade").fill("São Paulo");
+  await dialog.getByLabel("UF").fill("SP");
+  await dialog.getByRole("button", { name: "Cadastrar pedido" }).click();
+  await expect(dialog).toBeHidden();
+  const row = page.locator("tr.order-table-row-trigger").filter({ hasText: "2 ×" }).filter({ hasText: "3 ×" }).first();
+  await expect(row).toBeVisible();
+  await row.click();
+  await expect(page.getByRole("dialog", { name: /Pedido #/ }).getByText("Avenida Paulista, 1000")).toBeVisible();
+});
+
 test("pedido aberto pode ser editado e excluído com confirmação", async ({ page }) => {
   const fixture = await signIn(page);
   await page.goto(`http://${fixture.tenants.primary.host}:3007/pedidos`);

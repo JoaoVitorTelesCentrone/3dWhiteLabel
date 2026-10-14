@@ -1,8 +1,8 @@
-# Agencia 3D — Plataforma White Label de Gestão para Impressão 3D
+# Sua Empresa 3D — Plataforma White Label de Gestão para Impressão 3D
 
 > **Do pedido à peça entregue, toda a operação da sua empresa 3D em um sistema com a sua marca.**
 
-Este repositório documenta e implementa a Agencia 3D: uma plataforma white label de operação para empresas de impressão 3D, com ERP e PCP/MES.
+Este repositório documenta e implementa a Sua Empresa 3D: uma plataforma white label de operação para empresas de impressão 3D, com ERP e PCP/MES.
 
 Cada empresa cliente roda o mesmo core, mas enxerga exclusivamente a própria marca, domínio, cores, usuários e dados.
 
@@ -79,13 +79,17 @@ Para medir o tempo das principais rotas em desenvolvimento e em produção, cons
 
 Copie `.env.example` para `.env.local` antes de iniciar o app. Com Supabase local ativo, crie um tenant e convide seu owner com `pnpm tenant:create -- --name "Estúdio Exemplo" --slug exemplo --owner-name "Ana Silva" --owner-email ana@example.com`. O host padrão será `exemplo.localhost`. Se o provisionamento for interrompido, repita o comando para retomá-lo. Migrations versionadas em `supabase/migrations/` são a fonte do schema. Consulte `GUIA-DE-IMPLEMENTACAO.md` para a sequência completa.
 
-Para popular o Supabase local com uma operação de demonstração de 30 dias, execute `pnpm demo:seed`. O script cria a empresa `Agencia 3D Demo`, clientes, produtos, materiais, pedidos, jobs, recebimentos e despesas. Dados históricos de impressoras podem existir na demonstração, mas não fazem parte do fluxo atual. Ele imprime a senha local gerada ao concluir. A URL de acesso é `http://demo.localhost:3005/login`; se a porta do app for outra, use a porta configurada em `AGENCIA3D_APP_URL`. Executar novamente não duplica o conjunto: gera uma nova senha e informa os dados já existentes.
+Para ativar o Assistente IA em `/assistente`, defina `OPENAI_API_KEY` somente no ambiente do servidor. `OPENAI_MODEL` é opcional e usa `gpt-5.4-mini` por padrão. O agente consulta os dados pelo cliente Supabase autenticado, com `tenant_id`, RLS, módulos e permissões do usuário; ele não recebe uma chave de serviço nem executa alterações no negócio.
+
+Para popular o Supabase local com uma operação de demonstração de 30 dias, execute `pnpm demo:seed`. O script cria a empresa `Sua Empresa 3D Demo`, clientes, produtos, materiais, pedidos, jobs, recebimentos e despesas. Dados históricos de impressoras podem existir na demonstração, mas não fazem parte do fluxo atual. Ele imprime a senha local gerada ao concluir. A URL de acesso é `http://demo.localhost:3005/login`; se a porta do app for outra, use a porta configurada em `AGENCIA3D_APP_URL`. Executar novamente não duplica o conjunto: gera uma nova senha e informa os dados já existentes.
 
 ---
 
 O app `apps/web` já inclui Tailwind CSS v4 e shadcn/ui. A configuração fica em `apps/web/components.json`, os componentes instalados em `apps/web/src/components/` e os tokens de tema em `apps/web/src/app/globals.css`. O registry Watermelon UI está configurado como `@watermelon`; para adicionar outros componentes, execute `pnpm dlx shadcn@latest add @watermelon/<nome>` em `apps/web`. O pacote compartilhado `packages/ui` descrito em `ESTRUTURA.md` continua sendo a organização planejada para a evolução do design system.
 
 A navegação autenticada mostra Visão geral, Comercial, Produção, Produtos, Estoque e Gestão. Configurações foi retirada da interface atual. Cada item respeita módulo e permissão; grupos com uma única tela visível viram links diretos. No celular, o menu fecha após escolher uma página.
+
+O módulo Assistente IA oferece perguntas em linguagem natural sobre pedidos, clientes, produção, estoque, catálogo, orçamentos e finanças. Cada resposta factual passa por consultas de leitura controladas no servidor; custos, margens e contatos continuam limitados pelas permissões do perfil.
 
 ## Implementação disponível
 
@@ -113,7 +117,7 @@ As telas de marca e usuários em `/configuracoes` estão pausadas e retornam a p
 
 O console interno em /admin exige uma conta de plataforma e o host AGENCIA3D_ADMIN_HOST. Ele provisiona tenants, gerencia plano, licença e módulos, e registra domínios próprios como pendentes de verificação.
 
-Após aplicar as migrations, crie o primeiro administrador com pnpm platform:admin:add -- --name "Admin Agencia 3D" --email admin@example.com. O convite abre no host configurado em AGENCIA3D_ADMIN_HOST.
+Após aplicar as migrations, crie o primeiro administrador com pnpm platform:admin:add -- --name "Admin Sua Empresa 3D" --email admin@example.com. O convite abre no host configurado em AGENCIA3D_ADMIN_HOST.
 
 Modelos 3D e receitas permanecem como código histórico, com as rotas desativadas. Pedidos diretos usam o preço e custo da variação escolhida; os dados técnicos necessários são informados ao planejar o job.
 

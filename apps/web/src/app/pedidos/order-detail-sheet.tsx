@@ -11,6 +11,7 @@ import { formatProductionProgress } from "@/lib/production-progress";
 import { ReleaseOrderForm } from "@/app/producao/forms";
 import { DeliverOrderForm, ShipOrderForm } from "./shipment-forms";
 import { deleteOrder, loadOrderDetails, updateOrder, type CreateOrderState, type OrderDetails } from "./actions";
+import { ProductImagePreview } from "./product-image-preview";
 
 type Option = { id: string; label: string };
 export type OrderRecord = {
@@ -35,6 +36,14 @@ export type OrderRecord = {
 };
 
 const initialState: CreateOrderState = {};
+
+function formatDeliveryAddress(address: NonNullable<OrderDetails["deliveryAddress"]>) {
+  return [
+    `${address.street}, ${address.number}${address.complement ? `, ${address.complement}` : ""}`,
+    `${address.neighborhood} · ${address.city}/${address.state}`,
+    `CEP ${address.postalCode}`,
+  ];
+}
 
 export function OrderEditForm({ order, customers, variants }: { order: OrderRecord; customers: Option[]; variants: Option[] }) {
   const [state, action, pending] = useActionState(updateOrder, initialState);
@@ -106,7 +115,11 @@ export function OrderDetailSheet({ order, trigger, initialOpen = false }: { orde
           <h3>Itens</h3>
           {!details && !detailError ? <p role="status">Carregando itens…</p> : null}
           {detailError ? <p className="error" role="alert">{detailError}</p> : null}
-          {details?.items.map((item) => <div className="record-line" key={item.id}><span>{item.quantity} × {item.description}</span><small>{formatCents(BigInt(item.unitPriceCents))} por unidade</small></div>)}
+          {details?.items.map((item) => <div className="record-line order-detail-item" key={item.id}><ProductImagePreview imageUrl={item.imageUrl} name={item.description} /><span><strong>{item.quantity} × {item.description}</strong><small>{formatCents(BigInt(item.unitPriceCents))} por unidade</small></span></div>)}
+        </section>
+        <section className="order-delivery-address" aria-label="Endereço de entrega">
+          <h3>Entrega</h3>
+          {details?.deliveryAddress ? <address>{formatDeliveryAddress(details.deliveryAddress).map((line) => <span key={line}>{line}</span>)}</address> : <p>Endereço de entrega não informado.</p>}
         </section>
         <div className="order-detail-totals">
           <div><span>Faturamento</span><strong>{formatCents(BigInt(order.totalPriceCents))}</strong></div>

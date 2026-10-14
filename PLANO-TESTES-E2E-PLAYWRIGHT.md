@@ -1,4 +1,4 @@
-# Plano de cobertura E2E da Agencia 3D com Playwright
+# Plano de cobertura E2E da Sua Empresa 3D com Playwright
 
 ## Objetivo e estado atual
 

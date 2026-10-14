@@ -27,7 +27,7 @@ O custo marginal de um novo cliente tende a zero: mesma base, mesmas migrations,
 | Cache/edge | Cloudflare | Assets e tema do tenant servidos na borda |
 | Jobs assíncronos | pg_cron + Edge Functions → Inngest | Previsão de estoque, alertas de manutenção, e-mails |
 | Observabilidade | Sentry + PostHog + logs por tenant_id | Auditoria e suporte |
-| Pagamentos (da Agencia 3D) | Stripe ou Asaas | Cobrar licença + assinatura Care |
+| Pagamentos (da Sua Empresa 3D) | Stripe ou Asaas | Cobrar licença + assinatura Care |
 
 ## 3. Resolução de tenant (cada requisição)
 
@@ -52,7 +52,7 @@ Injeta TenantContext:
 • Feature flags escondem módulos fora do plano
 ```
 
-Fallback: se o host não resolve tenant → página de erro branded da Agencia 3D.
+Fallback: se o host não resolve tenant → página de erro branded da Sua Empresa 3D.
 
 ## 4. Isolamento de dados
 
@@ -75,7 +75,7 @@ tenants ─┬─ plan (start|pro|business)
 ```
 
 Regras:
-- Plano define o **default** de módulos; admin da Agencia 3D pode ligar módulos avulsos (upsell).
+- Plano define o **default** de módulos; admin da Sua Empresa 3D pode ligar módulos avulsos (upsell).
 - `license_status = suspended` → app entra em modo leitura com aviso; **nunca** apaga dados.
 - Manutenção (Care) inativa ≠ licença inválida: o sistema continua funcionando, apenas sem atualizações/suporte/hospedagem gerenciada.
 
@@ -84,14 +84,14 @@ Regras:
 Tabela `tenant_branding`: logo, logo_dark, favicon, primary_color, secondary_color, accent, font_heading, font_body, login_background, email_from_name, email_footer, custom_css (sanitizado).
 
 - O pacote `branding` converte isso em CSS custom properties servidas no `<head>` (sem flash de tema errado).
-- E-mails transacionais usam nome/logo do tenant — o cliente final nunca vê "Agencia 3D".
+- E-mails transacionais usam nome/logo do tenant — o cliente final nunca vê "Sua Empresa 3D".
 - Favicon por tenant via rota dinâmica.
-- O único lugar onde a marca Agencia 3D aparece para o tenant: console admin interno e rodapé opcional "Powered by Agencia 3D" (removível no Business).
+- O único lugar onde a marca Sua Empresa 3D aparece para o tenant: console admin interno e rodapé opcional "Powered by Sua Empresa 3D" (removível no Business).
 
 ## 7. Domínios customizados
 
 1. Tenant informa `erp.suaempresa.com.br` no painel.
-2. Agencia 3D cria custom hostname na Cloudflare for SaaS (SSL automático).
+2. Sua Empresa 3D cria custom hostname na Cloudflare for SaaS (SSL automático).
 3. Tenant aponta CNAME → validação → ativo.
 4. Alternativa sem custo de DNS: `slug.agencia3d.app` (wildcard já coberto).
 

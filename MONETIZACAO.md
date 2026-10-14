@@ -21,7 +21,7 @@ Licença ≠ Hospedagem ≠ Manutenção   → 3 decisões, 3 receitas
 | Portal do cliente, API, automações | | | ● |
 | Integrações (marketplaces, ERP), IA | | | ● |
 | Domínio customizado, multiunidade | | | ● |
-| "Powered by Agencia 3D" removível | | | ● |
+| "Powered by Sua Empresa 3D" removível | | | ● |
 
 ### Care (manutenção + hospedagem) — R$ 99/mês
 
@@ -45,7 +45,7 @@ Hospedagem, backup diário, monitoramento, atualizações, suporte, correções,
 
 ```text
 Concorrente SaaS: R$ 59/mês × 5 anos = R$ 3.540  (e nunca é seu)
-Agencia 3D Start:      R$ 1.497 único + R$ 99/mês opcional
+Sua Empresa 3D Start:  R$ 1.497 único + R$ 99/mês opcional
 ```
 
 Mensagem: *"Você não aluga mais uma ferramenta. Você compra o sistema da sua empresa, com a sua marca."*
@@ -55,7 +55,7 @@ Mensagem: *"Você não aluga mais uma ferramenta. Você compra o sistema da sua 
 **Objetivo: primeira receita na semana 8, R$ 30 mil em 6 meses.**
 
 ### Semana 1–4 — Pré-venda antes do MVP pronto
-- Landing page (marca Agencia 3D) + lista de espera.
+- Landing page (marca Sua Empresa 3D) + lista de espera.
 - Mapear 50 print farms/bureaus brasileiros (Instagram, grupos de Facebook/WhatsApp de impressão 3D, feiras).
 - Oferta de fundador: **licença Start por R$ 997** (33% off) para os 10 primeiros, com implantação gratuita. Meta: 5 pré-vendas = **R$ 4.985 antes do produto pronto** — valida o modelo e financia o desenvolvimento.
 
@@ -92,7 +92,7 @@ Mensagem: *"Você não aluga mais uma ferramenta. Você compra o sistema da sua 
 ## 7. Motores de receita futuros
 
 1. **Marketplace de módulos** — integrações e relatórios premium vendidos à la carte.
-2. **Revenda/parceiros** — agências e consultorias de impressão 3D vendem a Agencia 3D com comissão de 20–30% na licença.
+2. **Revenda/parceiros** — agências e consultorias de impressão 3D vendem a Sua Empresa 3D com comissão de 20–30% na licença.
 3. **Enterprise** — deploy dedicado + SSO + QMS para indústrias (R$ 2–5 mil/mês por contrato).
 4. **Dados anonimizados de mercado** (média de falha por material/marca) como relatório pago — apenas com consentimento e agregação.
 

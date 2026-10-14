@@ -2,12 +2,12 @@
 
 ## Mapa do mercado
 
-| Concorrente | Foco | Forte em | Lacuna que a Agencia 3D explora |
+| Concorrente | Foco | Forte em | Lacuna que a Sua Empresa 3D explora |
 |---|---|---|---|
 | **SimplyPrint** (simplyprint.io) | Gestão de impressoras/farm | Monitoramento, fila, bobinas individuais, secagem | Não é ERP comercial; sem white label |
 | **3DPrinterOS** (3dprinteros.com) | Cloud de impressão | Farms grandes, educacional/empresarial | Sem CRM/financeiro; não focado em PME brasileira |
 | **DigiFabster** (digifabster.com) | Orçamento automático + checkout | Análise de CAD, quoting, workflow comercial | Pouco chão de fábrica: manutenção, estoque especializado |
-| **Materialise CO-AM** | MES industrial | Scheduling, qualidade, rastreabilidade | Enterprise/caríssimo — Agencia 3D traz os conceitos para PME |
+| **Materialise CO-AM** | MES industrial | Scheduling, qualidade, rastreabilidade | Enterprise/caríssimo — Sua Empresa 3D traz os conceitos para PME |
 | **Authentise** | Workflow industrial | Processo ponta a ponta, smart factory | Complexidade enterprise |
 | **AMFG** (amfg.ai) | MES para AM | Automação e planejamento industrial | Inacessível para pequenas empresas |
 | **PrintDash** (printdash.com.br) | Gestão de impressão BR | Adaptação ao Brasil, simplicidade | Sem white label, PCP, manutenção, rastreabilidade |

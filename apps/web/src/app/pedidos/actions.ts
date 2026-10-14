@@ -8,8 +8,19 @@ import { createClient } from "@/lib/supabase/server";
 export type ShipmentState = { error?: string; success?: string };
 
 export type CreateOrderState = ShipmentState;
+export type DeliveryAddress = {
+  postalCode: string;
+  street: string;
+  number: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  country: "BR";
+};
 export type OrderDetails = {
-  items: Array<{ id: string; description: string; quantity: number; unitPriceCents: number }>;
+  items: Array<{ id: string; description: string; quantity: number; unitPriceCents: number; imageUrl: string | null }>;
+  deliveryAddress: DeliveryAddress | null;
   shipments: Array<{ carrier: string | null; trackingCode: string | null; shippedAt: string; deliveredAt: string | null }>;
 };
 
@@ -19,16 +30,55 @@ export async function loadOrderDetails(id: string): Promise<{ data?: OrderDetail
   const context = await requireModulePermission("orders", "orders.view");
   const supabase = await createClient();
   const [order, items, shipments] = await Promise.all([
-    supabase.from("sales_orders").select("id").eq("tenant_id", context.tenantId).eq("id", parsed.data).maybeSingle(),
-    supabase.from("sales_order_items").select("id,description,quantity,unit_price_cents").eq("tenant_id", context.tenantId).eq("order_id", parsed.data),
+    supabase.from("sales_orders").select("id,delivery_address").eq("tenant_id", context.tenantId).eq("id", parsed.data).maybeSingle(),
+    supabase.from("sales_order_items").select("id,description,quantity,unit_price_cents,product_variant_id").eq("tenant_id", context.tenantId).eq("order_id", parsed.data),
     supabase.from("order_shipments").select("carrier,tracking_code,shipped_at,delivered_at").eq("tenant_id", context.tenantId).eq("order_id", parsed.data).order("shipped_at", { ascending: false }),
   ]);
   if (order.error || items.error || shipments.error || !order.data) return { error: "Não foi possível carregar os detalhes deste pedido." };
+  const variantIds = (items.data ?? []).flatMap((item) => item.product_variant_id ? [item.product_variant_id] : []);
+  const variants = variantIds.length
+    ? await supabase.from("product_variants").select("id,product_id").eq("tenant_id", context.tenantId).in("id", variantIds)
+    : { data: [], error: null };
+  const productIds = [...new Set((variants.data ?? []).map((variant) => variant.product_id))];
+  const products = productIds.length
+    ? await supabase.from("products").select("id,image_path").eq("tenant_id", context.tenantId).in("id", productIds)
+    : { data: [], error: null };
+  if (variants.error || products.error) return { error: "Não foi possível carregar as imagens deste pedido." };
+  const imagePaths = (products.data ?? []).flatMap((product) => product.image_path ? [product.image_path] : []);
+  const signedImages = imagePaths.length
+    ? await supabase.storage.from("forja-products").createSignedUrls(imagePaths, 60 * 60)
+    : { data: [], error: null };
+  const imageUrlByPath = new Map(imagePaths.map((path, index) => [path, signedImages.data?.[index]?.signedUrl ?? null]));
+  const imagePathByProduct = new Map((products.data ?? []).map((product) => [product.id, product.image_path]));
+  const productByVariant = new Map((variants.data ?? []).map((variant) => [variant.id, variant.product_id]));
   return { data: {
-    items: (items.data ?? []).map((item) => ({ id: item.id, description: item.description, quantity: item.quantity, unitPriceCents: item.unit_price_cents })),
+    items: (items.data ?? []).map((item) => {
+      const productId = item.product_variant_id ? productByVariant.get(item.product_variant_id) : null;
+      const imagePath = productId ? imagePathByProduct.get(productId) : null;
+      return { id: item.id, description: item.description, quantity: item.quantity, unitPriceCents: item.unit_price_cents, imageUrl: imagePath ? imageUrlByPath.get(imagePath) ?? null : null };
+    }),
+    deliveryAddress: order.data.delivery_address as DeliveryAddress | null,
     shipments: (shipments.data ?? []).map((shipment) => ({ carrier: shipment.carrier, trackingCode: shipment.tracking_code, shippedAt: shipment.shipped_at, deliveredAt: shipment.delivered_at })),
   } };
 }
+const orderItemValues = z.object({
+  variantId: z.uuid(),
+  quantity: z.coerce.number().int().min(1).max(100000),
+});
+const createOrderValues = z.object({
+  customerId: z.uuid(),
+  items: z.array(orderItemValues).min(1).max(50),
+  deliveryAddress: z.object({
+    postalCode: z.string().trim().regex(/^\d{5}-?\d{3}$/),
+    street: z.string().trim().min(2).max(160),
+    number: z.string().trim().min(1).max(30),
+    complement: z.string().trim().max(120).optional().transform((value) => value || undefined),
+    neighborhood: z.string().trim().min(2).max(100),
+    city: z.string().trim().min(2).max(100),
+    state: z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/),
+    country: z.literal("BR"),
+  }),
+});
 const orderValues = z.object({
   customerId: z.uuid(),
   variantId: z.uuid(),
@@ -41,16 +91,33 @@ function revalidateOrderViews() {
 }
 
 export async function createOrder(_previous: CreateOrderState, formData: FormData): Promise<CreateOrderState> {
-  const parsed = orderValues.safeParse({ customerId: formData.get("customerId"), variantId: formData.get("variantId"), quantity: formData.get("quantity") });
-  if (!parsed.success) return { error: "Selecione o cliente, o produto e uma quantidade válida." };
+  const variantIds = formData.getAll("variantId");
+  const quantities = formData.getAll("quantity");
+  const parsed = createOrderValues.safeParse({
+    customerId: formData.get("customerId"),
+    items: variantIds.map((variantId, index) => ({ variantId, quantity: quantities[index] })),
+    deliveryAddress: {
+      postalCode: formData.get("postalCode"),
+      street: formData.get("street"),
+      number: formData.get("addressNumber"),
+      complement: formData.get("complement"),
+      neighborhood: formData.get("neighborhood"),
+      city: formData.get("city"),
+      state: formData.get("state"),
+      country: "BR",
+    },
+  });
+  if (!parsed.success || variantIds.length !== quantities.length) {
+    return { error: "Confira os produtos, as quantidades e o endereço de entrega." };
+  }
   await requireModulePermission("orders", "orders.create", { write: true });
   const supabase = await createClient();
   const { error } = await supabase.rpc("create_sales_order", {
     p_customer_id: parsed.data.customerId,
-    p_product_variant_id: parsed.data.variantId,
-    p_quantity: parsed.data.quantity,
+    p_items: parsed.data.items,
+    p_delivery_address: parsed.data.deliveryAddress,
   });
-  if (error) return { error: "Não foi possível criar o pedido. Confira se o produto possui preço e custo." };
+  if (error) return { error: "Não foi possível criar o pedido. Confira se todos os produtos possuem preço e custo." };
   revalidateOrderViews();
   return { success: "Pedido cadastrado." };
 }

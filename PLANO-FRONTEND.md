@@ -1,15 +1,15 @@
-# Evolução do frontend da Agencia 3D
+# Evolução do frontend da Sua Empresa 3D
 
 ## Objetivo
 
-Transformar o app da Agencia 3D em uma ferramenta de operação **profissional, elegante e minimalista**, com personalidade industrial própria. A interface deve permitir que alguém identifique o que exige atenção, encontre a próxima ação e conclua o trabalho com poucos passos, mesmo em uma bancada de produção.
+Transformar o app da Sua Empresa 3D em uma ferramenta de operação **profissional, elegante e minimalista**, com personalidade industrial própria. A interface deve permitir que alguém identifique o que exige atenção, encontre a próxima ação e conclua o trabalho com poucos passos, mesmo em uma bancada de produção.
 
-**Direção visual:** precisão de instrumento, hierarquia editorial e baixo ruído. O elemento memorável será a leitura operacional da Agencia 3D: estados de produção claros e o padrão **Previsto × Real**. Laranja e âmbar representam marca e ação; cores semânticas representam estado. Espaço livre organiza informação, sem transformar telas de trabalho em páginas vazias.
+**Direção visual:** precisão de instrumento, hierarquia editorial e baixo ruído. O elemento memorável será a leitura operacional da Sua Empresa 3D: estados de produção claros e o padrão **Previsto × Real**. Laranja e âmbar representam marca e ação; cores semânticas representam estado. Espaço livre organiza informação, sem transformar telas de trabalho em páginas vazias.
 
 ## Base atual e decisões que prevalecem
 
 - A aplicação já usa Next.js 15, React 19, Tailwind CSS 4, shadcn no estilo `base-nova` com Base UI e ícones Lucide. `apps/web/components.json` já configura o registro `@watermelon`.
-- `apps/web/src/app/globals.css` contém a paleta Agencia 3D, tokens shadcn, estilos do app e um bloco de estilos globais legados. A ligação final dos tokens shadcn com a marca já existe no `body`; a evolução é consolidar essa fonte de verdade e retirar as regras legadas após migrar as rotas que dependem delas.
+- `apps/web/src/app/globals.css` contém a paleta Sua Empresa 3D, tokens shadcn, estilos do app e um bloco de estilos globais legados. A ligação final dos tokens shadcn com a marca já existe no `body`; a evolução é consolidar essa fonte de verdade e retirar as regras legadas após migrar as rotas que dependem delas.
 - `apps/web/src/app/layout.tsx` já carrega Sora, Inter e JetBrains Mono e injeta cor primária e cor de destaque do tenant. O plano deve preservar o white label e testar marcas com cores claras e escuras.
 - Dashboard, navegação e páginas de operação já existem. `apps/web/src/components/card-split-accordian.tsx` é um componente animado associado ao Watermelon, usado em “O que acompanhar”. Ele será avaliado por utilidade, acessibilidade e coerência visual antes de expandir o mesmo padrão.
 - A identidade em `IDENTIDADE-VISUAL.md` e o contexto em `apps/web/PRODUCT.md` são a fonte da marca. O arquivo `design-system/agencia3d/MASTER.md` contém sugestões geradas de cor e fonte que seu próprio aviso manda descartar; não copiar a paleta verde nem as fontes Fira para o produto.
@@ -29,7 +29,7 @@ Transformar o app da Agencia 3D em uma ferramenta de operação **profissional, 
 
 | Camada | Decisão | Implementação planejada |
 | --- | --- | --- |
-| Cores base | Manter a paleta escura documentada da Agencia 3D como padrão; preparar tema claro completo | Primitivos em CSS, tokens semânticos para superfície/texto/borda e tokens de componente mapeados para shadcn |
+| Cores base | Manter a paleta escura documentada da Sua Empresa 3D como padrão; preparar tema claro completo | Primitivos em CSS, tokens semânticos para superfície/texto/borda e tokens de componente mapeados para shadcn |
 | Marca | `--brand-primary` e `--brand-accent` por tenant; contraste de texto calculado ou validado para cada cor | Revisar tokens `--primary-foreground`, `--accent-foreground`, foco e estados hover por combinação de marca |
 | Tipografia | Sora para títulos e KPIs, Inter para UI, JetBrains Mono apenas para códigos e medidas | Escala consistente para título de página, seção, corpo, metadado e número; `tabular-nums` em métricas |
 | Espaçamento | Base de 4 px com passos recorrentes de 8, 12, 16, 24 e 32 px | Definir espaçamento de página, seção, célula, formulário e cabeçalho em tokens reutilizáveis |
@@ -45,7 +45,7 @@ Transformar o app da Agencia 3D em uma ferramenta de operação **profissional, 
 - **Watermelon como repertório de padrões e blocos:** escolher componentes que resolvam uma necessidade concreta do produto, por exemplo painel de atenção, visão de métricas ou detalhe progressivo. Adaptar tokens, conteúdo, estrutura responsiva e interação. Não instalar dashboards inteiros apenas para herdar aparência genérica.
 - **Antes de adicionar um item:** verificar compatibilidade com o estilo `base-nova`/Base UI, dependências extras, teclado, leitor de tela, redução de movimento, licença e custo de renderização. Registrar no PR qual problema ele resolve e onde será usado.
 - **Integração:** o registro `@watermelon` já está em `components.json`. A [documentação oficial da Watermelon](https://ui.watermelon.sh/cli) descreve instalação via CLI do shadcn e variantes baseadas em tokens; conferir o item específico antes de copiar código. A [documentação do shadcn/ui](https://ui.shadcn.com/docs) explica o modelo de componentes locais editáveis.
-- **Camada Agencia 3D:** criar componentes de produto sobre esses primitivos, como `PageHeader`, `Metric`, `StatusBadge`, `EmptyState`, `DataTable`, `FormSection`, `ConfirmAction`, `PlannedVsActual` e `PrinterStatus`. Essa camada concentra decisões visuais e de comportamento repetidas.
+- **Camada Sua Empresa 3D:** criar componentes de produto sobre esses primitivos, como `PageHeader`, `Metric`, `StatusBadge`, `EmptyState`, `DataTable`, `FormSection`, `ConfirmAction`, `PlannedVsActual` e `PrinterStatus`. Essa camada concentra decisões visuais e de comportamento repetidas.
 
 ## Prioridade por superfície
 
@@ -106,7 +106,7 @@ As quatro fases foram aplicadas às rotas existentes do frontend. O trabalho fic
 - Contraste mínimo de 4,5:1 para texto normal; foco visível; teclado percorre e aciona todos os controles. Alvos de toque principais têm pelo menos 44 × 44 px no contexto móvel.
 - Estados de carregamento, vazio, erro, sucesso e dados parciais têm texto específico e não provocam saltos grandes de layout.
 - Cores de status nunca são o único sinal; datas, moeda e medidas usam convenções pt-BR.
-- Tema escuro e claro, quando habilitado, funcionam com marcas de tenant variadas; logo e cor da Agencia 3D não vazam para o app do cliente.
+- Tema escuro e claro, quando habilitado, funcionam com marcas de tenant variadas; logo e cor da Sua Empresa 3D não vazam para o app do cliente.
 - Componentes de terceiros entram apenas após revisão de dependências, acessibilidade, responsividade e tokens.
 - Capturas comparativas registram o resultado nas quatro larguras da auditoria, incluindo pelo menos dashboard e um fluxo denso de produção.
 

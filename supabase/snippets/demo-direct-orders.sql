@@ -1,5 +1,5 @@
 -- Dados de demonstração locais para apresentar o fluxo de pedido direto.
--- Execute somente no projeto local Agencia 3D Demo.
+-- Execute somente no projeto local Sua Empresa 3D Demo.
 do $$
 declare
   v_tenant uuid := '3103a46c-3d2f-426d-86ab-1c6cd5838a6a';

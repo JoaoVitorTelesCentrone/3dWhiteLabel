@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
@@ -10,7 +9,7 @@ const credentialsSchema = z.object({
   password: z.string().min(1).max(256),
 });
 
-export type LoginState = { error?: string };
+export type LoginState = { error?: string; success?: boolean };
 
 export async function signIn(_previous: LoginState, formData: FormData): Promise<LoginState> {
   const parsed = credentialsSchema.safeParse({
@@ -40,5 +39,5 @@ export async function signIn(_previous: LoginState, formData: FormData): Promise
     maxAge: 60 * 60 * 24 * 30,
   });
 
-  redirect("/dashboard");
+  return { success: true };
 }

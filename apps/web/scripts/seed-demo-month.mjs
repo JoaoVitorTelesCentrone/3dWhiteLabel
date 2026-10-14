@@ -6,7 +6,7 @@ const DEMO = {
   host: "demo.localhost",
   email: "demo@agencia3d.local",
   ownerName: "Ana Martins",
-  tenantName: "Agencia 3D Demo",
+  tenantName: "Sua Empresa 3D Demo",
   skuPrefix: "A3D-DEMO-26",
 };
 
@@ -58,6 +58,8 @@ async function main() {
     fail(profileError, "Falha ao consultar perfil demo");
     if (!profile) throw new Error("Usuário demo existe sem empresa vinculada; confira a conta antes de continuar.");
     tenantId = profile.tenant_id;
+    fail((await admin.schema("platform").from("tenants").update({ name: DEMO.tenantName }).eq("id", tenantId)).error, "Falha ao atualizar o nome da empresa demo");
+    fail((await admin.from("tenant_branding").update({ display_name: DEMO.tenantName }).eq("tenant_id", tenantId)).error, "Falha ao atualizar a marca demo");
   } else {
     userId = randomUUID();
     const { error: userError } = await admin.auth.admin.createUser({
@@ -188,7 +190,7 @@ async function main() {
       created_by: userId,
     })));
 
-    const password = process.env.AGENCIA3D_LOCAL_DEMO_PASSWORD || `Agencia3dDemo-${randomBytes(6).toString("hex")}!`;
+    const password = process.env.AGENCIA3D_LOCAL_DEMO_PASSWORD || `SuaEmpresa3dDemo-${randomBytes(6).toString("hex")}!`;
     const { error: passwordError } = await admin.auth.admin.updateUserById(userId, { password });
     fail(passwordError, "Falha ao definir senha local demo");
     const app = createClient(url, publishableKey, { auth: { autoRefreshToken: false, persistSession: false } });
@@ -337,7 +339,7 @@ async function main() {
     return;
   }
 
-  const password = process.env.AGENCIA3D_LOCAL_DEMO_PASSWORD || `Agencia3dDemo-${randomBytes(6).toString("hex")}!`;
+  const password = process.env.AGENCIA3D_LOCAL_DEMO_PASSWORD || `SuaEmpresa3dDemo-${randomBytes(6).toString("hex")}!`;
   const { error: passwordError } = await admin.auth.admin.updateUserById(userId, { password });
   fail(passwordError, "Falha ao atualizar senha local demo");
   const { count, error: skuError } = await admin.from("product_variants").select("id", { count: "exact", head: true }).eq("tenant_id", tenantId).like("sku", `${DEMO.skuPrefix}%`);

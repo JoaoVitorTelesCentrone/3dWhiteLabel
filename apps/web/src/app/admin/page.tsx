@@ -13,7 +13,7 @@ export default async function PlatformAdminPage() {
     admin.from("platform_audit_events").select("id,action,tenant_id,created_at").order("created_at", { ascending: false }).limit(20),
   ]);
   return <main className="management-page management-page--sections">
-    <header className="page-head management-page-head"><div className="page-head-main"><p className="page-context">Administração Agencia 3D · {actor.full_name}</p><h1 className="page-title">Tenants</h1><p className="page-desc">Provisione empresas e gerencie plano, licença, módulos e domínios registrados.</p></div><div className="page-actions"><RecordCreateSheet title="Novo tenant" description="Provisione uma nova empresa na plataforma."><CreateTenantForm /></RecordCreateSheet></div></header>
+    <header className="page-head management-page-head"><div className="page-head-main"><p className="page-context">Administração Sua Empresa 3D · {actor.full_name}</p><h1 className="page-title">Tenants</h1><p className="page-desc">Provisione empresas e gerencie plano, licença, módulos e domínios registrados.</p></div><div className="page-actions"><RecordCreateSheet title="Novo tenant" description="Provisione uma nova empresa na plataforma."><CreateTenantForm /></RecordCreateSheet></div></header>
     {error ? <p className="error" role="alert">Não foi possível carregar os tenants.</p> : null}
     {tenants?.map((tenant) => <section className="panel" key={tenant.id}><h2>{tenant.name}</h2>
       <p>{tenant.slug} · {tenant.plan} · licença {tenant.license_status}</p>

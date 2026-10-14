@@ -1,8 +1,11 @@
 import { LoginForm } from "./login-form";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getRequestUserId } from "@/lib/auth/session";
 
 export default async function LoginPage() {
+  if (await getRequestUserId()) redirect("/dashboard");
+
   const host = (await headers()).get("host")?.toLowerCase();
   const isLocalDemoHost = ["demo.localhost:3005", "localhost:3005", "127.0.0.1:3005"].includes(host ?? "");
 

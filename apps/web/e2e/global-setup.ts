@@ -42,15 +42,24 @@ async function seedTenantA(admin: SupabaseClient, fixture: E2EFixture) {
   const { ids, tenants, runTag } = fixture;
   const inserts = await Promise.all([
     admin.from("customers").insert({ id: ids.customerId, tenant_id: tenants.primary.id, name: `Cliente E2E ${runTag}`, email: `cliente-${runTag}@example.test` }),
-    admin.from("products").insert({ id: ids.productId, tenant_id: tenants.primary.id, name: `Produto E2E ${runTag}`, active: true }),
+    admin.from("products").insert([
+      { id: ids.productId, tenant_id: tenants.primary.id, name: `Produto E2E ${runTag}`, active: true },
+      { id: ids.secondProductId, tenant_id: tenants.primary.id, name: `Segundo produto E2E ${runTag}`, active: true },
+    ]),
     admin.from("materials").insert({ id: ids.materialId, tenant_id: tenants.primary.id, name: `PLA E2E ${runTag}`, kind: "PLA", cost_per_kg_cents: 5000, active: true }),
     admin.from("printers").insert({ id: ids.printerId, tenant_id: tenants.primary.id, name: `Impressora E2E ${runTag}`, status: "idle", active: true }),
   ]);
   for (const result of inserts) assertNoError(result.error, "Could not seed primary tenant fixture");
-  const { error: variantError } = await admin.from("product_variants").insert({
-    id: ids.variantId, tenant_id: tenants.primary.id, product_id: ids.productId, name: "Padrão", sku: `E2E-${runTag}`,
-    attributes: {}, price_cents: 8000, cost_cents: 2700, active: true, is_default: true,
-  });
+  const { error: variantError } = await admin.from("product_variants").insert([
+    {
+      id: ids.variantId, tenant_id: tenants.primary.id, product_id: ids.productId, name: "Padrão", sku: `E2E-${runTag}`,
+      attributes: {}, price_cents: 8000, cost_cents: 2700, active: true, is_default: true,
+    },
+    {
+      id: ids.secondVariantId, tenant_id: tenants.primary.id, product_id: ids.secondProductId, name: "Padrão", sku: `E2E-SECOND-${runTag}`,
+      attributes: {}, price_cents: 3500, cost_cents: 1100, active: true, is_default: true,
+    },
+  ]);
   assertNoError(variantError, "Could not seed product variant");
   const { error: spoolError } = await admin.from("material_spools").insert({
     id: ids.spoolId, tenant_id: tenants.primary.id, material_id: ids.materialId, code: `E2E-${runTag}`,
@@ -90,24 +99,24 @@ export default async function globalSetup() {
   const users: E2EFixture["users"] = {};
   let fixture: E2EFixture | undefined;
   try {
-    users.owner = await addUser(admin, `owner-${runTag}@example.test`, "Agencia 3D E2E Owner", "owner");
-    users.otherOwner = await addUser(admin, `owner-b-${runTag}@example.test`, "Agencia 3D E2E Tenant B", "owner");
-    users.platformAdmin = await addUser(admin, `platform-${runTag}@example.test`, "Agencia 3D E2E Platform Admin", "platform");
-    const { error: platformAdminError } = await admin.from("platform_admins").insert({ id: users.platformAdmin.id, full_name: "Agencia 3D E2E Platform Admin" });
+    users.owner = await addUser(admin, `owner-${runTag}@example.test`, "Sua Empresa 3D E2E Owner", "owner");
+    users.otherOwner = await addUser(admin, `owner-b-${runTag}@example.test`, "Sua Empresa 3D E2E Tenant B", "owner");
+    users.platformAdmin = await addUser(admin, `platform-${runTag}@example.test`, "Sua Empresa 3D E2E Platform Admin", "platform");
+    const { error: platformAdminError } = await admin.from("platform_admins").insert({ id: users.platformAdmin.id, full_name: "Sua Empresa 3D E2E Platform Admin" });
     assertNoError(platformAdminError, "Could not create platform administrator fixture");
-    const primaryId = await createTenant(admin, `Agencia 3D E2E ${runTag}`, tenantSlug, `${tenantSlug}.localhost`, users.owner);
+    const primaryId = await createTenant(admin, `Sua Empresa 3D E2E ${runTag}`, tenantSlug, `${tenantSlug}.localhost`, users.owner);
     tenantIds.push(primaryId);
-    const secondaryId = await createTenant(admin, `Agencia 3D E2E B ${runTag}`, otherTenantSlug, `${otherTenantSlug}.localhost`, users.otherOwner);
+    const secondaryId = await createTenant(admin, `Sua Empresa 3D E2E B ${runTag}`, otherTenantSlug, `${otherTenantSlug}.localhost`, users.otherOwner);
     tenantIds.push(secondaryId);
     await executeLocalSql(`update platform.tenants set license_status = 'suspended' where id = '${secondaryId}'::uuid;`, "suspend-secondary");
-    users.sales = await addUser(admin, `sales-${runTag}@example.test`, "Agencia 3D E2E Sales", "sales", primaryId);
-    users.production = await addUser(admin, `production-${runTag}@example.test`, "Agencia 3D E2E Production", "production", primaryId);
-    users.operator = await addUser(admin, `operator-${runTag}@example.test`, "Agencia 3D E2E Operator", "operator", primaryId);
-    users.stock = await addUser(admin, `stock-${runTag}@example.test`, "Agencia 3D E2E Stock", "stock", primaryId);
-    users.finance = await addUser(admin, `finance-${runTag}@example.test`, "Agencia 3D E2E Finance", "finance", primaryId);
-    users.viewer = await addUser(admin, `viewer-${runTag}@example.test`, "Agencia 3D E2E Viewer", "viewer", primaryId);
+    users.sales = await addUser(admin, `sales-${runTag}@example.test`, "Sua Empresa 3D E2E Sales", "sales", primaryId);
+    users.production = await addUser(admin, `production-${runTag}@example.test`, "Sua Empresa 3D E2E Production", "production", primaryId);
+    users.operator = await addUser(admin, `operator-${runTag}@example.test`, "Sua Empresa 3D E2E Operator", "operator", primaryId);
+    users.stock = await addUser(admin, `stock-${runTag}@example.test`, "Sua Empresa 3D E2E Stock", "stock", primaryId);
+    users.finance = await addUser(admin, `finance-${runTag}@example.test`, "Sua Empresa 3D E2E Finance", "finance", primaryId);
+    users.viewer = await addUser(admin, `viewer-${runTag}@example.test`, "Sua Empresa 3D E2E Viewer", "viewer", primaryId);
     const ids = {
-      customerId: randomUUID(), productId: randomUUID(), variantId: randomUUID(), materialId: randomUUID(),
+      customerId: randomUUID(), productId: randomUUID(), variantId: randomUUID(), secondProductId: randomUUID(), secondVariantId: randomUUID(), materialId: randomUUID(),
       printerId: randomUUID(), spoolId: randomUUID(), designId: randomUUID(), revisionId: randomUUID(),
       recipeId: randomUUID(), foreignCustomerId: randomUUID(),
     };

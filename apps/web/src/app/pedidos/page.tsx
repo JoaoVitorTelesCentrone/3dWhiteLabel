@@ -59,7 +59,7 @@ export default async function OrdersPage({ searchParams }: {
       p_selected_order_id: selectedOrderId ?? null,
     }),
     canCreate ? supabase.from("customers").select("id,name,archived_at").eq("tenant_id", context.tenantId).order("name") : Promise.resolve({ data: [], error: null }),
-    canCreate ? supabase.from("products").select("id,name").eq("tenant_id", context.tenantId).eq("active", true) : Promise.resolve({ data: [], error: null }),
+    canCreate ? supabase.from("products").select("id,name,image_path").eq("tenant_id", context.tenantId).eq("active", true) : Promise.resolve({ data: [], error: null }),
     canCreate ? supabase.from("product_variants").select("id,product_id,name,price_cents,cost_cents").eq("tenant_id", context.tenantId).eq("active", true).not("cost_cents", "is", null).order("name") : Promise.resolve({ data: [], error: null }),
   ]);
   const pageData = pageResult.data as OrderPageData | null;
@@ -75,10 +75,17 @@ export default async function OrdersPage({ searchParams }: {
   const loadError = pageResult.error || customersResult.error || productsResult.error || variantsResult.error || productionResult.error || jobsResult.error || !pageData;
 
   const productNames = new Map(productsResult.data?.map((product) => [product.id, product.name]));
+  const imagePaths = (productsResult.data ?? []).flatMap((product) => product.image_path ? [product.image_path] : []);
+  const signedImages = imagePaths.length
+    ? await supabase.storage.from("forja-products").createSignedUrls(imagePaths, 60 * 60)
+    : { data: [], error: null };
+  const signedImageMap = new Map(imagePaths.map((path, index) => [path, signedImages.data?.[index]?.signedUrl ?? null]));
+  const productImages = new Map((productsResult.data ?? []).map((product) => [product.id, product.image_path ? signedImageMap.get(product.image_path) ?? null : null]));
   const customerOptions = customersResult.data?.filter((customer) => !customer.archived_at).map((customer) => ({ id: customer.id, label: customer.name })) ?? [];
   const variantOptions = variantsResult.data?.filter((variant) => productNames.has(variant.product_id)).map((variant) => ({
     id: variant.id,
     label: `${productNames.get(variant.product_id)}${variant.name === "Padrão" ? "" : ` · ${variant.name}`} · ${formatCents(BigInt(variant.price_cents))}`,
+    imageUrl: productImages.get(variant.product_id) ?? null,
   })) ?? [];
   const productionByOrder = new Map<string, Array<{ id: string; sales_order_id: string; target_qty: number; status: string }>>();
   for (const production of productionResult.data ?? []) {
@@ -125,7 +132,7 @@ export default async function OrdersPage({ searchParams }: {
   return <main className="management-page">
     <header className="page-head management-page-head">
       <div className="page-head-main"><h1 className="page-title">Pedidos</h1><p className="page-desc">Cadastre, acompanhe e corrija pedidos da sua operação.</p></div>
-      <div className="page-actions">{canCreate ? <RecordCreateSheet title="Novo pedido" description="Escolha o cliente, o produto e a quantidade vendida."><OrderForm customers={customerOptions} variants={variantOptions} /></RecordCreateSheet> : null}</div>
+      <div className="page-actions">{canCreate ? <RecordCreateSheet title="Novo pedido" description="Escolha o cliente e adicione os produtos vendidos."><OrderForm customers={customerOptions} variants={variantOptions} /></RecordCreateSheet> : null}</div>
     </header>
     {loadError ? <p className="error" role="alert">Não foi possível carregar os pedidos. Atualize a página para tentar novamente.</p> : null}
     {!loadError && (totalCount > 0 || search || status) ? <section className="order-results" aria-label="Pedidos cadastrados">

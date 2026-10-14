@@ -40,6 +40,6 @@ export async function GET(request: Request) {
     ...rows,
   ].map((row) => row.map(csvCell).join(";")).join("\r\n") + "\r\n";
   return new Response("\uFEFF" + csv, {
-    headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename=agencia3d-relatorio-${start}-a-${end}.csv`, "Cache-Control": "private, no-store" },
+    headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": `attachment; filename=suaempresa3d-relatorio-${start}-a-${end}.csv`, "Cache-Control": "private, no-store" },
   });
 }

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { ArrowRight, Check, Factory, Gauge, PackageCheck, Sparkles, UsersRound, WalletCards } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "CRM para impressão 3D por R$ 1.000 | Agencia 3D",
+  title: "CRM para impressão 3D por R$ 1.000 | Sua Empresa 3D",
   description: "Organize clientes, pedidos, produção, estoque e financeiro. Contrate o CRM por R$ 1.000 e ganhe uma landing page para vender mais.",
 };
 
@@ -48,10 +48,10 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="offer-hero-stage" aria-label="Visão do CRM Agencia 3D">
+        <div className="offer-hero-stage" aria-label="Visão do CRM Sua Empresa 3D">
           <div className="offer-price-orbit" aria-hidden="true"><span>R$</span><strong>1.000</strong><small>CRM completo</small></div>
           <div className="offer-product-window">
-            <div className="offer-window-bar"><i /><i /><i /><span>painel.agencia3d</span></div>
+            <div className="offer-window-bar"><i /><i /><i /><span>painel.suaempresa3d</span></div>
             <div className="offer-window-body">
               <aside className="offer-window-nav">
                 <b>A3</b><span className="is-active" /><span /><span /><span /><span />
@@ -77,7 +77,7 @@ export default async function HomePage() {
 
       <section className="offer-price-strip" aria-label="Resumo da oferta">
         <div className="offer-price-product">
-          <div><span>CRM Agencia 3D</span><small>Sistema completo para sua operação</small></div>
+          <div><span>CRM Sua Empresa 3D</span><small>Sistema completo para sua operação</small></div>
           <strong>R$ 1.000</strong>
           <small className="offer-price-condition">pagamento único</small>
         </div>
@@ -146,7 +146,7 @@ export default async function HomePage() {
           <p>Uma estrutura para organizar o que você já vende e uma vitrine para conquistar o que vem depois.</p>
         </div>
         <div className="offer-checkout">
-          <div className="offer-checkout-line"><span>CRM Agencia 3D</span><strong>R$ 1.000</strong></div>
+          <div className="offer-checkout-line"><span>CRM Sua Empresa 3D</span><strong>R$ 1.000</strong></div>
           <div className="offer-checkout-line is-gift"><span>Landing page profissional</span><strong>GRÁTIS</strong></div>
           <div className="offer-checkout-total"><span>Investimento total</span><strong>R$ 1.000</strong><small>pagamento único</small></div>
           <Link href="/login">Ver o CRM funcionando <ArrowRight aria-hidden="true" /></Link>

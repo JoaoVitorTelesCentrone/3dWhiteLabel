@@ -18,7 +18,7 @@ export async function signInPlatform(_previous: AdminLoginState, formData: FormD
   const { data: admin } = await supabase.from("platform_admins").select("id").eq("id", data.user.id).maybeSingle();
   if (!admin) {
     await supabase.auth.signOut();
-    return { error: "Conta sem acesso à administração Agencia 3D." };
+    return { error: "Conta sem acesso à administração Sua Empresa 3D." };
   }
   redirect("/admin");
 }
