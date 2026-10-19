@@ -57,11 +57,11 @@ export default async function HomePage() {
 
       <section className="landing-hero" aria-labelledby="landing-title">
         <div className="landing-hero-copy">
-          <p className="landing-kicker"><span /> Gestão feita para impressão 3D</p>
-          <h1 id="landing-title">Sua operação inteira, sem caça ao pedido no WhatsApp.</h1>
-          <p className="landing-lead">Clientes, pedidos, produção, materiais e resultados em um sistema configurado com a marca da sua empresa.</p>
+          <p className="landing-kicker"><span /> O sistema da sua empresa 3D</p>
+          <h1 id="landing-title">Pare de caçar pedidos. Controle sua operação 3D.</h1>
+          <p className="landing-lead">Pedidos, produção, materiais e financeiro no mesmo fluxo — com a sua marca.</p>
           <div className="landing-actions">
-            <a className="landing-primary" href={salesContactUrl}>Quero ver o sistema <ArrowRight aria-hidden="true" /></a>
+            <a className="landing-primary" href={salesContactUrl}>Ver o sistema em ação <ArrowRight aria-hidden="true" /></a>
             <a className="landing-secondary" href={demoUrl}>Acessar demonstração</a>
           </div>
           <ul className="landing-assurance" aria-label="Condições da oferta">
@@ -70,6 +70,7 @@ export default async function HomePage() {
         </div>
 
         <div className="landing-product" aria-label="Prévia do painel de gestão">
+          <div className="landing-product-badge"><i /> Operação em tempo real</div>
           <div className="landing-product-bar"><i /><i /><i /><span>painel.suaempresa3d</span></div>
           <div className="landing-product-shell">
             <aside aria-hidden="true"><span className="landing-mini-brand"><Layers3 /></span><i className="active" /><i /><i /><i /></aside>
