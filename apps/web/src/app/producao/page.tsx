@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import { requireModulePermission } from "@/lib/auth/guards";
 import { roleAllows } from "@/lib/auth/permissions";
 import { formatProductionProgress, summarizeProduction } from "@/lib/production-progress";
+import { firstProductionLoadError } from "@/lib/production-load";
 import { createClient } from "@/lib/supabase/server";
 import { CancelQueuedJobForm, CompleteJobForm, FailJobForm, JobForm, StartJobForm } from "./forms";
 import { ProductionDetailSheet } from "./production-detail-sheet";
@@ -66,7 +67,12 @@ export default async function ProductionPage({ searchParams }: { searchParams: P
   const orders = [...(activeOrdersResult.data ?? []), ...(completedOrdersResult.data ?? [])];
   const orderIds = orders.map((order) => order.id);
   const salesOrderIds = [...new Set(orders.map((order) => order.sales_order_id))];
-  const [{ data: jobs, error: jobsError }, { data: salesOrders }, { data: orderItems }, { data: spools }] = await Promise.all([
+  const [
+    { data: jobs, error: jobsError },
+    { data: salesOrders, error: salesOrdersError },
+    { data: orderItems, error: orderItemsError },
+    { data: spools, error: spoolsError },
+  ] = await Promise.all([
     orderIds.length
       ? supabase.from("production_jobs").select("id,production_order_id,spool_id,quantity,estimated_minutes,estimated_g,actual_minutes,consumed_g,good_qty,bad_qty,status").eq("tenant_id", context.tenantId).in("production_order_id", orderIds).order("created_at", { ascending: false }).limit(1000)
       : Promise.resolve({ data: [], error: null }),
@@ -78,7 +84,14 @@ export default async function ProductionPage({ searchParams }: { searchParams: P
       : Promise.resolve({ data: [], error: null }),
     supabase.from("material_spools").select("id,code,status").eq("tenant_id", context.tenantId).limit(500),
   ]);
-  const error = activeOrdersResult.error || completedOrdersResult.error;
+  const error = firstProductionLoadError(
+    activeOrdersResult.error,
+    completedOrdersResult.error,
+    jobsError,
+    salesOrdersError,
+    orderItemsError,
+    spoolsError,
+  );
   const canRun = roleAllows(context.role, "production.start") && context.licenseStatus !== "suspended";
   const canPlan = roleAllows(context.role, "production.plan") && context.licenseStatus !== "suspended";
   const canCancel = roleAllows(context.role, "production.cancel") && context.licenseStatus !== "suspended";
@@ -92,7 +105,7 @@ export default async function ProductionPage({ searchParams }: { searchParams: P
     return { op, opJobs, progress, stage: getPipelineStage(op.status, opJobs.map((job) => job.status), progress.completedQty, progress.targetQty) };
   });
   return <main className="management-page"><header className="page-head management-page-head"><div className="page-head-main"><h1 className="page-title">Produção</h1><p className="page-desc">Pedidos enviados à produção, peças concluídas e trabalhos em andamento.</p></div>{selectedOrderId ? <Link className="btn btn-secondary" href="/producao">Ver toda a produção</Link> : null}</header>
-    {error || jobsError ? <p className="error" role="alert">Não foi possível carregar a produção.</p> : null}
+    {error ? <p className="error" role="alert">Não foi possível carregar a produção.</p> : null}
     {pipelineOrders.length ? <ProductionPipelineBoard><div className="production-pipeline" aria-label="Pipeline de produção">{pipelineStages.map((stage) => {
       const stageOrders = pipelineOrders.filter((item) => item.stage === stage.id);
       const completedOnPage = stageOrders.slice(0, completedVisibleCount);

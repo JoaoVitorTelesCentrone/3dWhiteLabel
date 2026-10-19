@@ -3,7 +3,7 @@ import "server-only";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { resolveRequestHost } from "@/lib/tenant/context";
+import { resolveRequestHost } from "@/lib/tenant/host";
 
 export async function requirePlatformHost() {
   const host = resolveRequestHost(await headers())?.toLowerCase();

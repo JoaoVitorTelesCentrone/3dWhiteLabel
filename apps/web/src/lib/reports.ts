@@ -55,8 +55,17 @@ export function profitPeriods(now = new Date()) {
   }));
 }
 
+const reportDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+export function isValidReportDate(value: string): boolean {
+  if (!reportDatePattern.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  if (year < 1) return false;
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
 export function reportPeriod(searchParams: { start?: string | string[]; end?: string | string[]; period?: string | string[] }, now = new Date()) {
-  const date = /^\d{4}-\d{2}-\d{2}$/;
   const requestedPreset = typeof searchParams.period === "string" && reportPresets.includes(searchParams.period as ReportPreset)
     ? searchParams.period as ReportPreset
     : null;
@@ -64,8 +73,8 @@ export function reportPeriod(searchParams: { start?: string | string[]; end?: st
     const preset = reportPresetRanges(now).find((period) => period.id === requestedPreset)!;
     return { start: preset.start, end: preset.end, preset: requestedPreset };
   }
-  const start = typeof searchParams.start === "string" && date.test(searchParams.start) ? searchParams.start : null;
-  const end = typeof searchParams.end === "string" && date.test(searchParams.end) ? searchParams.end : null;
+  const start = typeof searchParams.start === "string" && isValidReportDate(searchParams.start) ? searchParams.start : null;
+  const end = typeof searchParams.end === "string" && isValidReportDate(searchParams.end) ? searchParams.end : null;
   if (start && end) return { start, end, preset: null };
   const defaultPreset = reportPresetRanges(now).find((period) => period.id === "month")!;
   return { start: defaultPreset.start, end: defaultPreset.end, preset: "month" as const };

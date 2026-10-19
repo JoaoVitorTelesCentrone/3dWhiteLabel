@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Role } from "@/lib/auth/permissions";
 import { getEnabledModules, type ModuleKey, type Plan } from "./modules";
 import type { TenantLicenseStatus } from "@agencia3d/db/types";
+import { canUseSelectedTenantFallback, resolveRequestHost } from "./host";
 
 export type TenantContext = {
   userId: string;
@@ -18,35 +19,6 @@ export type TenantContext = {
   modules: ModuleKey[];
 };
 
-export function resolveTenantHost(value: string): string {
-  const host = value.trim().toLowerCase().replace(/:\d+$/, "").replace(/\.$/, "");
-
-  if (
-    process.env.NODE_ENV === "development" &&
-    process.env.AGENCIA3D_LOCAL_DEMO_AUTO_LOGIN === "true" &&
-    (host === "localhost" || host === "127.0.0.1")
-  ) {
-    return "demo.localhost";
-  }
-
-  return host;
-}
-
-export function resolveRequestHost(requestHeaders: Pick<Headers, "get">): string | null {
-  const forwardedHost = requestHeaders.get("x-forwarded-host")?.split(",", 1)[0]?.trim();
-  const host = forwardedHost ?? requestHeaders.get("host")?.trim();
-  const origin = requestHeaders.get("origin");
-  if (origin && (!host || /^(localhost|127\.0\.0\.1)(:\d+)?$/i.test(host))) {
-    try {
-      const originHost = new URL(origin).host;
-      if (!/^(localhost|127\.0\.0\.1)(:\d+)?$/i.test(originHost)) return resolveTenantHost(originHost);
-    } catch {
-      // Ignore invalid Origin values and use the request host.
-    }
-  }
-  return host ? resolveTenantHost(host) : null;
-}
-
 export const getRequestTenantDomain = cache(async (): Promise<{ tenant_id: string } | null> => {
   const host = resolveRequestHost(await headers());
   const supabase = await createClient();
@@ -56,6 +28,8 @@ export const getRequestTenantDomain = cache(async (): Promise<{ tenant_id: strin
       .select("tenant_id").eq("host", host).eq("status", "active").maybeSingle();
     if (!error && data) return data;
   }
+
+  if (!canUseSelectedTenantFallback(host)) return null;
 
   const selectedTenantId = (await cookies()).get("agencia3d_selected_tenant")?.value;
   if (selectedTenantId && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(selectedTenantId)) {

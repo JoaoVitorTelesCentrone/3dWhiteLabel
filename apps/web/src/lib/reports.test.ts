@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { profitPeriods, reportPeriod, reportPresetRanges } from "./reports";
+import { isValidReportDate, profitPeriods, reportPeriod, reportPresetRanges } from "./reports";
 
 describe("profitPeriods", () => {
   it("uses São Paulo calendar dates and starts the week on Monday", () => {
@@ -27,5 +27,16 @@ describe("reportPeriod", () => {
   it("uses a quick period when selected and preserves manual dates otherwise", () => {
     expect(reportPeriod({ period: "week" }, now)).toEqual({ start: "2026-10-05", end: "2026-10-09", preset: "week" });
     expect(reportPeriod({ start: "2026-09-10", end: "2026-10-09" }, now)).toEqual({ start: "2026-09-10", end: "2026-10-09", preset: null });
+  });
+
+  it("rejects dates that do not exist in the calendar", () => {
+    expect(isValidReportDate("2026-02-28")).toBe(true);
+    expect(isValidReportDate("2026-02-29")).toBe(false);
+    expect(isValidReportDate("2026-13-01")).toBe(false);
+    expect(reportPeriod({ start: "2026-02-31", end: "2026-03-01" }, now)).toEqual({
+      start: "2026-10-01",
+      end: "2026-10-09",
+      preset: "month",
+    });
   });
 });
