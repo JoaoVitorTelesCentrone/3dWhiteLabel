@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
@@ -38,6 +39,5 @@ export async function signIn(_previous: LoginState, formData: FormData): Promise
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
   });
-
-  return { success: true };
+  redirect("/dashboard");
 }

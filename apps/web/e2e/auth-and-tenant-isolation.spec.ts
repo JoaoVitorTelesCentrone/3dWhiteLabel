@@ -7,7 +7,7 @@ test("login rejeita senha inválida e protege rotas autenticadas", async ({ page
   const owner = fixture.users.owner!;
   await page.goto(`http://${fixture.tenants.primary.host}:3007/login`);
   await page.getByLabel("E-mail").fill(owner.email);
-  await page.getByLabel("Senha").fill("senha-incorreta-e2e");
+  await page.getByLabel("Senha", { exact: true }).fill("senha-incorreta-e2e");
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page.getByRole("alert")).toBeVisible();
   await page.goto(`http://${fixture.tenants.primary.host}:3007/financeiro`);
@@ -22,7 +22,7 @@ test("dados de outro tenant não aparecem mesmo ao abrir sua URL", async ({ page
   const otherOwner = fixture.users.otherOwner!;
   await page.goto(`http://${fixture.tenants.secondary.host}:3007/login`);
   await page.getByLabel("E-mail").fill(otherOwner.email);
-  await page.getByLabel("Senha").fill(otherOwner.password);
+  await page.getByLabel("Senha", { exact: true }).fill(otherOwner.password);
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await page.goto(`http://${fixture.tenants.secondary.host}:3007/clientes`);
@@ -35,7 +35,7 @@ test("licença suspensa permite consulta e esconde cadastros", async ({ page }) 
   const owner = fixture.users.otherOwner!;
   await page.goto(`http://${fixture.tenants.secondary.host}:3007/login`);
   await page.getByLabel("E-mail").fill(owner.email);
-  await page.getByLabel("Senha").fill(owner.password);
+  await page.getByLabel("Senha", { exact: true }).fill(owner.password);
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await page.goto(`http://${fixture.tenants.secondary.host}:3007/clientes`);
@@ -50,6 +50,7 @@ test("papéis veem apenas áreas e ações autorizadas", async ({ browser }) => 
   const salesContext = await browser.newContext();
   const salesPage = await salesContext.newPage();
   await signIn(salesPage, "sales", fixture);
+  await salesPage.getByRole("button", { name: "Comercial", exact: true }).click();
   await expect(salesPage.getByRole("link", { name: "Pedidos", exact: true })).toBeVisible();
   await expect(salesPage.getByRole("button", { name: "Produção", exact: true })).toHaveCount(0);
   await salesPage.goto(`http://${fixture.tenants.primary.host}:3007/producao`);

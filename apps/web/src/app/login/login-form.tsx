@@ -1,20 +1,12 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState } from "react";
 import { Button } from "@/components/base-ui/button";
 import { PasswordField } from "@/components/password-field";
 import { signIn } from "./actions";
 
 export function LoginForm() {
   const [state, action, pending] = useActionState(signIn, {});
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!state.success) return;
-    router.replace("/dashboard");
-    router.refresh();
-  }, [router, state.success]);
 
   return (
     <form action={action} className="panel">

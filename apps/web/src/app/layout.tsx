@@ -97,6 +97,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       visibleLink("/materiais"), visibleLink("/estoque"),
     ) },
     { id: "management", label: "Gestão", links: navigationLinks(visibleLink("/financeiro"), visibleLink("/relatorios")) },
+    { id: "settings", label: "Configurações", links: navigationLinks(
+      context && roleAllows(context.role, "branding.manage") ? { href: "/configuracoes/marca", label: "Marca" } : null,
+      context && roleAllows(context.role, "users.manage") ? { href: "/configuracoes/usuarios", label: "Usuários" } : null,
+    ) },
   ].filter((group) => group.links.length > 0) as NavigationGroup[];
   const brandStyle = {
     "--brand-primary": branding?.primary_color ?? "#ff5a1f",

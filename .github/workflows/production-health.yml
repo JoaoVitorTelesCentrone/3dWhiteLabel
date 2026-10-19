@@ -1,0 +1,17 @@
+name: Production health
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    if: ${{ secrets.PRODUCTION_HEALTH_URL != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check application and database
+        env:
+          HEALTH_URL: ${{ secrets.PRODUCTION_HEALTH_URL }}
+        run: curl --fail --silent --show-error --max-time 20 --retry 1 "$HEALTH_URL"

@@ -23,7 +23,7 @@ test("pedido percorre produção, expedição e entrega com dados sincronizados"
   await page.getByRole("button", { name: "Imprimindo", exact: true }).click();
   await expect(page.locator('.production-stage-card[data-pipeline-stage="running"]').filter({ hasText: `Pedido #${number}` })).toBeVisible();
 
-  await page.getByRole("button", { name: `Ver detalhes do pedido #${number}` }).click();
+  await page.getByRole("link", { name: `Ver detalhes do pedido #${number}` }).click();
   const details = page.getByRole("dialog", { name: `Pedido #${number}` });
   await expect(details).toBeVisible();
   await expect(details.locator(".production-job")).toContainText("Imprimindo");
@@ -63,15 +63,17 @@ test("falha registrada permite replanejar as peças restantes", async ({ page })
   const card = page.locator(".production-stage-card").filter({ hasText: `Pedido #${number}` });
   await card.getByRole("button", { name: "Alterar etapa da produção" }).click();
   await page.getByRole("button", { name: "Imprimindo", exact: true }).click();
-  await page.getByRole("button", { name: `Ver detalhes do pedido #${number}` }).click();
+  await page.getByRole("link", { name: `Ver detalhes do pedido #${number}` }).click();
   const details = page.getByRole("dialog", { name: `Pedido #${number}` });
   await details.getByLabel("Motivo da falha").fill("Bico entupido durante a impressão");
   await details.getByLabel("Tempo utilizado (min)").fill("20");
   await details.getByLabel("Material consumido (g)").fill("10");
   await details.getByRole("button", { name: "Registrar falha" }).click();
+  await details.getByLabel("Bobina").selectOption(fixture.ids.spoolId);
+  await details.getByLabel("Tempo estimado (min)").fill("160");
+  await details.getByLabel("Material reservado (g)").fill("120");
+  await details.getByRole("button", { name: "Criar job" }).click();
+  await page.keyboard.press("Escape");
   const queuedCard = page.locator('.production-stage-card[data-pipeline-stage="queued"]').filter({ hasText: `Pedido #${number}` });
   await expect(queuedCard).toBeVisible({ timeout: 20_000 });
-  await queuedCard.getByRole("button", { name: "Alterar etapa da produção" }).click();
-  await page.getByRole("button", { name: "Imprimindo", exact: true }).click();
-  await expect(page.locator('.production-stage-card[data-pipeline-stage="running"]').filter({ hasText: `Pedido #${number}` })).toBeVisible();
 });

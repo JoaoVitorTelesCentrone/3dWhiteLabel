@@ -27,6 +27,7 @@ Os buckets de Storage ainda usam IDs técnicos `forja-*`, e o projeto Supabase l
 | `GUIA-DE-IMPLEMENTACAO.md` | Plano consolidado, ordem de execução, critérios de aceite e operação |
 | `PLANO-INTEGRACAO-PONTA-A-PONTA.md` | Gaps atuais e sequência para integrar o fluxo de venda, produção, entrega e financeiro |
 | `PLANO-TESTES-E2E-PLAYWRIGHT.md` | Cobertura E2E proposta para os fluxos da aplicação com Playwright e seu MCP |
+| `OPERACAO-PRODUCAO.md` | Configuração de produção, monitoramento, backups, restore e liberação de clientes |
 | `assets/agencia3d-logo.png` | Símbolo da plataforma |
 
 ---
@@ -87,7 +88,7 @@ Para popular o Supabase local com uma operação de demonstração de 30 dias, e
 
 O app `apps/web` já inclui Tailwind CSS v4 e shadcn/ui. A configuração fica em `apps/web/components.json`, os componentes instalados em `apps/web/src/components/` e os tokens de tema em `apps/web/src/app/globals.css`. O registry Watermelon UI está configurado como `@watermelon`; para adicionar outros componentes, execute `pnpm dlx shadcn@latest add @watermelon/<nome>` em `apps/web`. O pacote compartilhado `packages/ui` descrito em `ESTRUTURA.md` continua sendo a organização planejada para a evolução do design system.
 
-A navegação autenticada mostra Visão geral, Comercial, Produção, Produtos, Estoque e Gestão. Configurações foi retirada da interface atual. Cada item respeita módulo e permissão; grupos com uma única tela visível viram links diretos. No celular, o menu fecha após escolher uma página.
+A navegação autenticada mostra Visão geral, Comercial, Produção, Produtos, Estoque, Gestão e, para owners e administradores autorizados, Configurações. Marca e usuários podem ser administrados sem acesso técnico. Cada item respeita módulo e permissão; grupos com uma única tela visível viram links diretos. No celular, o menu fecha após escolher uma página.
 
 O módulo Assistente IA oferece perguntas em linguagem natural sobre pedidos, clientes, produção, estoque, catálogo, orçamentos e finanças. Cada resposta factual passa por consultas de leitura controladas no servidor; custos, margens e contatos continuam limitados pelas permissões do perfil.
 
@@ -113,9 +114,9 @@ Pedidos prontos podem ser expedidos e marcados como entregues; recebimentos parc
 
 O painel da operação destaca a próxima ação, mostra vendas, custo previsto e margem estimada pela data local do pedido, recebimentos pela data do pagamento e despesas pela data de ocorrência. Materiais separa peso físico, reservado e disponível. Os dados continuam filtrados por tenant, módulo e permissão. /relatorios agrega os mesmos fatos por período em America/Sao_Paulo; custo de material usa o preço congelado no job.
 
-As telas de marca e usuários em `/configuracoes` estão pausadas e retornam a página não encontrada. A implementação permanece no repositório para retomada futura.
+As telas de marca e usuários em `/configuracoes` permitem alterar nome, cores, logo, convites, papéis e ativação de acessos. Alterações continuam protegidas por permissão, licença e RLS.
 
-O console interno em /admin exige uma conta de plataforma e o host AGENCIA3D_ADMIN_HOST. Ele provisiona tenants, gerencia plano, licença e módulos, e registra domínios próprios como pendentes de verificação.
+O console interno em /admin exige uma conta de plataforma e o host AGENCIA3D_ADMIN_HOST. Ele provisiona tenants, gerencia plano, licença e módulos, cria domínios próprios na Cloudflare for SaaS e acompanha DNS e SSL até a ativação.
 
 Após aplicar as migrations, crie o primeiro administrador com pnpm platform:admin:add -- --name "Admin Sua Empresa 3D" --email admin@example.com. O convite abre no host configurado em AGENCIA3D_ADMIN_HOST.
 
@@ -124,6 +125,8 @@ Modelos 3D e receitas permanecem como código histórico, com as rotas desativad
 A base inclui provisionamento de tenant e owner, contexto de plano/licença/módulos, CRM em `/clientes` e produtos e variantes em `/catalogo/produtos`. As estruturas históricas de modelos e arquivos privados continuam no schema, mas a aplicação não oferece essas páginas. Leitura e gravação das áreas ativas usam RLS; gravações respeitam papel, módulo e suspensão da licença. A aplicação das migrations e validação entre tenants requerem Docker Desktop ativo.
 
 `pnpm db:types` gera `packages/db/src/database.generated.types.ts` para comparação com os tipos provisórios em `database.types.ts`; a migração para tipos gerados depende da primeira aplicação validada do schema.
+
+Antes de publicar, configure as variáveis listadas em `PRODUCTION-CONFIG.example`, execute `pnpm release:check` e siga `OPERACAO-PRODUCAO.md`. O endpoint `/api/health` verifica aplicação e banco sem expor dados. `pnpm backup:database` cria o dump lógico e `pnpm backup:verify` recusa backup ausente, inválido ou com mais de 26 horas.
 
 ## Fluxo central do produto
 

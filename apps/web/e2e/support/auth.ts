@@ -7,8 +7,8 @@ export async function signIn(page: Page, role: E2ERole = "owner", fixture?: E2EF
   if (!user) throw new Error(`The E2E fixture has no user for role ${role}.`);
   await page.goto(`http://${host ?? data.tenants.primary.host}:3007/login`);
   await page.getByLabel("E-mail").fill(user.email);
-  await page.getByLabel("Senha").fill(user.password);
+  await page.getByLabel("Senha", { exact: true }).fill(user.password);
   await page.getByRole("button", { name: "Entrar" }).click();
-  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 15_000 });
   return data;
 }

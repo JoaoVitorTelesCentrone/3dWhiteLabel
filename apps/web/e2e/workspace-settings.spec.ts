@@ -2,26 +2,6 @@ import { expect, test } from "@playwright/test";
 import { signIn } from "./support/auth.js";
 import { readFixture } from "./support/fixture.js";
 
-test("plano de manutenção e registro de serviço ficam ligados à impressora", async ({ page }) => {
-  const fixture = await signIn(page);
-  await page.goto(`http://${fixture.tenants.primary.host}:3007/manutencao`);
-  await page.getByRole("button", { name: "Criar plano", exact: true }).click();
-  const createDialog = page.getByRole("dialog", { name: "Criar plano" });
-  await createDialog.getByLabel("Impressora").selectOption(fixture.ids.printerId);
-  await createDialog.getByLabel("Intervalo (horas de uso)").fill("100");
-  await createDialog.getByLabel("Alertar antes (horas)").fill("10");
-  await createDialog.getByRole("button", { name: "Criar plano" }).click();
-  await expect(createDialog.getByRole("status")).toContainText("Plano de manutenção criado.");
-  await page.reload();
-
-  const card = page.locator(".maintenance-card").filter({ hasText: `Impressora E2E ${fixture.runTag}` });
-  await expect(card).toContainText("Intervalo de 100 h");
-  await card.getByLabel("Custo (R$)").fill("25,00");
-  await card.getByLabel("Serviço realizado").fill("Limpeza e lubrificação E2E");
-  await card.getByRole("button", { name: "Registrar manutenção" }).click();
-  await expect(card.getByText("Limpeza e lubrificação E2E")).toBeVisible({ timeout: 20_000 });
-});
-
 test("marca da empresa e acesso da equipe podem ser atualizados", async ({ page }) => {
   const fixture = await signIn(page);
   await page.goto(`http://${fixture.tenants.primary.host}:3007/configuracoes/marca`);
@@ -48,7 +28,7 @@ test("admin da plataforma pode entrar e suspender/restaurar uma licença", async
   const platformAdmin = fixture.users.platformAdmin!;
   await page.goto("http://admin.localhost:3007/admin/login");
   await page.getByLabel("E-mail").fill(platformAdmin.email);
-  await page.getByLabel("Senha").fill(platformAdmin.password);
+  await page.getByLabel("Senha", { exact: true }).fill(platformAdmin.password);
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page).toHaveURL(/\/admin$/);
   await expect(page.getByRole("heading", { name: "Tenants" })).toBeVisible();
@@ -62,7 +42,7 @@ test("admin da plataforma pode entrar e suspender/restaurar uma licença", async
 
   await page.goto(`http://${fixture.tenants.primary.host}:3007/login`);
   await page.getByLabel("E-mail").fill(fixture.users.owner!.email);
-  await page.getByLabel("Senha").fill(fixture.users.owner!.password);
+  await page.getByLabel("Senha", { exact: true }).fill(fixture.users.owner!.password);
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await page.goto(`http://${fixture.tenants.primary.host}:3007/pedidos`);

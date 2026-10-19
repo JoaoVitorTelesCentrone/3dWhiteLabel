@@ -40,6 +40,7 @@ export function CustomDomainForm({ id }: { id: string }) {
   const [state, action, pending] = useActionState(requestCustomDomain, initial);
   return <form action={action}><input name="id" type="hidden" value={id} />
     <label>Domínio próprio <input name="host" placeholder="erp.empresa.com.br" required maxLength={253} /></label>
+    <small>O domínio será criado na Cloudflare e ficará pendente até a configuração do DNS e do certificado.</small>
     <Button type="submit" disabled={pending}>{pending ? "Salvando…" : "Registrar domínio pendente"}</Button><Feedback state={state} />
   </form>;
 }

@@ -10,18 +10,17 @@ Licença ≠ Hospedagem ≠ Manutenção   → 3 decisões, 3 receitas
 
 ## 2. Tabela de planos
 
-| | **Start** | **Pro** | **Business** |
+| | **Start disponível** | **Pro sob proposta** | **Business sob proposta** |
 |---|---|---|---|
-| Licença (única) | **R$ 1.497** | **R$ 2.497** | **R$ 4.997** |
-| CRM, clientes, orçamentos, pedidos | ● | ● | ● |
-| Produtos, modelos 3D, arquivos | ● | ● | ● |
-| Estoque, filamentos, produção básica | ● | ● | ● |
-| Impressoras, manutenção, fila, OPs, QR Code | | ● | ● |
-| Custos reais, relatórios avançados, planner | | ● | ● |
-| Portal do cliente, API, automações | | | ● |
-| Integrações (marketplaces, ERP), IA | | | ● |
-| Domínio customizado, multiunidade | | | ● |
-| "Powered by Sua Empresa 3D" removível | | | ● |
+| Licença (única) | **R$ 1.497** | **a definir no escopo** | **a definir no escopo** |
+| Clientes, produtos e pedidos | ● | ● | ● |
+| Materiais, bobinas, produção e entrega | ● | ● | ● |
+| Financeiro e relatórios essenciais | ● | ● | ● |
+| Marca, usuários e permissões | ● | ● | ● |
+| Domínio próprio | — | — | ● |
+| Funcionalidades futuras ou integrações | sob orçamento | sob orçamento | sob orçamento |
+
+Modelos 3D, receitas, QR Code, planner, portal do cliente, multiunidade e integrações não fazem parte da licença Start atual. Só devem aparecer em proposta quando houver escopo, prazo e aceite específicos.
 
 ### Care (manutenção + hospedagem) — R$ 99/mês
 

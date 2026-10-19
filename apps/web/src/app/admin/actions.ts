@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { cloudflareDomainConfig, createCustomHostname, deleteCustomHostname, getCustomHostname } from "@/lib/cloudflare/custom-hostnames";
 
 export type PlatformState = { error?: string; success?: string };
 const plans = ["start", "pro", "business"] as const;
@@ -119,14 +120,77 @@ export async function requestCustomDomain(_previous: PlatformState, formData: Fo
   const admin = createAdminClient();
   const { data: tenant } = await admin.from("tenant_runtime").select("id,plan").eq("id", parsed.data.id).maybeSingle();
   if (!tenant || tenant.plan !== "business") return { error: "Domínio próprio exige plano Business." };
+  const { data: existing } = await admin.from("tenant_domains").select("host").eq("host", parsed.data.host).maybeSingle();
+  if (existing) return { error: "Este domínio já está registrado." };
+  let provisioned: Awaited<ReturnType<typeof createCustomHostname>>;
+  let cnameTarget: string;
+  try {
+    cnameTarget = cloudflareDomainConfig().cnameTarget;
+    provisioned = await createCustomHostname(parsed.data.host, parsed.data.id);
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Não foi possível provisionar o domínio na Cloudflare." };
+  }
   const { error } = await admin.from("tenant_domains").insert({
-    tenant_id: parsed.data.id, host: parsed.data.host, kind: "custom", status: "pending",
+    tenant_id: parsed.data.id,
+    host: parsed.data.host,
+    kind: "custom",
+    status: provisioned.status === "active" && provisioned.sslStatus === "active" ? "active" : "pending",
+    provider: "cloudflare",
+    provider_hostname_id: provisioned.id,
+    verification_record: provisioned.verification,
+    ssl_status: provisioned.sslStatus === "active" ? "active" : "pending",
+    checked_at: new Date().toISOString(),
   });
-  if (error) return { error: "Não foi possível registrar o domínio. Confira se já está em uso." };
+  if (error) {
+    await deleteCustomHostname(provisioned.id).catch(() => undefined);
+    return { error: "O domínio foi recusado pelo banco. Confira se ele já está em uso." };
+  }
   await admin.from("platform_audit_events").insert({
     actor_id: actor.id, tenant_id: parsed.data.id, action: "tenant.domain.request",
     after_state: { host: parsed.data.host, status: "pending" },
   });
   revalidatePath("/admin");
-  return { success: "Domínio registrado como pendente de verificação." };
+  return { success: `Domínio criado. Aponte um CNAME para ${cnameTarget} e publique o registro TXT exibido no painel.` };
+}
+
+export async function syncCustomDomain(formData: FormData) {
+  const parsed = z.object({ id: z.uuid() }).safeParse({ id: formData.get("id") });
+  if (!parsed.success) return;
+  const actor = await requirePlatformAdmin();
+  const admin = createAdminClient();
+  const { data: domain } = await admin.from("tenant_domains")
+    .select("tenant_id,host,provider_hostname_id").eq("id", parsed.data.id).eq("kind", "custom").maybeSingle();
+  if (!domain?.provider_hostname_id) return;
+  try {
+    const remote = await getCustomHostname(domain.provider_hostname_id);
+    await admin.from("tenant_domains").update({
+      status: remote.active ? "active" : "pending",
+      ssl_status: remote.sslStatus === "active" ? "active" : remote.error ? "failed" : "pending",
+      verification_record: remote.verification,
+      last_error: remote.error,
+      checked_at: new Date().toISOString(),
+      verified_at: remote.active ? new Date().toISOString() : null,
+    }).eq("id", parsed.data.id);
+    await admin.from("platform_audit_events").insert({
+      actor_id: actor.id, tenant_id: domain.tenant_id, action: "tenant.domain.sync",
+      after_state: { host: domain.host, status: remote.active ? "active" : "pending", ssl_status: remote.sslStatus },
+    });
+  } catch (error) {
+    await admin.from("tenant_domains").update({
+      last_error: error instanceof Error ? error.message : "Falha ao consultar a Cloudflare.", checked_at: new Date().toISOString(),
+    }).eq("id", parsed.data.id);
+  }
+  revalidatePath("/admin");
+}
+
+export async function updateSalesLead(formData: FormData) {
+  const parsed = z.object({ id: z.uuid(), status: z.enum(["new", "contacted", "qualified", "closed"]) }).safeParse({
+    id: formData.get("id"), status: formData.get("status"),
+  });
+  if (!parsed.success) return;
+  const actor = await requirePlatformAdmin();
+  const admin = createAdminClient();
+  const { error } = await admin.from("sales_leads").update({ status: parsed.data.status }).eq("id", parsed.data.id);
+  if (!error) await admin.from("platform_audit_events").insert({ actor_id: actor.id, action: "sales.lead.update", after_state: parsed.data });
+  revalidatePath("/admin");
 }

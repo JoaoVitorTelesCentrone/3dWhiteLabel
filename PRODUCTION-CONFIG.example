@@ -1,0 +1,16 @@
+# Copy these names to the production provider. Never commit real values.
+NEXT_PUBLIC_SUPABASE_URL=https://project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=replace_me
+SUPABASE_SECRET_KEY=replace_me
+NEXT_PUBLIC_APP_BASE_DOMAIN=agencia3d.app
+AGENCIA3D_APP_URL=https://demo.agencia3d.app
+AGENCIA3D_ADMIN_HOST=admin.agencia3d.app
+NEXT_PUBLIC_DEMO_URL=https://demo.agencia3d.app/login
+NEXT_PUBLIC_SALES_CONTACT_URL=/contato
+CLOUDFLARE_API_TOKEN=replace_me
+CLOUDFLARE_ZONE_ID=replace_me
+CLOUDFLARE_SAAS_CNAME_TARGET=customers.agencia3d.app
+SUPABASE_DB_URL=postgresql://postgres:replace_me@replace_me:5432/postgres
+APP_VERSION=replace_me
+OPENAI_API_KEY=replace_me
+OPENAI_MODEL=gpt-5.4-mini

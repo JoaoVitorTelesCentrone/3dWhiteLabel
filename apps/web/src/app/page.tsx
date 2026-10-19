@@ -7,12 +7,12 @@ import { ArrowRight, Check, Factory, Gauge, PackageCheck, Settings2, Sparkles, U
 
 export const metadata: Metadata = {
   title: "Sistema de gestão para empresas de impressão 3D | Sua Empresa 3D",
-  description: "Organize clientes, pedidos, produção, materiais e resultados da sua empresa de impressão 3D. Inclui uma landing page personalizada para apresentar o negócio.",
+  description: "Organize clientes, pedidos, produção, materiais, entregas e resultados da sua empresa de impressão 3D.",
 };
 
 const included = [
-  "Clientes e histórico de atendimentos e pedidos",
-  "Orçamentos e pedidos acompanhados por etapa",
+  "Clientes e histórico de pedidos",
+  "Pedidos acompanhados da confirmação à entrega",
   "Produção com jobs, prazos e status de entrega",
   "Materiais, produtos prontos e controle de estoque",
   "Visão de receitas, despesas e margens estimadas",
@@ -21,31 +21,34 @@ const included = [
 
 const workflow = [
   { icon: UsersRound, title: "Registre o contato", copy: "Guarde dados do cliente, conversa e histórico do atendimento." },
-  { icon: PackageCheck, title: "Converta em pedido", copy: "Acompanhe orçamento, valor, prazo e o que foi combinado." },
+  { icon: PackageCheck, title: "Registre o pedido", copy: "Registre itens, quantidades, endereço, valor e prazo combinado." },
   { icon: Factory, title: "Acompanhe a produção", copy: "Veja quais jobs estão na fila, imprimindo ou prontos para entrega." },
   { icon: WalletCards, title: "Leia os resultados", copy: "Consulte receitas, despesas e margens estimadas do período." },
 ];
 
 const everydayProblems = [
-  ["Orçamento perdido na conversa", "Quando cada atendimento fica em um chat diferente, retomar uma proposta vira procura manual."],
+  ["Pedido perdido na conversa", "Quando cada venda fica em um chat diferente, retomar o combinado vira procura manual."],
   ["Pedido sem atualização", "Cliente pergunta do andamento e a resposta depende de lembrar em que etapa o job está."],
   ["Material e custos sem visão", "Bobinas, produtos prontos, recebimentos e despesas ficam espalhados em anotações e planilhas."],
 ];
 
+const offerPrice = "R$ 1.497";
 const faqs = [
   ["O sistema fica com a minha marca?", "A instância é configurada com nome, logo e identidade visual do negócio. O alcance exato dessa personalização é definido na implantação."],
   ["Posso retirar módulos que não uso?", "Sim. Os módulos podem ser avaliados conforme o processo da empresa. Confirme na proposta quais ficam ativos na sua instância."],
   ["E se eu precisar de uma funcionalidade nova?", "Solicitações fora do pacote padrão passam por avaliação técnica e comercial. Desenvolvimento adicional não está incluído automaticamente no valor de lançamento."],
-  ["Como vejo a demonstração?", "A demonstração exige credenciais. Acesse o login ou solicite um acesso de demonstração para conhecer o sistema."],
-  ["O que entra nos R$ 1.000?", "O valor é do pacote padrão de lançamento: instância configurada e landing page personalizada. [CONFIRMAR: escopo final, forma de pagamento e itens de implantação.]"],
-  ["Domínio, hospedagem, suporte e atualizações estão incluídos?", "[CONFIRMAR: condições de domínio, hospedagem, manutenção, suporte e atualizações após a entrega.]"],
-  ["Meus dados ficam protegidos?", "O sistema possui controle de acesso por login. [CONFIRMAR: política de backup, retenção de dados e responsabilidades de tratamento.]"],
+  ["Como vejo a demonstração?", "Solicite um acesso de demonstração. Você recebe um ambiente com dados fictícios para conhecer o fluxo completo sem expor dados de clientes."],
+  ["O que entra no valor da licença?", `A licença Start de ${offerPrice} inclui implantação assistida, marca da empresa, usuários, clientes, produtos, pedidos, produção, materiais, financeiro e relatórios essenciais.`],
+  ["Como funcionam hospedagem, suporte e atualizações?", "O Care custa R$ 99 por mês e inclui hospedagem compartilhada, backup diário do banco, monitoramento, atualizações corretivas e suporte remoto. A licença continua válida sem o Care para hospedagem por conta própria."],
+  ["Meus dados ficam protegidos?", "Cada empresa possui isolamento por tenant, controle de acesso por papel e políticas no banco. O ambiente com Care usa backup diário; consulte a Política de Privacidade para retenção, direitos e canais de atendimento."],
 ];
 
 export default async function HomePage() {
   if (await getRequestUserId()) redirect("/dashboard");
 
   const host = (await headers()).get("host")?.toLowerCase();
+  const demoUrl = process.env.NEXT_PUBLIC_DEMO_URL || "/login";
+  const salesContactUrl = process.env.NEXT_PUBLIC_SALES_CONTACT_URL || "/contato";
   if (process.env.NODE_ENV === "development" && process.env.AGENCIA3D_LOCAL_DEMO_AUTO_LOGIN === "true" && host === "demo.localhost:3005") {
     redirect("/dev-login");
   }
@@ -56,20 +59,20 @@ export default async function HomePage() {
         <div className="offer-hero-copy">
           <p className="offer-kicker"><span /> Gestão feita para quem trabalha com impressão 3D sob encomenda</p>
           <h1 id="offer-title">Mais controle nos pedidos. Mais clareza para tocar sua empresa de impressão 3D.</h1>
-          <p className="offer-lead">Uma instância do sistema configurada com a sua marca para acompanhar clientes, orçamentos, jobs, materiais e resultados. Você também recebe uma landing page profissional para apresentar o negócio e facilitar novos contatos.</p>
+          <p className="offer-lead">Uma instância do sistema configurada com a sua marca para acompanhar clientes, pedidos, jobs, materiais, entregas e resultados.</p>
           <div className="offer-actions">
             <a className="offer-primary-action" href="#oferta">Ver a proposta <ArrowRight aria-hidden="true" /></a>
-            <Link className="offer-secondary-action" href="/login">Acessar demonstração</Link>
+            <a className="offer-secondary-action" href={demoUrl}>Acessar demonstração</a>
           </div>
           <div className="offer-assurance" aria-label="Condições da oferta">
             <span><Check aria-hidden="true" /> Pagamento único</span>
             <span><Check aria-hidden="true" /> Instância com a sua marca</span>
-            <span><Check aria-hidden="true" /> Landing page inclusa</span>
+            <span><Check aria-hidden="true" /> Implantação assistida</span>
           </div>
         </div>
 
         <div className="offer-hero-stage" aria-label="Visão do CRM Sua Empresa 3D">
-          <div className="offer-price-orbit" aria-hidden="true"><span>R$</span><strong>1.000</strong><small>pacote padrão</small></div>
+          <div className="offer-price-orbit" aria-hidden="true"><span>R$</span><strong>1.497</strong><small>licença Start</small></div>
           <div className="offer-product-window">
             <div className="offer-window-bar"><i /><i /><i /><span>painel.suaempresa3d</span></div>
             <div className="offer-window-body">
@@ -91,21 +94,21 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-          <div className="offer-gift-ticket"><Sparkles aria-hidden="true" /><span>Inclusa no pacote</span><strong>Landing page profissional</strong></div>
+          <div className="offer-gift-ticket"><Sparkles aria-hidden="true" /><span>Inclusa no pacote</span><strong>Implantação assistida</strong></div>
         </div>
       </section>
 
       <section className="offer-price-strip" aria-label="Resumo da oferta">
         <div className="offer-price-product">
           <div><span>Sistema de gestão personalizado</span><small>Para a rotina da sua operação de impressão 3D</small></div>
-          <strong>R$ 1.000</strong>
+          <strong>{offerPrice}</strong>
           <small className="offer-price-condition">pagamento único</small>
         </div>
         <span className="offer-plus" aria-hidden="true">+</span>
         <div className="offer-price-bonus">
           <span><Sparkles aria-hidden="true" /> Bônus incluso</span>
-          <strong>Landing page profissional</strong>
-          <small>para apresentar seu negócio e facilitar contatos</small>
+          <strong>Implantação assistida</strong>
+          <small>configuração da marca, owner e ambiente inicial</small>
         </div>
       </section>
 
@@ -174,10 +177,10 @@ export default async function HomePage() {
           </div>
         </div>
         <div className="offer-gift-copy">
-          <p>Landing page inclusa</p>
-          <h2 id="gift-title">Uma página profissional para apresentar sua empresa e facilitar novos contatos.</h2>
-          <p>Mostre seus serviços, diferenciais e formas de contato em uma página adaptada para celular. Ela ajuda o cliente a entender o seu trabalho antes de pedir um orçamento; não substitui divulgação nem promete vendas.</p>
-          <div className="offer-gift-details"><span>Identidade visual da marca</span><span>Versão para celular</span><span>Texto comercial da empresa</span><span>Direcionamento para contato</span></div>
+          <p>Implantação assistida</p>
+          <h2 id="gift-title">Seu ambiente configurado para começar com segurança.</h2>
+          <p>Configuramos a empresa, aplicamos a marca, criamos o acesso do proprietário e orientamos os primeiros cadastros. Importação de dados e desenvolvimento adicional recebem orçamento separado.</p>
+          <div className="offer-gift-details"><span>Nome, logo e cores</span><span>Acesso do proprietário</span><span>Dados iniciais orientados</span><span>Treinamento de ativação</span></div>
         </div>
       </section>
 
@@ -185,14 +188,14 @@ export default async function HomePage() {
         <div className="offer-final-copy">
           <p>Pacote padrão de lançamento</p>
           <h2 id="final-title">Organize a operação e apresente melhor a sua empresa.</h2>
-          <p>Você recebe uma instância configurada para o negócio e uma landing page personalizada. Ajustes especiais e funcionalidades novas são avaliados e orçados à parte.</p>
+          <p>Você recebe uma instância configurada com a marca da empresa e o fluxo operacional ativo. Ajustes especiais e funcionalidades novas são avaliados e orçados à parte.</p>
         </div>
         <div className="offer-checkout">
-          <div className="offer-checkout-line"><span>Instância padrão configurada</span><strong>R$ 1.000</strong></div>
-          <div className="offer-checkout-line is-gift"><span>Landing page personalizada</span><strong>INCLUSA</strong></div>
-          <div className="offer-checkout-total"><span>Investimento total</span><strong>R$ 1.000</strong><small>pagamento único</small></div>
-          <Link href="/login">Acessar demonstração <ArrowRight aria-hidden="true" /></Link>
-          <p>A demonstração exige credenciais. [CONFIRMAR: condições de hospedagem, suporte, manutenção e prazo de implantação.]</p>
+          <div className="offer-checkout-line"><span>Licença Start</span><strong>{offerPrice}</strong></div>
+          <div className="offer-checkout-line is-gift"><span>Implantação assistida</span><strong>INCLUSA</strong></div>
+          <div className="offer-checkout-total"><span>Investimento inicial</span><strong>{offerPrice}</strong><small>pagamento único</small></div>
+          <a href={salesContactUrl}>Solicitar demonstração <ArrowRight aria-hidden="true" /></a>
+          <p>Care opcional por R$ 99/mês. Prazo e forma de pagamento são confirmados na proposta comercial.</p>
         </div>
       </section>
 
@@ -208,8 +211,9 @@ export default async function HomePage() {
 
       <section className="offer-closing" aria-labelledby="closing-title">
         <div><h2 id="closing-title">Quer conhecer o sistema antes de implantar?</h2><p>Acesse a demonstração com suas credenciais ou solicite um acesso para avaliar se o pacote faz sentido para a sua operação.</p></div>
-        <Link href="/login">Acessar demonstração <ArrowRight aria-hidden="true" /></Link>
+        <a href={salesContactUrl}>Solicitar acesso <ArrowRight aria-hidden="true" /></a>
       </section>
+      <footer className="offer-legal-links"><Link href="/privacidade">Privacidade</Link><Link href="/termos">Termos de uso</Link></footer>
     </main>
   );
 }

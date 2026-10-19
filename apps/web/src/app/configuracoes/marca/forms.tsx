@@ -13,13 +13,14 @@ export function BrandingForm({ brand }: { brand: { display_name: string; primary
   const [state, action, pending] = useActionState(updateBranding, initial);
   const [primaryColor, setPrimaryColor] = useState(brand.primary_color);
   const [accentColor, setAccentColor] = useState(brand.accent_color);
+  const [displayName, setDisplayName] = useState(brand.display_name);
   const previewStyle = { "--brand-primary": primaryColor, "--brand-accent": accentColor } as CSSProperties;
   return <form action={action} className="panel brand-form"><h2>Identidade da empresa</h2>
-    <label>Nome exibido <input name="displayName" defaultValue={brand.display_name} required minLength={2} maxLength={120} /></label>
+    <label>Nome exibido <input name="displayName" value={displayName} onChange={(event) => setDisplayName(event.target.value)} required minLength={2} maxLength={120} /></label>
     <label>Cor principal <input name="primaryColor" type="color" value={primaryColor} onChange={(event) => setPrimaryColor(event.target.value)} /></label>
     <label>Cor de destaque <input name="accentColor" type="color" value={accentColor} onChange={(event) => setAccentColor(event.target.value)} /></label>
     <div className="brand-preview" style={previewStyle} aria-label="Prévia das cores da marca">
-      <div><span>Prévia do espaço de trabalho</span><strong>{brand.display_name}</strong></div>
+      <div><span>Prévia do espaço de trabalho</span><strong>{displayName || "Nome da empresa"}</strong></div>
       <div className="brand-preview-actions"><span className="brand-preview-primary">Ação principal</span><span className="brand-preview-accent">Destaque e foco</span></div>
     </div>
     {state.error ? <p className="error" role="alert">{state.error}</p> : null}{state.success ? <p role="status">{state.success}</p> : null}

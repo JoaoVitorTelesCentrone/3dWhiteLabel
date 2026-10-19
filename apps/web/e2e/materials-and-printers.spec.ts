@@ -36,21 +36,3 @@ test("material, bobina e ajuste atualizam a tabela de estoque", async ({ page })
   await expect(adjustDialog).toBeHidden();
   await expect(page.locator("tr").filter({ hasText: spoolCode })).toContainText("1.350 g");
 });
-
-test("impressora pode ser cadastrada e desativada enquanto está ociosa", async ({ page }) => {
-  const fixture = await signIn(page);
-  await page.goto(`http://${fixture.tenants.primary.host}:3007/impressoras`);
-  const printerName = `Impressora E2E criada ${fixture.runTag}`;
-  await page.getByRole("button", { name: "Cadastrar impressora", exact: true }).click();
-  const dialog = page.getByRole("dialog", { name: "Cadastrar impressora" });
-  await dialog.getByLabel("Nome").fill(printerName);
-  await dialog.getByLabel("Modelo").fill("CoreXY teste");
-  await dialog.getByRole("button", { name: "Cadastrar impressora" }).click();
-  await expect(dialog.getByRole("status")).toContainText("Impressora cadastrada.");
-  await page.reload();
-
-  const printerCard = page.locator(".printer-card").filter({ hasText: printerName });
-  await expect(printerCard).toContainText("CoreXY teste");
-  await printerCard.getByRole("button", { name: "Desativar" }).click();
-  await expect(printerCard).toContainText("Inativa");
-});

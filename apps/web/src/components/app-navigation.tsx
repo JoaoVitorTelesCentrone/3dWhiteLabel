@@ -4,7 +4,7 @@ import { useState, useTransition, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Factory, LayoutDashboard, LogOut, Package, Sparkles, UsersRound, Wallet } from "lucide-react";
+import { ChevronDown, Factory, LayoutDashboard, LogOut, Package, Settings, Sparkles, UsersRound, Wallet } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -16,7 +16,7 @@ import {
 
 export type NavigationLink = { href: string; label: string };
 export type NavigationGroup = {
-  id: "overview" | "assistant" | "commercial" | "production" | "catalog" | "stock" | "management";
+  id: "overview" | "assistant" | "commercial" | "production" | "catalog" | "stock" | "management" | "settings";
   label: string;
   links: NavigationLink[];
 };
@@ -28,6 +28,7 @@ const icons = {
   catalog: Package,
   stock: Package,
   management: Wallet,
+  settings: Settings,
 };
 
 function isActive(pathname: string, href: string) {

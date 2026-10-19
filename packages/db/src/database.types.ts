@@ -9,6 +9,12 @@ export type TenantModuleKey =
 export type Database = {
   public: {
     Tables: {
+      sales_leads: {
+        Row: { id: string; name: string; company: string; email: string; phone: string | null; message: string | null; source: string; status: string; created_at: string };
+        Insert: { id?: string; name: string; company: string; email: string; phone?: string | null; message?: string | null; source?: string; status?: string; created_at?: string };
+        Update: Partial<Pick<Database["public"]["Tables"]["sales_leads"]["Row"], "status">>;
+        Relationships: [];
+      };
       profiles: {
         Row: { id: string; tenant_id: string; full_name: string; email: string; role: string; active: boolean; created_at: string; updated_at: string };
         Insert: { id: string; tenant_id: string; full_name: string; email: string; role: string; active?: boolean };
@@ -16,9 +22,19 @@ export type Database = {
         Relationships: [];
       };
       tenant_domains: {
-        Row: { tenant_id: string; host: string; kind: string; status: string };
-        Insert: { tenant_id: string; host: string; kind?: string; status?: string };
-        Update: never;
+        Row: {
+          id: string; tenant_id: string; host: string; kind: string; status: string; verified_at: string | null;
+          provider: string | null; provider_hostname_id: string | null;
+          verification_record: Json | null; ssl_status: string | null;
+          last_error: string | null; checked_at: string | null;
+        };
+        Insert: {
+          id?: string; tenant_id: string; host: string; kind?: string; status?: string; verified_at?: string | null;
+          provider?: string | null; provider_hostname_id?: string | null;
+          verification_record?: Json | null; ssl_status?: string | null;
+          last_error?: string | null; checked_at?: string | null;
+        };
+        Update: Partial<Pick<Database["public"]["Tables"]["tenant_domains"]["Row"], "status" | "provider" | "provider_hostname_id" | "verification_record" | "ssl_status" | "last_error" | "checked_at" | "verified_at">>;
         Relationships: [];
       };
       tenant_settings: {

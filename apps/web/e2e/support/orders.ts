@@ -6,8 +6,8 @@ export async function createOrder(page: Page, fixture: E2EFixture, quantity: num
   const dialog = page.getByRole("dialog", { name: "Novo pedido" });
   await expect(dialog).toBeVisible();
   await dialog.getByLabel("Cliente").selectOption(fixture.ids.customerId);
-  await dialog.getByLabel("Produto").selectOption(fixture.ids.variantId);
-  await dialog.getByLabel("Quantidade").fill(String(quantity));
+  await dialog.locator('select[name="variantId"]').selectOption(fixture.ids.variantId);
+  await dialog.locator('input[name="quantity"]').fill(String(quantity));
   await dialog.getByLabel("CEP").fill("01310-100");
   await dialog.getByLabel("Rua ou avenida").fill("Avenida Paulista");
   await dialog.getByLabel("Número").fill("1000");
