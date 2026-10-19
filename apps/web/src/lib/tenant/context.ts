@@ -50,18 +50,23 @@ export function resolveRequestHost(requestHeaders: Pick<Headers, "get">): string
 export const getRequestTenantDomain = cache(async (): Promise<{ tenant_id: string } | null> => {
   const host = resolveRequestHost(await headers());
   const supabase = await createClient();
-  const selectedTenantId = (await cookies()).get("agencia3d_selected_tenant")?.value;
 
+  if (host) {
+    const { data, error } = await supabase.from("tenant_domains")
+      .select("tenant_id").eq("host", host).eq("status", "active").maybeSingle();
+    if (!error && data) return data;
+  }
+
+  const selectedTenantId = (await cookies()).get("agencia3d_selected_tenant")?.value;
   if (selectedTenantId && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(selectedTenantId)) {
+    const { data: claims, error: claimsError } = await supabase.auth.getClaims();
+    if (claimsError || typeof claims?.claims?.sub !== "string") return null;
     const { data, error } = await supabase.from("tenant_domains")
       .select("tenant_id").eq("tenant_id", selectedTenantId).eq("status", "active").maybeSingle();
     if (!error && data) return data;
   }
 
-  if (!host) return null;
-  const { data, error } = await supabase.from("tenant_domains")
-    .select("tenant_id").eq("host", host).eq("status", "active").maybeSingle();
-  return error ? null : data;
+  return null;
 });
 
 export const getTenantContext = cache(async function getTenantContext(userId: string): Promise<TenantContext | null> {

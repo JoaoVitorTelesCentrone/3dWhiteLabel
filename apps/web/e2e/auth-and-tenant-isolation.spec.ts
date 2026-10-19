@@ -14,6 +14,24 @@ test("login rejeita senha inválida e protege rotas autenticadas", async ({ page
   await expect(page).toHaveURL(/\/login/);
 });
 
+test("domínio atual prevalece sobre cookie antigo de outro tenant", async ({ browser }) => {
+  const fixture = await readFixture();
+  const context = await browser.newContext();
+  await context.addCookies([{
+    name: "agencia3d_selected_tenant",
+    value: fixture.tenants.secondary.id,
+    domain: ".localhost",
+    path: "/",
+    httpOnly: true,
+    sameSite: "Lax",
+  }]);
+  const page = await context.newPage();
+  await page.goto(`http://${fixture.tenants.primary.host}:3007/login`);
+  await expect(page.getByRole("link", { name: `Sua Empresa 3D E2E ${fixture.runTag}`, exact: true })).toBeVisible();
+  await expect(page.getByText(`Sua Empresa 3D E2E B ${fixture.runTag}`, { exact: true })).toHaveCount(0);
+  await context.close();
+});
+
 test("dados de outro tenant não aparecem mesmo ao abrir sua URL", async ({ page }) => {
   const fixture = await signIn(page);
   await page.goto(`http://${fixture.tenants.primary.host}:3007/clientes`);
