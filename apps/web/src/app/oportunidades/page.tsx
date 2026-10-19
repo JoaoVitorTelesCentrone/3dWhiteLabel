@@ -10,12 +10,12 @@ export default async function OpportunitiesPage() {
   const context = await requireModulePermission("crm", "crm.view");
   const supabase = await createClient();
   const [{ data: opportunities, error }, { data: customers, error: customerError }, { data: quotes }, { data: variants }, { data: revisions }, { data: designs }] = await Promise.all([
-    supabase.from("opportunities").select("id,customer_id,title,stage,notes,lost_reason").eq("tenant_id", context.tenantId).order("updated_at", { ascending: false }),
-    supabase.from("customers").select("id,name").eq("tenant_id", context.tenantId).is("archived_at", null).order("name"),
-    supabase.from("quotes").select("id,opportunity_id,number,status").eq("tenant_id", context.tenantId).not("opportunity_id", "is", null).order("number", { ascending: false }),
-    supabase.from("product_variants").select("id,name,sku,active").eq("tenant_id", context.tenantId).eq("active", true).order("name"),
-    supabase.from("design_revisions").select("id,design_id,version").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }),
-    supabase.from("designs").select("id,name").eq("tenant_id", context.tenantId).eq("active", true),
+    supabase.from("opportunities").select("id,customer_id,title,stage,notes,lost_reason").eq("tenant_id", context.tenantId).order("updated_at", { ascending: false }).limit(200),
+    supabase.from("customers").select("id,name").eq("tenant_id", context.tenantId).is("archived_at", null).order("name").limit(500),
+    supabase.from("quotes").select("id,opportunity_id,number,status").eq("tenant_id", context.tenantId).not("opportunity_id", "is", null).order("number", { ascending: false }).limit(500),
+    supabase.from("product_variants").select("id,name,sku,active").eq("tenant_id", context.tenantId).eq("active", true).order("name").limit(500),
+    supabase.from("design_revisions").select("id,design_id,version").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(500),
+    supabase.from("designs").select("id,name").eq("tenant_id", context.tenantId).eq("active", true).limit(200),
   ]);
   const canEdit = roleAllows(context.role, "crm.edit") && context.licenseStatus !== "suspended";
   const canCreateQuote = context.modules.includes("quotes") && roleAllows(context.role, "quotes.create") && context.licenseStatus !== "suspended";

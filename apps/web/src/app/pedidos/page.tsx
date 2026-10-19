@@ -58,19 +58,19 @@ export default async function OrdersPage({ searchParams }: {
       p_status: status,
       p_selected_order_id: selectedOrderId ?? null,
     }),
-    canCreate ? supabase.from("customers").select("id,name,archived_at").eq("tenant_id", context.tenantId).order("name") : Promise.resolve({ data: [], error: null }),
-    canCreate ? supabase.from("products").select("id,name,image_path").eq("tenant_id", context.tenantId).eq("active", true) : Promise.resolve({ data: [], error: null }),
-    canCreate ? supabase.from("product_variants").select("id,product_id,name,price_cents,cost_cents").eq("tenant_id", context.tenantId).eq("active", true).not("cost_cents", "is", null).order("name") : Promise.resolve({ data: [], error: null }),
+    canCreate ? supabase.from("customers").select("id,name,archived_at").eq("tenant_id", context.tenantId).order("name").limit(500) : Promise.resolve({ data: [], error: null }),
+    canCreate ? supabase.from("products").select("id,name,image_path").eq("tenant_id", context.tenantId).eq("active", true).limit(200) : Promise.resolve({ data: [], error: null }),
+    canCreate ? supabase.from("product_variants").select("id,product_id,name,price_cents,cost_cents").eq("tenant_id", context.tenantId).eq("active", true).not("cost_cents", "is", null).order("name").limit(1000) : Promise.resolve({ data: [], error: null }),
   ]);
   const pageData = pageResult.data as OrderPageData | null;
   const rows = Array.isArray(pageData?.rows) ? pageData.rows : [];
   const orderIds = rows.map((row) => row.id);
   const productionResult = orderIds.length
-    ? await supabase.from("production_orders").select("id,sales_order_id,target_qty,status").eq("tenant_id", context.tenantId).in("sales_order_id", orderIds)
+    ? await supabase.from("production_orders").select("id,sales_order_id,target_qty,status").eq("tenant_id", context.tenantId).in("sales_order_id", orderIds).limit(100)
     : { data: [], error: null };
   const productionIds = (productionResult.data ?? []).map((production) => production.id);
   const jobsResult = productionIds.length
-    ? await supabase.from("production_jobs").select("production_order_id,status,quantity,good_qty").eq("tenant_id", context.tenantId).in("production_order_id", productionIds)
+    ? await supabase.from("production_jobs").select("production_order_id,status,quantity,good_qty").eq("tenant_id", context.tenantId).in("production_order_id", productionIds).limit(500)
     : { data: [], error: null };
   const loadError = pageResult.error || customersResult.error || productsResult.error || variantsResult.error || productionResult.error || jobsResult.error || !pageData;
 

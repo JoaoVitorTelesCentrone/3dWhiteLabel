@@ -12,11 +12,11 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
   const context = await requireModulePermission("quotes", "quotes.view");
   const supabase = await createClient();
   const opportunityId = (await searchParams).oportunidade;
-  const quoteQuery = supabase.from("quotes").select("id,number,customer_id,status,total_price_cents,created_at,opportunity_id").eq("tenant_id", context.tenantId).order("number", { ascending: false });
+  const quoteQuery = supabase.from("quotes").select("id,number,customer_id,status,total_price_cents,created_at,opportunity_id").eq("tenant_id", context.tenantId).order("number", { ascending: false }).limit(200);
   const [{ data: quotes, error }, { data: items, error: itemError }, { data: customers }] = await Promise.all([
     opportunityId ? quoteQuery.eq("opportunity_id", opportunityId) : quoteQuery,
-    supabase.from("quote_items").select("quote_id,description,quantity,unit_price_cents").eq("tenant_id", context.tenantId),
-    supabase.from("customers").select("id,name").eq("tenant_id", context.tenantId).is("archived_at", null).order("name"),
+    supabase.from("quote_items").select("quote_id,description,quantity,unit_price_cents").eq("tenant_id", context.tenantId).limit(1000),
+    supabase.from("customers").select("id,name").eq("tenant_id", context.tenantId).is("archived_at", null).order("name").limit(500),
   ]);
   const names = new Map(customers?.map((c) => [c.id, c.name]));
   const canApprove = roleAllows(context.role, "quotes.approve") && context.licenseStatus !== "suspended";

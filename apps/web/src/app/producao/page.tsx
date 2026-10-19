@@ -41,17 +41,44 @@ export default async function ProductionPage({ searchParams }: { searchParams: P
   const { pedido: selectedOrderId, ordem: selectedProductionOrderId, etapa: selectedStage, concluidos } = await searchParams;
   const requestedCompletedPages = Number(concluidos);
   const completedPages = Number.isSafeInteger(requestedCompletedPages) && requestedCompletedPages > 0
-    ? requestedCompletedPages
+    ? Math.min(requestedCompletedPages, 50)
     : 1;
   const completedVisibleCount = completedPages * 20;
   const supabase = await createClient();
-  const [{ data: orders, error }, { data: jobs, error: jobsError }, { data: salesOrders }, { data: orderItems }, { data: spools }] = await Promise.all([
-    supabase.from("production_orders").select("id,sales_order_id,sales_order_item_id,material_id,target_qty,status").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }),
-    supabase.from("production_jobs").select("id,production_order_id,spool_id,quantity,estimated_minutes,estimated_g,actual_minutes,consumed_g,good_qty,bad_qty,status").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }),
-    supabase.from("sales_orders").select("id,number").eq("tenant_id", context.tenantId),
-    supabase.from("sales_order_items").select("id,order_id,description,quantity,estimated_g,estimated_minutes,units_per_plate").eq("tenant_id", context.tenantId),
-    supabase.from("material_spools").select("id,code,status").eq("tenant_id", context.tenantId),
+  const activeOrdersQuery = supabase.from("production_orders")
+    .select("id,sales_order_id,sales_order_item_id,material_id,target_qty,status")
+    .eq("tenant_id", context.tenantId)
+    .in("status", ["planned", "in_progress"])
+    .order("created_at", { ascending: false })
+    .limit(200);
+  const completedOrdersQuery = supabase.from("production_orders")
+    .select("id,sales_order_id,sales_order_item_id,material_id,target_qty,status")
+    .eq("tenant_id", context.tenantId)
+    .eq("status", "completed")
+    .order("created_at", { ascending: false });
+  if (selectedOrderId) {
+    activeOrdersQuery.eq("sales_order_id", selectedOrderId);
+    completedOrdersQuery.eq("sales_order_id", selectedOrderId).limit(200);
+  } else {
+    completedOrdersQuery.range(0, Math.min(completedVisibleCount, 1000));
+  }
+  const [activeOrdersResult, completedOrdersResult] = await Promise.all([activeOrdersQuery, completedOrdersQuery]);
+  const orders = [...(activeOrdersResult.data ?? []), ...(completedOrdersResult.data ?? [])];
+  const orderIds = orders.map((order) => order.id);
+  const salesOrderIds = [...new Set(orders.map((order) => order.sales_order_id))];
+  const [{ data: jobs, error: jobsError }, { data: salesOrders }, { data: orderItems }, { data: spools }] = await Promise.all([
+    orderIds.length
+      ? supabase.from("production_jobs").select("id,production_order_id,spool_id,quantity,estimated_minutes,estimated_g,actual_minutes,consumed_g,good_qty,bad_qty,status").eq("tenant_id", context.tenantId).in("production_order_id", orderIds).order("created_at", { ascending: false }).limit(1000)
+      : Promise.resolve({ data: [], error: null }),
+    salesOrderIds.length
+      ? supabase.from("sales_orders").select("id,number").eq("tenant_id", context.tenantId).in("id", salesOrderIds).limit(500)
+      : Promise.resolve({ data: [], error: null }),
+    salesOrderIds.length
+      ? supabase.from("sales_order_items").select("id,order_id,description,quantity,estimated_g,estimated_minutes,units_per_plate").eq("tenant_id", context.tenantId).in("order_id", salesOrderIds).limit(1000)
+      : Promise.resolve({ data: [], error: null }),
+    supabase.from("material_spools").select("id,code,status").eq("tenant_id", context.tenantId).limit(500),
   ]);
+  const error = activeOrdersResult.error || completedOrdersResult.error;
   const canRun = roleAllows(context.role, "production.start") && context.licenseStatus !== "suspended";
   const canPlan = roleAllows(context.role, "production.plan") && context.licenseStatus !== "suspended";
   const canCancel = roleAllows(context.role, "production.cancel") && context.licenseStatus !== "suspended";

@@ -9,9 +9,9 @@ export default async function PlatformAdminPage() {
   const actor = await requirePlatformAdmin();
   const admin = createAdminClient();
   const [{ data: tenants, error }, { data: domains }, { data: overrides }, { data: events }, { data: leads }] = await Promise.all([
-    admin.from("tenant_runtime").select("id,name,slug,plan,license_status").order("name"),
-    admin.from("tenant_domains").select("id,tenant_id,host,kind,status,ssl_status,verification_record,last_error,checked_at").order("host"),
-    admin.from("tenant_modules").select("tenant_id,module_key,enabled").order("module_key"),
+    admin.from("tenant_runtime").select("id,name,slug,plan,license_status").order("name").limit(500),
+    admin.from("tenant_domains").select("id,tenant_id,host,kind,status,ssl_status,verification_record,last_error,checked_at").order("host").limit(1000),
+    admin.from("tenant_modules").select("tenant_id,module_key,enabled").order("module_key").limit(5000),
     admin.from("platform_audit_events").select("id,action,tenant_id,created_at").order("created_at", { ascending: false }).limit(20),
     admin.from("sales_leads").select("id,name,company,email,phone,message,status,created_at").order("created_at", { ascending: false }).limit(100),
   ]);

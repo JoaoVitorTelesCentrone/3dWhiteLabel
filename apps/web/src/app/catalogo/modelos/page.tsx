@@ -9,9 +9,9 @@ export default async function DesignsPage() {
   const context = await requireModulePermission("catalog", "designs.view");
   const supabase = await createClient();
   const [{ data: designs, error: designsError }, { data: revisions, error: revisionsError }, { data: files, error: filesError }] = await Promise.all([
-    supabase.from("designs").select("id,name,category,description,active").eq("tenant_id", context.tenantId).order("name"),
-    supabase.from("design_revisions").select("id,design_id,version,notes,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }),
-    supabase.from("design_files").select("id,design_id,revision_id,storage_path,filename,format,size_bytes").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }),
+    supabase.from("designs").select("id,name,category,description,active").eq("tenant_id", context.tenantId).order("name").limit(200),
+    supabase.from("design_revisions").select("id,design_id,version,notes,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(500),
+    supabase.from("design_files").select("id,design_id,revision_id,storage_path,filename,format,size_bytes").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(1000),
   ]);
   const canEdit = roleAllows(context.role, "designs.edit") && context.licenseStatus !== "suspended";
   const error = designsError || revisionsError || filesError;

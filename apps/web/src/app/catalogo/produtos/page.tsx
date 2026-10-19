@@ -13,7 +13,8 @@ export default async function ProductsPage() {
     .from("products")
     .select("id, name, category, description, active, image_path")
     .eq("tenant_id", context.tenantId)
-    .order("name");
+    .order("name")
+    .limit(200);
 
   const productIds = products?.map((product) => product.id) ?? [];
   const { data: variants, error: variantsError } = productIds.length
@@ -22,6 +23,7 @@ export default async function ProductsPage() {
       .eq("tenant_id", context.tenantId)
       .in("product_id", productIds)
       .order("created_at")
+      .limit(1000)
     : { data: [], error: null };
 
   const imagePaths = (products ?? []).flatMap((product) => product.image_path ? [product.image_path] : []);

@@ -8,11 +8,11 @@ export default async function RecipesPage() {
   const context = await requireModulePermission("catalog", "catalog.view");
   const supabase = await createClient();
   const [{ data: recipes, error }, { data: variants }, { data: revisions }, { data: designs }, { data: materials }] = await Promise.all([
-    supabase.from("production_recipes").select("id,product_variant_id,design_revision_id,material_id,version,estimated_g,estimated_minutes,units_per_plate,active").eq("tenant_id", context.tenantId).order("version", { ascending: false }),
-    supabase.from("product_variants").select("id,name,sku,active").eq("tenant_id", context.tenantId),
-    supabase.from("design_revisions").select("id,design_id,version").eq("tenant_id", context.tenantId),
-    supabase.from("designs").select("id,name,active").eq("tenant_id", context.tenantId),
-    supabase.from("materials").select("id,name,active").eq("tenant_id", context.tenantId),
+    supabase.from("production_recipes").select("id,product_variant_id,design_revision_id,material_id,version,estimated_g,estimated_minutes,units_per_plate,active").eq("tenant_id", context.tenantId).order("version", { ascending: false }).limit(200),
+    supabase.from("product_variants").select("id,name,sku,active").eq("tenant_id", context.tenantId).limit(500),
+    supabase.from("design_revisions").select("id,design_id,version").eq("tenant_id", context.tenantId).limit(500),
+    supabase.from("designs").select("id,name,active").eq("tenant_id", context.tenantId).limit(200),
+    supabase.from("materials").select("id,name,active").eq("tenant_id", context.tenantId).limit(200),
   ]);
   const variantNames = new Map(variants?.map((v) => [v.id, v.sku + " · " + v.name]));
   const designNames = new Map(designs?.map((d) => [d.id, d.name]));

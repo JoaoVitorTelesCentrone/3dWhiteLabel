@@ -7,6 +7,7 @@ import type { createClient } from "@/lib/supabase/server";
 export type BusinessArea = "overview" | "orders" | "customers" | "production" | "inventory" | "finance" | "catalog" | "quotes";
 export type BusinessQuery = { area: BusinessArea; query: string | null; days: number; limit: number; includeContact: boolean };
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
+const AI_QUERY_ROW_CAP = 1_000;
 
 const access: Record<Exclude<BusinessArea, "overview">, { permission: Permission; module?: TenantContext["modules"][number] }> = {
   orders: { permission: "orders.view", module: "orders" },
@@ -47,11 +48,11 @@ async function overview(supabase: SupabaseClient, context: TenantContext, days: 
   const start = since(days);
   const [customers, orders, jobs, products, spools, printers] = await Promise.all([
     canAccess(context, "customers") ? supabase.from("customers").select("id", { count: "exact", head: true }).eq("tenant_id", context.tenantId).is("archived_at", null) : null,
-    canAccess(context, "orders") ? supabase.from("sales_orders").select("status,total_price_cents,total_cost_cents,created_at").eq("tenant_id", context.tenantId).gte("created_at", start).neq("status", "canceled") : null,
-    canAccess(context, "production") ? supabase.from("production_jobs").select("status,good_qty,bad_qty,actual_minutes,created_at").eq("tenant_id", context.tenantId).gte("created_at", start) : null,
+    canAccess(context, "orders") ? supabase.from("sales_orders").select("status,total_price_cents,total_cost_cents,created_at", { count: "exact" }).eq("tenant_id", context.tenantId).gte("created_at", start).neq("status", "canceled").limit(AI_QUERY_ROW_CAP) : null,
+    canAccess(context, "production") ? supabase.from("production_jobs").select("status,good_qty,bad_qty,actual_minutes,created_at", { count: "exact" }).eq("tenant_id", context.tenantId).gte("created_at", start).limit(AI_QUERY_ROW_CAP) : null,
     canAccess(context, "catalog") ? supabase.from("products").select("id", { count: "exact", head: true }).eq("tenant_id", context.tenantId).eq("active", true) : null,
-    canAccess(context, "inventory") ? supabase.from("material_spools").select("status,current_gross_g,tare_g").eq("tenant_id", context.tenantId) : null,
-    canAccess(context, "production") ? supabase.from("printers").select("status").eq("tenant_id", context.tenantId).eq("active", true) : null,
+    canAccess(context, "inventory") ? supabase.from("material_spools").select("status,current_gross_g,tare_g", { count: "exact" }).eq("tenant_id", context.tenantId).limit(AI_QUERY_ROW_CAP) : null,
+    canAccess(context, "production") ? supabase.from("printers").select("status").eq("tenant_id", context.tenantId).eq("active", true).limit(500) : null,
   ]);
   const error = customers?.error ?? orders?.error ?? jobs?.error ?? products?.error ?? spools?.error ?? printers?.error;
   if (error) throw error;
@@ -80,6 +81,14 @@ async function overview(supabase: SupabaseClient, context: TenantContext, days: 
       spoolsByStatus: groupCount(spoolRows.map((row) => row.status)),
       availableMaterialG: spoolRows.reduce((sum, row) => sum + Math.max(0, row.current_gross_g - row.tare_g), 0),
     } : null,
+    limits: {
+      truncated: Boolean(
+        (orders?.count ?? 0) > orderRows.length ||
+        (jobs?.count ?? 0) > jobRows.length ||
+        (spools?.count ?? 0) > spoolRows.length,
+      ),
+      rowCap: AI_QUERY_ROW_CAP,
+    },
   };
 }
 
@@ -115,9 +124,9 @@ async function customers(supabase: SupabaseClient, context: TenantContext, query
 
 async function production(supabase: SupabaseClient, context: TenantContext, limit: number) {
   const [ordersResult, jobsResult, printersResult] = await Promise.all([
-    supabase.from("production_orders").select("id,sales_order_id,target_qty,status,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(limit),
-    supabase.from("production_jobs").select("production_order_id,status,quantity,good_qty,bad_qty,estimated_minutes,actual_minutes,estimated_g,consumed_g,printer_id,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(limit * 3),
-    supabase.from("printers").select("id,name,model,status,runtime_min").eq("tenant_id", context.tenantId).eq("active", true),
+    supabase.from("production_orders").select("id,sales_order_id,target_qty,status,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(Math.min(limit, AI_QUERY_ROW_CAP)),
+    supabase.from("production_jobs").select("production_order_id,status,quantity,good_qty,bad_qty,estimated_minutes,actual_minutes,estimated_g,consumed_g,printer_id,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(Math.min(limit * 3, AI_QUERY_ROW_CAP)),
+    supabase.from("printers").select("id,name,model,status,runtime_min").eq("tenant_id", context.tenantId).eq("active", true).limit(500),
   ]);
   if (ordersResult.error || jobsResult.error || printersResult.error) throw ordersResult.error ?? jobsResult.error ?? printersResult.error;
   const printerNames = new Map((printersResult.data ?? []).map((printer) => [printer.id, printer.name]));
@@ -133,8 +142,8 @@ async function inventory(supabase: SupabaseClient, context: TenantContext, limit
     supabase.from("materials").select("id,name,kind,color,cost_per_kg_cents,active").eq("tenant_id", context.tenantId).eq("active", true).limit(limit),
     supabase.from("material_spools").select("material_id,code,tare_g,current_gross_g,status,updated_at").eq("tenant_id", context.tenantId).order("updated_at", { ascending: false }).limit(limit * 3),
     supabase.from("finished_goods_stock").select("product_variant_id,quantity,updated_at").eq("tenant_id", context.tenantId).order("quantity", { ascending: false }).limit(limit),
-    supabase.from("product_variants").select("id,product_id,name,sku").eq("tenant_id", context.tenantId),
-    supabase.from("products").select("id,name").eq("tenant_id", context.tenantId),
+    supabase.from("product_variants").select("id,product_id,name,sku").eq("tenant_id", context.tenantId).limit(1000),
+    supabase.from("products").select("id,name").eq("tenant_id", context.tenantId).limit(500),
   ]);
   const error = materialsResult.error || spoolsResult.error || stockResult.error || variantsResult.error || productsResult.error;
   if (error) throw error;
@@ -160,9 +169,9 @@ async function finance(supabase: SupabaseClient, context: TenantContext, days: n
   const start = since(days);
   const date = start.slice(0, 10);
   const [ordersResult, paymentsResult, expensesResult] = await Promise.all([
-    supabase.from("sales_orders").select("total_price_cents,total_cost_cents,status").eq("tenant_id", context.tenantId).gte("created_at", start).neq("status", "canceled"),
-    supabase.from("order_payments").select("amount_cents,method,received_at").eq("tenant_id", context.tenantId).gte("received_at", start),
-    supabase.from("operational_expenses").select("amount_cents,category,incurred_on").eq("tenant_id", context.tenantId).gte("incurred_on", date),
+    supabase.from("sales_orders").select("total_price_cents,total_cost_cents,status", { count: "exact" }).eq("tenant_id", context.tenantId).gte("created_at", start).neq("status", "canceled").limit(AI_QUERY_ROW_CAP),
+    supabase.from("order_payments").select("amount_cents,method,received_at", { count: "exact" }).eq("tenant_id", context.tenantId).gte("received_at", start).limit(AI_QUERY_ROW_CAP),
+    supabase.from("operational_expenses").select("amount_cents,category,incurred_on", { count: "exact" }).eq("tenant_id", context.tenantId).gte("incurred_on", date).limit(AI_QUERY_ROW_CAP),
   ]);
   if (ordersResult.error || paymentsResult.error || expensesResult.error) throw ordersResult.error ?? paymentsResult.error ?? expensesResult.error;
   const orderRows = ordersResult.data ?? [];
@@ -176,6 +185,14 @@ async function finance(supabase: SupabaseClient, context: TenantContext, days: n
     expensesCents: expenses.reduce((sum, row) => sum + row.amount_cents, 0),
     paymentsByMethod: groupCount(payments.map((row) => row.method)),
     expensesByCategory: expenses.reduce<Record<string, number>>((totals, row) => { totals[row.category] = (totals[row.category] ?? 0) + row.amount_cents; return totals; }, {}),
+    limits: {
+      truncated: Boolean(
+        (ordersResult.count ?? 0) > orderRows.length ||
+        (paymentsResult.count ?? 0) > payments.length ||
+        (expensesResult.count ?? 0) > expenses.length,
+      ),
+      rowCap: AI_QUERY_ROW_CAP,
+    },
   };
 }
 
@@ -185,7 +202,7 @@ async function catalog(supabase: SupabaseClient, context: TenantContext, query: 
   const productsResult = await productRequest;
   if (productsResult.error) throw productsResult.error;
   const ids = (productsResult.data ?? []).map((product) => product.id);
-  const variantsResult = ids.length ? await supabase.from("product_variants").select("product_id,name,sku,price_cents,cost_cents,active").eq("tenant_id", context.tenantId).in("product_id", ids) : { data: [], error: null };
+  const variantsResult = ids.length ? await supabase.from("product_variants").select("product_id,name,sku,price_cents,cost_cents,active").eq("tenant_id", context.tenantId).in("product_id", ids).limit(Math.min(limit * 20, AI_QUERY_ROW_CAP)) : { data: [], error: null };
   if (variantsResult.error) throw variantsResult.error;
   const mayViewCosts = roleAllows(context.role, "costs.view");
   return (productsResult.data ?? []).map((product) => ({ ...product, variants: (variantsResult.data ?? []).filter((variant) => variant.product_id === product.id).map((variant) => ({ name: variant.name, sku: variant.sku, priceCents: variant.price_cents, costCents: mayViewCosts ? variant.cost_cents : undefined, active: variant.active })) }));

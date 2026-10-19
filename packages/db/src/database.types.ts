@@ -332,6 +332,10 @@ export type Database = {
       record_order_payment: { Args: { p_order_id: string; p_amount_cents: number; p_method: string; p_idempotency_key: string }; Returns: string };
       record_operational_expense: { Args: { p_category: string; p_amount_cents: number; p_description: string; p_incurred_on: string; p_idempotency_key: string }; Returns: string };
       get_operational_report: { Args: { p_start: string; p_end: string }; Returns: Json };
+      get_dashboard_summary: { Args: { p_month_start: string; p_month_end: string; p_chart_start: string; p_chart_end: string }; Returns: Json };
+      get_finance_summary: { Args: Record<PropertyKey, never>; Returns: Json };
+      claim_ai_request: { Args: { p_tenant_id: string; p_user_id: string; p_ip_hash: string; p_model: string; p_reserved_tokens: number; p_reserved_cost_microusd: number; p_user_minute_limit: number; p_ip_minute_limit: number; p_tenant_daily_request_limit: number; p_tenant_daily_token_limit: number; p_tenant_daily_budget_microusd: number }; Returns: Json };
+      finalize_ai_request: { Args: { p_tenant_id: string; p_user_id: string; p_event_id: string; p_status: string; p_input_tokens: number; p_output_tokens: number; p_total_tokens: number; p_actual_cost_microusd: number }; Returns: void };
       platform_update_tenant: { Args: { p_tenant_id: string; p_plan: string; p_license_status: string; p_actor_id: string }; Returns: void };
       platform_set_module: { Args: { p_tenant_id: string; p_module_key: string; p_enabled: boolean; p_actor_id: string }; Returns: void };
       platform_assign_tenant_user: { Args: { p_tenant_id: string; p_user_id: string; p_full_name: string; p_email: string; p_role: string; p_actor_id: string }; Returns: void };

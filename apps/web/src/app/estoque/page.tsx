@@ -15,9 +15,9 @@ export default async function FinishedGoodsPage() {
   const context = await requireModulePermission("stock", "stock.view");
   const supabase = await createClient();
   const [{ data: products, error: productsError }, { data: variants, error: variantsError }, { data: stock, error: stockError }] = await Promise.all([
-    supabase.from("products").select("id,name").eq("tenant_id", context.tenantId).eq("active", true).order("name"),
-    supabase.from("product_variants").select("id,product_id,name,sku,active").eq("tenant_id", context.tenantId).eq("active", true).order("name"),
-    supabase.from("finished_goods_stock").select("product_variant_id,quantity,updated_at").eq("tenant_id", context.tenantId),
+    supabase.from("products").select("id,name").eq("tenant_id", context.tenantId).eq("active", true).order("name").limit(200),
+    supabase.from("product_variants").select("id,product_id,name,sku,active").eq("tenant_id", context.tenantId).eq("active", true).order("name").limit(500),
+    supabase.from("finished_goods_stock").select("product_variant_id,quantity,updated_at").eq("tenant_id", context.tenantId).limit(1000),
   ]);
   const loadError = productsError || variantsError || stockError;
   const productNames = new Map(products?.map((product) => [product.id, product.name]));

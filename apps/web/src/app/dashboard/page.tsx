@@ -4,11 +4,30 @@ import { formatCents } from "@/lib/pricing";
 import { requireTenantContext } from "@/lib/auth/guards";
 import { roleAllows } from "@/lib/auth/permissions";
 import { createClient } from "@/lib/supabase/server";
+import { z } from "zod";
 import { DashboardCharts, type OrderStatusPoint, type RevenuePoint } from "./dashboard-charts";
 
 export const dynamic = "force-dynamic";
 
 type ActivityItem = { id: string; title: string; detail: string; href: string; createdAt: string };
+
+const dashboardSummarySchema = z.object({
+  orders: z.object({
+    ongoing_count: z.number(),
+    month_order_count: z.number(),
+    month_sales_cents: z.number(),
+    month_cost_cents: z.number().nullable(),
+    statuses: z.record(z.string(), z.number()),
+    sales_by_month: z.array(z.object({ key: z.string(), sales_cents: z.number(), order_count: z.number() })),
+  }).nullable(),
+  production: z.object({ active_job_count: z.number() }).nullable(),
+  catalog: z.object({ active_product_count: z.number() }).nullable(),
+  finance: z.object({
+    month_received_cents: z.number(),
+    month_expenses_cents: z.number(),
+    received_by_month: z.array(z.object({ key: z.string(), received_cents: z.number() })),
+  }).nullable(),
+});
 
 export default async function DashboardPage() {
   const context = await requireTenantContext();
@@ -18,21 +37,31 @@ export default async function DashboardPage() {
   const canFinance = roleAllows(context.role, "finance.view");
   const canProduction = context.modules.includes("production") && roleAllows(context.role, "production.view");
   const canCatalog = context.modules.includes("catalog") && roleAllows(context.role, "catalog.view");
-  const [ordersResult, jobsResult, recentOrdersResult, expensesResult, paymentsResult, productsResult] = await Promise.all([
-    supabase.from("sales_orders").select("id,status,total_price_cents,total_cost_cents,created_at").eq("tenant_id", context.tenantId).neq("status", "canceled"),
-    supabase.from("production_jobs").select("id,status").eq("tenant_id", context.tenantId).in("status", ["queued", "running", "failed"]),
-    supabase.from("sales_orders").select("id,number,status,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(4),
-    supabase.from("operational_expenses").select("id,category,amount_cents,description,incurred_on").eq("tenant_id", context.tenantId).order("incurred_on", { ascending: false }),
-    supabase.from("order_payments").select("id,order_id,amount_cents,method,received_at").eq("tenant_id", context.tenantId).order("received_at", { ascending: false }),
-    supabase.from("products").select("id").eq("tenant_id", context.tenantId).eq("active", true),
+  const now = new Date();
+  const monthParts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" })
+    .formatToParts(now).reduce<Record<string, string>>((parts, part) => ({ ...parts, [part.type]: part.value }), {});
+  const monthStartDate = `${monthParts.year}-${monthParts.month}-01`;
+  const monthEndDate = `${monthParts.year}-${monthParts.month}-${monthParts.day}`;
+  const chartStart = new Date(Date.UTC(Number(monthParts.year), Number(monthParts.month) - 6, 1));
+  const chartStartDate = `${chartStart.getUTCFullYear()}-${String(chartStart.getUTCMonth() + 1).padStart(2, "0")}-01`;
+  const [summaryResult, recentOrdersResult, expensesResult, paymentsResult] = await Promise.all([
+    supabase.rpc("get_dashboard_summary", { p_month_start: monthStartDate, p_month_end: monthEndDate, p_chart_start: chartStartDate, p_chart_end: monthEndDate }),
+    canOrders ? supabase.from("sales_orders").select("id,number,status,created_at").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(5) : Promise.resolve({ data: [], error: null }),
+    canFinance ? supabase.from("operational_expenses").select("id,category,amount_cents,description,incurred_on").eq("tenant_id", context.tenantId).order("incurred_on", { ascending: false }).limit(5) : Promise.resolve({ data: [], error: null }),
+    canFinance ? supabase.from("order_payments").select("id,order_id,amount_cents,method,received_at").eq("tenant_id", context.tenantId).order("received_at", { ascending: false }).limit(5) : Promise.resolve({ data: [], error: null }),
   ]);
-
-  const activeJobs = jobsResult.data?.filter((job) => ["queued", "running"].includes(job.status)).length ?? 0;
-  const ongoingOrders = ordersResult.data?.filter((order) => ["open", "in_production"].includes(order.status)).length ?? 0;
+  const parsedSummary = dashboardSummarySchema.safeParse(summaryResult.data);
+  const summary = parsedSummary.success ? parsedSummary.data : null;
+  const summaryUnavailable = Boolean(summaryResult.error) || !summary;
+  const ordersSummary = summary?.orders;
+  const financeSummary = summary?.finance;
+  const ongoingOrders = ordersSummary?.ongoing_count ?? 0;
+  const activeJobs = summary?.production?.active_job_count ?? 0;
+  const activeProducts = summary?.catalog?.active_product_count ?? 0;
   const flow = [
-    { visible: canOrders, label: "Pedidos em andamento", value: ordersResult.error ? "—" : ongoingOrders, detail: "abertos ou em produção", href: "/pedidos", icon: ClipboardList },
-    { visible: canProduction, label: "Na fábrica", value: jobsResult.error ? "—" : activeJobs, detail: "jobs planejados ou em execução", href: "/producao", icon: Factory },
-    { visible: canCatalog, label: "Produtos ativos", value: productsResult.error ? "—" : productsResult.data?.length ?? 0, detail: "prontos para vender", href: "/catalogo/produtos", icon: Package },
+    { visible: canOrders, label: "Pedidos em andamento", value: summaryUnavailable || !ordersSummary ? "—" : ongoingOrders, detail: "abertos ou em produção", href: "/pedidos", icon: ClipboardList },
+    { visible: canProduction, label: "Na fábrica", value: summaryUnavailable || !summary?.production ? "—" : activeJobs, detail: "jobs planejados ou em execução", href: "/producao", icon: Factory },
+    { visible: canCatalog, label: "Produtos ativos", value: summaryUnavailable || !summary?.catalog ? "—" : activeProducts, detail: "prontos para vender", href: "/catalogo/produtos", icon: Package },
   ].filter((item) => item.visible);
   const orderStatus: Record<string, string> = { open: "Aberto", in_production: "Em produção", ready: "Pronto para envio", shipped: "Enviado", delivered: "Entregue", canceled: "Cancelado" };
   const activity: ActivityItem[] = [
@@ -49,27 +78,16 @@ export default async function DashboardPage() {
       href: "/financeiro", createdAt: `${expense.incurred_on}T12:00:00.000Z`,
     })) ?? [] : []),
   ].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5);
-  const activityUnavailable = (canOrders && !!recentOrdersResult.error) || (canFinance && (!!paymentsResult.error || !!expensesResult.error));
-  const now = new Date();
+  const activityUnavailable = summaryUnavailable || (canOrders && !!recentOrdersResult.error) || (canFinance && (!!paymentsResult.error || !!expensesResult.error));
   const hour = Number(new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", hourCycle: "h23" }).format(now));
   const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
   const firstName = context.fullName.trim().split(/\s+/)[0];
-  const monthParts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit" })
-    .formatToParts(now).reduce<Record<string, string>>((parts, part) => ({ ...parts, [part.type]: part.value }), {});
   const monthNumber = Number(monthParts.month);
-  const localMonthStart = new Date(Date.UTC(Number(monthParts.year), monthNumber - 1, 1) + 3 * 60 * 60 * 1000);
-  const localNextMonthStart = new Date(Date.UTC(Number(monthParts.year), monthNumber, 1) + 3 * 60 * 60 * 1000);
-  const monthStartDate = `${monthParts.year}-${monthParts.month}-01`;
-  const monthOrders = ordersResult.data?.filter((order) => {
-    const createdAt = new Date(order.created_at);
-    return createdAt >= localMonthStart && createdAt < localNextMonthStart;
-  }) ?? [];
-  const salesCents = monthOrders.reduce((total, order) => total + BigInt(order.total_price_cents), 0n);
-  const costsCents = monthOrders.reduce((total, order) => total + BigInt(order.total_cost_cents), 0n);
-  const receivedCents = paymentsResult.data?.filter((payment) => new Date(payment.received_at) >= localMonthStart && new Date(payment.received_at) < localNextMonthStart)
-    .reduce((total, payment) => total + BigInt(payment.amount_cents), 0n) ?? 0n;
-  const expensesCents = expensesResult.data?.filter((expense) => expense.incurred_on >= monthStartDate)
-    .reduce((total, expense) => total + BigInt(expense.amount_cents), 0n) ?? 0n;
+  const monthOrdersCount = ordersSummary?.month_order_count ?? 0;
+  const salesCents = BigInt(ordersSummary?.month_sales_cents ?? 0);
+  const costsCents = BigInt(ordersSummary?.month_cost_cents ?? 0);
+  const receivedCents = BigInt(financeSummary?.month_received_cents ?? 0);
+  const expensesCents = BigInt(financeSummary?.month_expenses_cents ?? 0);
   const grossProfitCents = salesCents - costsCents;
   const operatingResultCents = grossProfitCents - expensesCents;
   const dateLabel = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long", timeZone: "America/Sao_Paulo" }).format(now);
@@ -81,24 +99,20 @@ export default async function DashboardPage() {
     return { key: `${year}-${month}`, month: label.charAt(0).toUpperCase() + label.slice(1), sales: 0, received: 0 };
   });
   const revenueByMonth = new Map(chartMonths.map((item) => [item.key, item]));
-  ordersResult.data?.forEach((order) => {
-    const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit" })
-      .formatToParts(new Date(order.created_at)).reduce<Record<string, string>>((values, part) => ({ ...values, [part.type]: part.value }), {});
-    const point = revenueByMonth.get(`${parts.year}-${parts.month}`);
-    if (point) point.sales += Number(order.total_price_cents) / 100;
+  ordersSummary?.sales_by_month.forEach((month) => {
+    const point = revenueByMonth.get(month.key);
+    if (point) point.sales = month.sales_cents / 100;
   });
-  if (canFinance) paymentsResult.data?.forEach((payment) => {
-    const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit" })
-      .formatToParts(new Date(payment.received_at)).reduce<Record<string, string>>((values, part) => ({ ...values, [part.type]: part.value }), {});
-    const point = revenueByMonth.get(`${parts.year}-${parts.month}`);
-    if (point) point.received += Number(payment.amount_cents) / 100;
+  financeSummary?.received_by_month.forEach((month) => {
+    const point = revenueByMonth.get(month.key);
+    if (point) point.received = month.received_cents / 100;
   });
   const revenueChartData = chartMonths.map(({ month, sales, received }) => ({ month, sales, received }));
   const statusChartOrder = ["open", "in_production", "ready", "shipped", "delivered"];
   const orderStatusChartData: OrderStatusPoint[] = statusChartOrder.map((status) => ({
     key: status,
     label: orderStatus[status],
-    value: monthOrders.filter((order) => order.status === status).length,
+    value: ordersSummary?.statuses[status] ?? 0,
     fill: `var(--color-${status})`,
   })).filter((item) => item.value > 0);
 
@@ -112,19 +126,19 @@ export default async function DashboardPage() {
         <div className="dashboard-welcome-copy">
           <p className="dashboard-welcome-greeting">{greeting}{firstName ? `, ${firstName}` : ""}!</p>
           {canOrders ? <>
-            <h2>{ordersResult.error ? "Pedidos indisponíveis" : `${ongoingOrders} pedido${ongoingOrders === 1 ? "" : "s"} em andamento`}</h2>
-            <p>{ordersResult.error ? "Atualize a página para consultar seus pedidos." : "Confira o que precisa seguir para produção ou entrega."}</p>
+            <h2>{summaryUnavailable || !ordersSummary ? "Pedidos indisponíveis" : `${ongoingOrders} pedido${ongoingOrders === 1 ? "" : "s"} em andamento`}</h2>
+            <p>{summaryUnavailable || !ordersSummary ? "Atualize a página para consultar seus pedidos." : "Confira o que precisa seguir para produção ou entrega."}</p>
           </> : <><h2>Bem-vindo à sua operação</h2><p>Acompanhe o trabalho da equipe ao longo do dia.</p></>}
         </div>
-        {canOrders && !ordersResult.error ? <Link className="dashboard-welcome-link" href="/pedidos">Ver pedidos<ArrowRight size={18} aria-hidden="true" /></Link> : null}
+        {canOrders && !summaryUnavailable && ordersSummary ? <Link className="dashboard-welcome-link" href="/pedidos">Ver pedidos<ArrowRight size={18} aria-hidden="true" /></Link> : null}
       </section>
 
       {canOrders ? <section className="dashboard-financials" aria-label="Resumo financeiro do mês">
-        <div><span>Vendas no mês</span><strong>{ordersResult.error ? "—" : formatCents(salesCents)}</strong><small>{monthOrders.length} pedido{monthOrders.length === 1 ? "" : "s"} cadastrado{monthOrders.length === 1 ? "" : "s"}</small></div>
-        {canFinance ? <><div><span>Recebido no mês</span><strong>{paymentsResult.error ? "—" : formatCents(receivedCents)}</strong><small>pagamentos registrados no período</small></div><div><span>Gastos operacionais</span><strong>{expensesResult.error ? "—" : formatCents(expensesCents)}</strong><small>despesas lançadas no período</small></div>{canViewCosts ? <div><span>Resultado estimado</span><strong>{ordersResult.error || expensesResult.error ? "—" : formatCents(operatingResultCents)}</strong><small>margem prevista menos gastos</small></div> : null}</> : null}
+        <div><span>Vendas no mês</span><strong>{summaryUnavailable || !ordersSummary ? "—" : formatCents(salesCents)}</strong><small>{monthOrdersCount} pedido{monthOrdersCount === 1 ? "" : "s"} cadastrado{monthOrdersCount === 1 ? "" : "s"}</small></div>
+        {canFinance ? <><div><span>Recebido no mês</span><strong>{summaryUnavailable || !financeSummary ? "—" : formatCents(receivedCents)}</strong><small>pagamentos registrados no período</small></div><div><span>Gastos operacionais</span><strong>{summaryUnavailable || !financeSummary ? "—" : formatCents(expensesCents)}</strong><small>despesas lançadas no período</small></div>{canViewCosts ? <div><span>Resultado estimado</span><strong>{summaryUnavailable || !ordersSummary || !financeSummary ? "—" : formatCents(operatingResultCents)}</strong><small>margem prevista menos gastos</small></div> : null}</> : null}
       </section> : null}
 
-      {canOrders && !ordersResult.error ? <DashboardCharts revenue={revenueChartData} orderStatuses={orderStatusChartData} showReceived={canFinance && !paymentsResult.error} /> : null}
+      {canOrders && !summaryUnavailable && ordersSummary ? <DashboardCharts revenue={revenueChartData} orderStatuses={orderStatusChartData} showReceived={canFinance && !!financeSummary} /> : null}
 
       {flow.length > 0 ? <section className="dashboard-flow" aria-labelledby="dashboard-flow-title">
         <div className="dashboard-section-heading"><div><h2 id="dashboard-flow-title">Operação agora</h2><p>Acompanhe pedidos, produção e catálogo.</p></div></div>

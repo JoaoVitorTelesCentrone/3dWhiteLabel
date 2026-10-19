@@ -1,11 +1,14 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { roleAllows } from "@/lib/auth/permissions";
 import { getRequestUserId } from "@/lib/auth/session";
 import { consultBusinessData } from "@/lib/ai/business-data";
 import { assistantRequestSchema, businessAreas, businessQuerySchema } from "@/lib/ai/schemas";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { getTenantContext } from "@/lib/tenant/context";
+import { AI_MAX_OUTPUT_TOKENS, AI_MAX_ROUNDS, estimateCostMicrousd, estimateReservedTokens, getAiLimits, hashClientIp } from "@/lib/ai/limits";
 
 export const runtime = "nodejs";
 
@@ -28,6 +31,36 @@ const businessTool: OpenAI.Responses.FunctionTool = {
   },
 };
 
+const aiQuotaResponseSchema = z.object({
+  allowed: z.boolean(),
+  event_id: z.string().uuid().optional(),
+  reason: z.string().optional(),
+  retry_after_seconds: z.number().int().positive().optional(),
+});
+
+type UsageTotals = { inputTokens: number; outputTokens: number; totalTokens: number };
+type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
+
+function getClientIp(request: Request) {
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return request.headers.get("x-real-ip")?.trim() || forwarded || "unknown";
+}
+
+async function finalizeAiRequest(supabase: SupabaseClient, tenantId: string, userId: string, eventId: string, status: "completed" | "failed", usage: UsageTotals, limits: ReturnType<typeof getAiLimits>) {
+  const actualCostMicrousd = estimateCostMicrousd(usage.inputTokens, usage.outputTokens, limits.inputCostPerMillionUsd, limits.outputCostPerMillionUsd);
+  const { error } = await supabase.rpc("finalize_ai_request", {
+    p_tenant_id: tenantId,
+    p_user_id: userId,
+    p_event_id: eventId,
+    p_status: status,
+    p_input_tokens: usage.inputTokens,
+    p_output_tokens: usage.outputTokens,
+    p_total_tokens: usage.totalTokens,
+    p_actual_cost_microusd: actualCostMicrousd,
+  });
+  if (error) console.error("AI usage finalization failed", error.message);
+}
+
 function instructions(company: string) {
   return `Você é o analista interno da empresa ${company}. Responda em português do Brasil, de forma clara, objetiva e útil.
 
@@ -40,6 +73,7 @@ Regras obrigatórias:
 - Só solicite includeContact=true quando a pessoa pedir explicitamente telefone ou e-mail de um cliente.
 - Valores com sufixo Cents estão em centavos; converta-os e apresente em reais (R$).
 - Diferencie previsão, valor recebido e valor realizado. Não invente causas, tendências ou conclusões que os dados não sustentam.
+- Se a ferramenta retornar limits.truncated=true, avise que os dados foram limitados e não apresente os totais como completos; peça um período ou filtro mais específico.
 - Datas estão em ISO e devem ser apresentadas no padrão brasileiro quando isso ajudar.
 - Formate a resposta em Markdown simples: use parágrafos curtos, negrito para os números principais e listas quando houver vários itens. Use títulos somente em respostas longas.
 - Não escreva uma seção de fontes ou "Dados consultados"; a interface mostra automaticamente as áreas consultadas.`;
@@ -67,29 +101,78 @@ export async function POST(request: Request) {
 
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const supabase = await createClient();
+  const admin = createAdminClient();
+  const model = process.env.OPENAI_MODEL || "gpt-5.4-mini";
+  const limits = getAiLimits();
+  const instructionText = instructions(context.tenantName);
+  const reservedTokens = estimateReservedTokens(parsed.data.messages, instructionText);
+  const reservedCostMicrousd = estimateCostMicrousd(
+    reservedTokens - AI_MAX_OUTPUT_TOKENS * AI_MAX_ROUNDS,
+    AI_MAX_OUTPUT_TOKENS * AI_MAX_ROUNDS,
+    limits.inputCostPerMillionUsd,
+    limits.outputCostPerMillionUsd,
+  );
+  const ipHash = hashClientIp(
+    getClientIp(request),
+    process.env.AI_RATE_LIMIT_SALT || process.env.OPENAI_API_KEY || "local-development",
+  );
+  const quotaResult = await admin.rpc("claim_ai_request", {
+    p_tenant_id: context.tenantId,
+    p_user_id: userId,
+    p_ip_hash: ipHash,
+    p_model: model,
+    p_reserved_tokens: reservedTokens,
+    p_reserved_cost_microusd: reservedCostMicrousd,
+    p_user_minute_limit: limits.userMinuteRequests,
+    p_ip_minute_limit: limits.ipMinuteRequests,
+    p_tenant_daily_request_limit: limits.tenantDailyRequests,
+    p_tenant_daily_token_limit: limits.tenantDailyTokens,
+    p_tenant_daily_budget_microusd: limits.tenantDailyBudgetMicrousd,
+  });
+  if (quotaResult.error) {
+    console.error("AI quota claim failed", quotaResult.error.message);
+    return NextResponse.json({ error: "AI quota is unavailable right now." }, { status: 503 });
+  }
+  const quota = aiQuotaResponseSchema.safeParse(quotaResult.data);
+  if (!quota.success || !quota.data.allowed || !quota.data.event_id) {
+    const retryAfter = quota.success ? quota.data.retry_after_seconds ?? 60 : 60;
+    const message = quota.success && quota.data.reason === "tenant_daily_budget"
+      ? "O limite diario de custo do Assistente IA foi atingido."
+      : quota.success && quota.data.reason === "tenant_daily_tokens"
+        ? "O limite diario de tokens do Assistente IA foi atingido."
+        : quota.success && quota.data.reason === "tenant_daily_requests"
+        ? "O limite diario de consultas do Assistente IA foi atingido."
+          : "Muitas consultas ao Assistente IA. Aguarde um instante e tente novamente.";
+    return NextResponse.json({ error: message }, { status: 429, headers: { "Retry-After": String(retryAfter) } });
+  }
   const sources = new Set<string>();
+  const usage: UsageTotals = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
   let input: OpenAI.Responses.ResponseInput = parsed.data.messages.map((message) => ({
     role: message.role,
     content: message.content,
   }));
 
   try {
-    for (let round = 0; round < 5; round += 1) {
+    for (let round = 0; round < AI_MAX_ROUNDS; round += 1) {
       const response = await openai.responses.create({
-        model: process.env.OPENAI_MODEL || "gpt-5.4-mini",
-        instructions: instructions(context.tenantName),
+        model,
+        instructions: instructionText,
         input,
         tools: [businessTool],
         tool_choice: "auto",
         parallel_tool_calls: false,
         reasoning: { effort: "low" },
-        max_output_tokens: 1_400,
+        max_output_tokens: AI_MAX_OUTPUT_TOKENS,
         store: false,
       });
+      usage.inputTokens += response.usage?.input_tokens ?? 0;
+      usage.outputTokens += response.usage?.output_tokens ?? 0;
+      usage.totalTokens += response.usage?.total_tokens ?? 0;
       const calls = response.output.filter((item) => item.type === "function_call");
       if (calls.length === 0) {
         const answer = response.output_text.trim();
         if (!answer) throw new Error("OpenAI returned an empty response");
+        await finalizeAiRequest(admin, context.tenantId, userId, quota.data.event_id, "completed", usage, limits);
         return NextResponse.json({ answer, sources: [...sources] });
       }
 
@@ -109,8 +192,10 @@ export async function POST(request: Request) {
         });
       }
     }
+    await finalizeAiRequest(admin, context.tenantId, userId, quota.data.event_id, "failed", usage, limits);
     return NextResponse.json({ error: "A consulta ficou complexa demais. Tente uma pergunta mais específica." }, { status: 422 });
   } catch (error) {
+    await finalizeAiRequest(admin, context.tenantId, userId, quota.data.event_id, "failed", usage, limits);
     console.error("Assistant request failed", error instanceof Error ? error.message : "unknown error");
     return NextResponse.json({ error: "Não foi possível consultar o assistente agora. Tente novamente." }, { status: 502 });
   }

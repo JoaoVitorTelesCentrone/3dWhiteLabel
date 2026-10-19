@@ -9,9 +9,9 @@ export default async function MaterialsPage() {
   const context = await requireModulePermission("stock", "stock.view");
   const supabase = await createClient();
   const [{ data: materials, error }, { data: spools, error: spoolError }, { data: reservations, error: reservationError }] = await Promise.all([
-    supabase.from("materials").select("id,name,kind,color,active").eq("tenant_id", context.tenantId).order("name"),
-    supabase.from("material_spools").select("id,material_id,code,tare_g,current_gross_g,status").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }),
-    supabase.from("material_reservations").select("spool_id,reserved_g").eq("tenant_id", context.tenantId).eq("status", "active"),
+    supabase.from("materials").select("id,name,kind,color,active").eq("tenant_id", context.tenantId).order("name").limit(200),
+    supabase.from("material_spools").select("id,material_id,code,tare_g,current_gross_g,status").eq("tenant_id", context.tenantId).order("created_at", { ascending: false }).limit(500),
+    supabase.from("material_reservations").select("spool_id,reserved_g").eq("tenant_id", context.tenantId).eq("status", "active").limit(1000),
   ]);
   const canAdjust = roleAllows(context.role, "stock.adjust") && context.licenseStatus !== "suspended";
   const canReceive = roleAllows(context.role, "stock.purchase") && context.licenseStatus !== "suspended";

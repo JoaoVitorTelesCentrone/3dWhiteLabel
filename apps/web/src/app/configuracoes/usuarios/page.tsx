@@ -9,7 +9,7 @@ export default async function TenantUsersPage() {
   const context = await requirePermission("users.manage");
   const admin = createAdminClient();
   const { data: users, error } = await admin.from("profiles").select("id,full_name,email,role,active,created_at")
-    .eq("tenant_id", context.tenantId).order("created_at");
+    .eq("tenant_id", context.tenantId).order("created_at").limit(500);
   const canEdit = context.licenseStatus !== "suspended";
   return <main className="management-page">
     <header className="page-head management-page-head"><div className="page-head-main"><p className="page-context">Configurações · {context.tenantName}</p><h1 className="page-title">Usuários</h1><p className="page-desc">Convide a equipe, atribua papéis e desative acessos quando necessário.</p></div><div className="page-actions">{canEdit ? <RecordCreateSheet title="Convidar usuário" description="Envie um convite e defina o papel de acesso."><InviteUserForm /></RecordCreateSheet> : null}</div></header>

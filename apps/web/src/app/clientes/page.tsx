@@ -14,13 +14,15 @@ export default async function CustomersPage() {
       .select("id, name, company_name, email, phone, notes, created_at")
       .eq("tenant_id", context.tenantId)
       .is("archived_at", null)
-      .order("name"),
+      .order("name")
+      .limit(500),
     canViewSales
       ? supabase.from("sales_orders")
         .select("id, customer_id, number, status, total_price_cents, created_at")
         .eq("tenant_id", context.tenantId)
         .neq("status", "canceled")
         .order("created_at", { ascending: false })
+        .limit(1000)
       : Promise.resolve({ data: [], error: null }),
   ]);
   const canEdit = roleAllows(context.role, "crm.edit") && context.licenseStatus !== "suspended";
