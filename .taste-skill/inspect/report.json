@@ -1,0 +1,2374 @@
+{
+ "url": "http://127.0.0.1:3015",
+ "at": "2026-10-30T18:57:26.380Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.93,
+    0.67,
+    0.28,
+    0.63,
+    0.74,
+    0.39,
+    0.42
+   ],
+   "motion": {
+    "elements": 11,
+    "css": 10,
+    "transitions": 0,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 5662,
+     "screens": 6.3,
+     "words": 481,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 24,
+     "sections": 8,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fassets%2Fproduction-status-polished"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Peça falhou? Replaneje.",
+     "words": 3,
+     "chars": 23,
+     "lines": 2,
+     "size": 72,
+     "vw": 5,
+     "font": "Sora",
+     "weight": 760,
+     "tracking": -0.055,
+     "leading": 0.98,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.34,
+     "top": 250,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Peça falhou? Replaneje.",
+     "words": 3,
+     "lines": 2,
+     "size": 72,
+     "font": "Sora"
+    },
+    "headings": [
+     {
+      "text": "Peça falhou? Replaneje.",
+      "words": 3,
+      "chars": 23,
+      "lines": 2,
+      "size": 72,
+      "vw": 5,
+      "font": "Sora",
+      "weight": 760,
+      "tracking": -0.055,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.34,
+      "top": 250,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Falha? Planeje a reposição.",
+      "words": 4,
+      "chars": 27,
+      "lines": 2,
+      "size": 63.4,
+      "vw": 4.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.4,
+      "top": 1078,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Cada peça aprovada conta.",
+      "words": 4,
+      "chars": 25,
+      "lines": 2,
+      "size": 63.4,
+      "vw": 4.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.48,
+      "top": 1918,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Sua marca.",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 43.2,
+      "vw": 3,
+      "font": "Sora",
+      "weight": 600,
+      "tracking": -0.04,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.3,
+      "top": 2854,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Traga um pedido.",
+      "words": 3,
+      "chars": 16,
+      "lines": 1,
+      "size": 43.2,
+      "vw": 3,
+      "font": "Sora",
+      "weight": 600,
+      "tracking": -0.04,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.3,
+      "top": 3372,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Veja o produto antes de decidir.",
+      "words": 6,
+      "chars": 32,
+      "lines": 2,
+      "size": 36,
+      "vw": 2.5,
+      "font": "Sora",
+      "weight": 760,
+      "tracking": -0.045,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.27,
+      "top": 4003,
+      "tag": "strong",
+      "kind": "heading"
+     },
+     {
+      "text": "Veja o fluxo antes de decidir.",
+      "words": 6,
+      "chars": 30,
+      "lines": 2,
+      "size": 63.4,
+      "vw": 4.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.42,
+      "top": 4047,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Perguntas comuns",
+      "words": 2,
+      "chars": 16,
+      "lines": 2,
+      "size": 63.4,
+      "vw": 4.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 4745,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Depois da aprovação, o que vem?",
+      "words": 6,
+      "chars": 31,
+      "lines": 2,
+      "size": 43.2,
+      "vw": 3,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.38,
+      "top": 5349,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 9,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 4,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 0.86,
+       "mono": false
+      },
+      {
+       "family": "Sora",
+       "share": 0.14,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      36,
+      43,
+      63,
+      72
+     ],
+     "sizeCount": 10,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 16,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.8
+     },
+     "measureChars": 86,
+     "max": {
+      "size": 72,
+      "vw": 5,
+      "font": "Sora",
+      "text": "Peça falhou? Replaneje."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0,
+     "smallText": 4
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#0e1013",
+     "bodyBgHsl": {
+      "h": 216,
+      "s": 0.15,
+      "l": 0.06
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#111317",
+       "top": 114,
+       "hsl": {
+        "h": 220,
+        "s": 0.15,
+        "l": 0.08
+       }
+      },
+      {
+       "color": "#17191e",
+       "top": 997,
+       "hsl": {
+        "h": 223,
+        "s": 0.13,
+        "l": 0.1
+       }
+      },
+      {
+       "color": "#1a1d23",
+       "top": 3186,
+       "hsl": {
+        "h": 220,
+        "s": 0.15,
+        "l": 0.12
+       }
+      },
+      {
+       "color": "#1a1c21",
+       "top": 3888,
+       "hsl": {
+        "h": 223,
+        "s": 0.12,
+        "l": 0.12
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#bec2c9",
+       "share": 0.71
+      },
+      {
+       "color": "#f4f5f7",
+       "share": 0.21
+      },
+      {
+       "color": "#d1d4d9",
+       "share": 0.03
+      },
+      {
+       "color": "#140b07",
+       "share": 0.02
+      },
+      {
+       "color": "#a8adb5",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ff5a1f",
+      "hsl": {
+       "h": 16,
+       "s": 1,
+       "l": 0.56
+      },
+      "fg": "#140b07"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 2,
+     "radius": 9,
+     "height": 59,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Demonstração",
+      "Pedir demonstração"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 1,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 23,
+     "hairlineSamples": [
+      "article 276px",
+      "article 277px",
+      "article 276px",
+      "article 277px",
+      "div.landing-flow-footnote 1177px"
+     ],
+     "outlinedBoxes": 7,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 3,
+     "boxRadius": 13,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 19,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": true,
+       "rounded": false,
+       "top": 1325
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.21
+     }
+    ],
+    "nav": {
+     "links": 0,
+     "fixed": false,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "sora",
+     "sora fallback",
+     "inter",
+     "inter fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 5662,
+    "margins": {
+     "left": 92,
+     "right": 113
+    },
+    "sections": [
+     {
+      "sel": "section.landing-hero",
+      "tag": "section",
+      "top": 114,
+      "height": 710,
+      "words": 64,
+      "media": 1,
+      "middle": 110,
+      "heading": {
+       "text": "Peça falhou? Replaneje.",
+       "size": 72,
+       "tag": "h1"
+      },
+      "left": 102,
+      "right": 113,
+      "textLeft": 102,
+      "textRight": 115,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#fluxo.landing-flow",
+      "tag": "section",
+      "top": 997,
+      "height": 694,
+      "words": 93,
+      "media": 0,
+      "middle": 66,
+      "heading": {
+       "text": "Falha? Planeje a reposição.",
+       "size": 63,
+       "tag": "h2"
+      },
+      "left": 131,
+      "right": 143,
+      "textLeft": 131,
+      "textRight": 143,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#recursos.landing-control",
+      "tag": "section",
+      "top": 1865,
+      "height": 637,
+      "words": 77,
+      "media": 1,
+      "middle": 222,
+      "heading": {
+       "text": "Cada peça aprovada conta.",
+       "size": 63,
+       "tag": "h2"
+      },
+      "left": 146,
+      "right": 149,
+      "textLeft": 632,
+      "textRight": 149,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-brand-proof",
+      "tag": "section",
+      "top": 2677,
+      "height": 509,
+      "words": 44,
+      "media": 0,
+      "middle": 208,
+      "heading": {
+       "text": "Sua marca.",
+       "size": 43,
+       "tag": "h2"
+      },
+      "left": 133,
+      "right": 167,
+      "textLeft": 133,
+      "textRight": 167,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-demo-steps",
+      "tag": "section",
+      "top": 3186,
+      "height": 528,
+      "words": 58,
+      "media": 0,
+      "middle": 124,
+      "heading": {
+       "text": "Traga um pedido.",
+       "size": 43,
+       "tag": "h2"
+      },
+      "left": 133,
+      "right": 187,
+      "textLeft": 133,
+      "textRight": 187,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#investimento.landing-offer",
+      "tag": "section",
+      "top": 3888,
+      "height": 684,
+      "words": 87,
+      "media": 0,
+      "middle": 243,
+      "heading": {
+       "text": "Veja o fluxo antes de decidir.",
+       "size": 63,
+       "tag": "h2"
+      },
+      "left": 131,
+      "right": 198,
+      "textLeft": 131,
+      "textRight": 198,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-faq",
+      "tag": "section",
+      "top": 4745,
+      "height": 376,
+      "words": 114,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 604,
+      "right": 169,
+      "textLeft": 604,
+      "textRight": 169,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-closing",
+      "tag": "section",
+      "top": 5295,
+      "height": 272,
+      "words": 25,
+      "media": 0,
+      "middle": 549,
+      "heading": {
+       "text": "Depois da aprovação, o que vem?",
+       "size": 43,
+       "tag": "h2"
+      },
+      "left": 104,
+      "right": 150,
+      "textLeft": 104,
+      "textRight": 150,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [
+     {
+      "top": 712,
+      "height": 356
+     },
+     {
+      "top": 1612,
+      "height": 296
+     },
+     {
+      "top": 2448,
+      "height": 388
+     },
+     {
+      "top": 3024,
+      "height": 304
+     },
+     {
+      "top": 3572,
+      "height": 424
+     },
+     {
+      "top": 4448,
+      "height": 288
+     }
+    ],
+    "h1s": [
+     {
+      "text": "Peça falhou? Replaneje.",
+      "size": 72,
+      "top": 250,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 131,
+      "n": 10
+     },
+     {
+      "x": 604,
+      "n": 5
+     },
+     {
+      "x": 102,
+      "n": 4
+     },
+     {
+      "x": 432,
+      "n": 2
+     },
+     {
+      "x": 632,
+      "n": 2
+     },
+     {
+      "x": 732,
+      "n": 2
+     },
+     {
+      "x": 1032,
+      "n": 2
+     },
+     {
+      "x": 51,
+      "n": 1
+     },
+     {
+      "x": 755,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 29,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.2,
+    "voidBox": {
+     "x": 0,
+     "y": 720,
+     "w": 1440,
+     "h": 180
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.92,
+    0.86,
+    0.42,
+    0.52,
+    0.86,
+    0.54,
+    0.49
+   ],
+   "motion": {
+    "elements": 11,
+    "css": 10,
+    "transitions": 0,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 6225,
+     "screens": 6.1,
+     "words": 474,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 24,
+     "sections": 8,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fassets%2Fproduction-status-polished"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Peça falhou? Replaneje.",
+     "words": 3,
+     "chars": 23,
+     "lines": 2,
+     "size": 57.6,
+     "vw": 7.5,
+     "font": "Sora",
+     "weight": 760,
+     "tracking": -0.055,
+     "leading": 0.98,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.82,
+     "top": 139,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Peça falhou? Replaneje.",
+     "words": 3,
+     "lines": 2,
+     "size": 57.6,
+     "font": "Sora"
+    },
+    "headings": [
+     {
+      "text": "Peça falhou? Replaneje.",
+      "words": 3,
+      "chars": 23,
+      "lines": 2,
+      "size": 57.6,
+      "vw": 7.5,
+      "font": "Sora",
+      "weight": 760,
+      "tracking": -0.055,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 139,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Falha? Planeje a reposição.",
+      "words": 4,
+      "chars": 27,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.73,
+      "top": 1359,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Cada peça aprovada conta.",
+      "words": 4,
+      "chars": 25,
+      "lines": 2,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.59,
+      "top": 2512,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Sua marca.",
+      "words": 2,
+      "chars": 10,
+      "lines": 2,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Sora",
+      "weight": 600,
+      "tracking": -0.04,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.29,
+      "top": 3390,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Traga um pedido.",
+      "words": 3,
+      "chars": 16,
+      "lines": 2,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Sora",
+      "weight": 600,
+      "tracking": -0.04,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.29,
+      "top": 3882,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Veja o fluxo antes de decidir.",
+      "words": 6,
+      "chars": 30,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 4392,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Veja o produto antes de decidir.",
+      "words": 6,
+      "chars": 32,
+      "lines": 2,
+      "size": 26.4,
+      "vw": 3.4,
+      "font": "Sora",
+      "weight": 760,
+      "tracking": -0.045,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.46,
+      "top": 4727,
+      "tag": "strong",
+      "kind": "heading"
+     },
+     {
+      "text": "Perguntas comuns",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 41.6,
+      "vw": 5.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.64,
+      "top": 5286,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Depois da aprovação, o que vem?",
+      "words": 6,
+      "chars": 31,
+      "lines": 2,
+      "size": 28.8,
+      "vw": 3.8,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.47,
+      "top": 5857,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 9,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 4,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 0.86,
+       "mono": false
+      },
+      {
+       "family": "Sora",
+       "share": 0.14,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      26,
+      29,
+      42,
+      58
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 16,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.8
+     },
+     "measureChars": 86,
+     "max": {
+      "size": 57.6,
+      "vw": 7.5,
+      "font": "Sora",
+      "text": "Peça falhou? Replaneje."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0,
+     "smallText": 7
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#0e1013",
+     "bodyBgHsl": {
+      "h": 216,
+      "s": 0.15,
+      "l": 0.06
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#111317",
+       "top": 96,
+       "hsl": {
+        "h": 220,
+        "s": 0.15,
+        "l": 0.08
+       }
+      },
+      {
+       "color": "#191c21",
+       "top": 668,
+       "hsl": {
+        "h": 218,
+        "s": 0.14,
+        "l": 0.11
+       }
+      },
+      {
+       "color": "#0c0e10",
+       "top": 715,
+       "hsl": {
+        "h": 210,
+        "s": 0.14,
+        "l": 0.05
+       }
+      },
+      {
+       "color": "#17191e",
+       "top": 1332,
+       "hsl": {
+        "h": 223,
+        "s": 0.13,
+        "l": 0.1
+       }
+      },
+      {
+       "color": "#1a1d23",
+       "top": 3755,
+       "hsl": {
+        "h": 220,
+        "s": 0.15,
+        "l": 0.12
+       }
+      },
+      {
+       "color": "#1a1c21",
+       "top": 4366,
+       "hsl": {
+        "h": 223,
+        "s": 0.12,
+        "l": 0.12
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#bec2c9",
+       "share": 0.72
+      },
+      {
+       "color": "#f4f5f7",
+       "share": 0.21
+      },
+      {
+       "color": "#d1d4d9",
+       "share": 0.03
+      },
+      {
+       "color": "#140b07",
+       "share": 0.02
+      },
+      {
+       "color": "#c2c6cd",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ff5a1f",
+      "hsl": {
+       "h": 16,
+       "s": 1,
+       "l": 0.56
+      },
+      "fg": "#140b07"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 2,
+     "radius": 9,
+     "height": 59,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Demonstração",
+      "Pedir demonstração"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 1,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 23,
+     "hairlineSamples": [
+      "article 668px",
+      "article 668px",
+      "article 668px",
+      "article 668px",
+      "div.landing-flow-footnote 690px"
+     ],
+     "outlinedBoxes": 6,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 3,
+     "boxRadius": 13,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 14,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": true,
+       "rounded": false,
+       "top": 1520
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.24
+     }
+    ],
+    "nav": {
+     "links": 0,
+     "fixed": false,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "sora",
+     "sora fallback",
+     "inter",
+     "inter fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 6225,
+    "margins": {
+     "left": 18,
+     "right": 74
+    },
+    "sections": [
+     {
+      "sel": "section.landing-hero",
+      "tag": "section",
+      "top": 96,
+      "height": 1139,
+      "words": 64,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Peça falhou? Replaneje.",
+       "size": 58,
+       "tag": "h1"
+      },
+      "left": 61,
+      "right": 74,
+      "textLeft": 61,
+      "textRight": 76,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#fluxo.landing-flow",
+      "tag": "section",
+      "top": 1332,
+      "height": 811,
+      "words": 93,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Falha? Planeje a reposição.",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 39,
+      "right": 149,
+      "textLeft": 39,
+      "textRight": 149,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#recursos.landing-control",
+      "tag": "section",
+      "top": 2240,
+      "height": 948,
+      "words": 77,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Cada peça aprovada conta.",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 18,
+      "right": 188,
+      "textLeft": 18,
+      "textRight": 188,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-brand-proof",
+      "tag": "section",
+      "top": 3285,
+      "height": 471,
+      "words": 44,
+      "media": 0,
+      "middle": 98,
+      "heading": {
+       "text": "Sua marca.",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 77,
+      "right": 111,
+      "textLeft": 77,
+      "textRight": 111,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-demo-steps",
+      "tag": "section",
+      "top": 3755,
+      "height": 515,
+      "words": 58,
+      "media": 0,
+      "middle": 82,
+      "heading": {
+       "text": "Traga um pedido.",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 77,
+      "right": 94,
+      "textLeft": 77,
+      "textRight": 94,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#investimento.landing-offer",
+      "tag": "section",
+      "top": 4366,
+      "height": 823,
+      "words": 87,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Veja o fluxo antes de decidir.",
+       "size": 42,
+       "tag": "h2"
+      },
+      "left": 43,
+      "right": 100,
+      "textLeft": 43,
+      "textRight": 100,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-faq",
+      "tag": "section",
+      "top": 5286,
+      "height": 447,
+      "words": 114,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 18,
+      "right": 83,
+      "textLeft": 18,
+      "textRight": 83,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-closing",
+      "tag": "section",
+      "top": 5830,
+      "height": 264,
+      "words": 25,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Depois da aprovação, o que vem?",
+       "size": 29,
+       "tag": "h2"
+      },
+      "left": 25,
+      "right": 237,
+      "textLeft": 25,
+      "textRight": 237,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Peça falhou? Replaneje.",
+      "size": 58,
+      "top": 139,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 77,
+      "n": 12
+     },
+     {
+      "x": 18,
+      "n": 10
+     },
+     {
+      "x": 39,
+      "n": 5
+     },
+     {
+      "x": 61,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 29,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 9,
+   "filled": [
+    0.86,
+    0.79,
+    0.7,
+    0.43,
+    0.76,
+    0.86,
+    0.78,
+    0.67,
+    0.66
+   ],
+   "motion": {
+    "elements": 11,
+    "css": 10,
+    "transitions": 0,
+    "scripted": 1,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 6797,
+     "screens": 8.1,
+     "words": 474,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 24,
+     "sections": 8,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 1,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "image?url=%2Fassets%2Fproduction-status-polished"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Peça falhou? Replaneje.",
+     "words": 3,
+     "chars": 23,
+     "lines": 2,
+     "size": 46.4,
+     "vw": 11.9,
+     "font": "Sora",
+     "weight": 760,
+     "tracking": -0.055,
+     "leading": 0.98,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.77,
+     "top": 123,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Peça falhou? Replaneje.",
+     "words": 3,
+     "lines": 2,
+     "size": 46.4,
+     "font": "Sora"
+    },
+    "headings": [
+     {
+      "text": "Peça falhou? Replaneje.",
+      "words": 3,
+      "chars": 23,
+      "lines": 2,
+      "size": 46.4,
+      "vw": 11.9,
+      "font": "Sora",
+      "weight": 760,
+      "tracking": -0.055,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 123,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Falha? Planeje a reposição.",
+      "words": 4,
+      "chars": 27,
+      "lines": 2,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.8,
+      "top": 1154,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Cada peça aprovada conta.",
+      "words": 4,
+      "chars": 25,
+      "lines": 2,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.85,
+      "top": 2425,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Sua marca.",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Sora",
+      "weight": 600,
+      "tracking": -0.04,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.8,
+      "top": 3304,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Traga um pedido.",
+      "words": 3,
+      "chars": 16,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Sora",
+      "weight": 600,
+      "tracking": -0.04,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.8,
+      "top": 3971,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Veja o fluxo antes de decidir.",
+      "words": 6,
+      "chars": 30,
+      "lines": 2,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.78,
+      "top": 4719,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Veja o produto antes de decidir.",
+      "words": 6,
+      "chars": 32,
+      "lines": 2,
+      "size": 26.4,
+      "vw": 6.8,
+      "font": "Sora",
+      "weight": 760,
+      "tracking": -0.045,
+      "leading": 1.08,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.67,
+      "top": 5190,
+      "tag": "strong",
+      "kind": "heading"
+     },
+     {
+      "text": "Perguntas comuns",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 5816,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Depois da aprovação, o que vem?",
+      "words": 6,
+      "chars": 31,
+      "lines": 2,
+      "size": 28.8,
+      "vw": 7.4,
+      "font": "Sora",
+      "weight": 730,
+      "tracking": -0.065,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.87,
+      "top": 6390,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 9,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 4,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 0.86,
+       "mono": false
+      },
+      {
+       "family": "Sora",
+       "share": 0.14,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      26,
+      29,
+      30,
+      46
+     ],
+     "sizeCount": 9,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 16,
+      "leading": 1.65,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.8
+     },
+     "measureChars": 40,
+     "max": {
+      "size": 46.4,
+      "vw": 11.9,
+      "font": "Sora",
+      "text": "Peça falhou? Replaneje."
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0,
+     "smallText": 7
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#0e1013",
+     "bodyBgHsl": {
+      "h": 216,
+      "s": 0.15,
+      "l": 0.06
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#111317",
+       "top": 96,
+       "hsl": {
+        "h": 220,
+        "s": 0.15,
+        "l": 0.08
+       }
+      },
+      {
+       "color": "#191c21",
+       "top": 655,
+       "hsl": {
+        "h": 218,
+        "s": 0.14,
+        "l": 0.11
+       }
+      },
+      {
+       "color": "#17191e",
+       "top": 1127,
+       "hsl": {
+        "h": 223,
+        "s": 0.13,
+        "l": 0.1
+       }
+      },
+      {
+       "color": "#1a1d23",
+       "top": 3914,
+       "hsl": {
+        "h": 220,
+        "s": 0.15,
+        "l": 0.12
+       }
+      },
+      {
+       "color": "#1a1c21",
+       "top": 4694,
+       "hsl": {
+        "h": 223,
+        "s": 0.12,
+        "l": 0.12
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#bec2c9",
+       "share": 0.72
+      },
+      {
+       "color": "#f4f5f7",
+       "share": 0.21
+      },
+      {
+       "color": "#d1d4d9",
+       "share": 0.03
+      },
+      {
+       "color": "#140b07",
+       "share": 0.02
+      },
+      {
+       "color": "#c2c6cd",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ff5a1f",
+      "hsl": {
+       "h": 16,
+       "s": 1,
+       "l": 0.56
+      },
+      "fg": "#140b07"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 2,
+     "radius": 9,
+     "height": 59,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Demonstração",
+      "Pedir demonstração"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 1,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 23,
+     "hairlineSamples": [
+      "article 290px",
+      "article 290px",
+      "article 290px",
+      "article 290px",
+      "div.landing-flow-footnote 312px"
+     ],
+     "outlinedBoxes": 7,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 3,
+     "boxRadius": 13,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 14,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": true,
+       "rounded": false,
+       "top": 1394
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.1
+     }
+    ],
+    "nav": {
+     "links": 0,
+     "fixed": false,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "sora",
+     "sora fallback",
+     "inter",
+     "inter fallback"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 6797,
+    "margins": {
+     "left": 18,
+     "right": 39
+    },
+    "sections": [
+     {
+      "sel": "section.landing-hero",
+      "tag": "section",
+      "top": 96,
+      "height": 934,
+      "words": 64,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Peça falhou? Replaneje.",
+       "size": 46,
+       "tag": "h1"
+      },
+      "left": 44,
+      "right": 46,
+      "textLeft": 44,
+      "textRight": 46,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#fluxo.landing-flow",
+      "tag": "section",
+      "top": 1127,
+      "height": 942,
+      "words": 93,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Falha? Planeje a reposição.",
+       "size": 30,
+       "tag": "h2"
+      },
+      "left": 39,
+      "right": 39,
+      "textLeft": 39,
+      "textRight": 39,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#recursos.landing-control",
+      "tag": "section",
+      "top": 2165,
+      "height": 985,
+      "words": 77,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Cada peça aprovada conta.",
+       "size": 30,
+       "tag": "h2"
+      },
+      "left": 18,
+      "right": 19,
+      "textLeft": 18,
+      "textRight": 19,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-brand-proof",
+      "tag": "section",
+      "top": 3247,
+      "height": 667,
+      "words": 44,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Sua marca.",
+       "size": 30,
+       "tag": "h2"
+      },
+      "left": 39,
+      "right": 67,
+      "textLeft": 39,
+      "textRight": 67,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-demo-steps",
+      "tag": "section",
+      "top": 3914,
+      "height": 683,
+      "words": 58,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Traga um pedido.",
+       "size": 30,
+       "tag": "h2"
+      },
+      "left": 39,
+      "right": 46,
+      "textLeft": 39,
+      "textRight": 46,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section#investimento.landing-offer",
+      "tag": "section",
+      "top": 4694,
+      "height": 1025,
+      "words": 87,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Veja o fluxo antes de decidir.",
+       "size": 30,
+       "tag": "h2"
+      },
+      "left": 43,
+      "right": 44,
+      "textLeft": 43,
+      "textRight": 44,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-faq",
+      "tag": "section",
+      "top": 5816,
+      "height": 450,
+      "words": 95,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 18,
+      "right": 55,
+      "textLeft": 18,
+      "textRight": 55,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.landing-closing",
+      "tag": "section",
+      "top": 6362,
+      "height": 291,
+      "words": 25,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Depois da aprovação, o que vem?",
+       "size": 29,
+       "tag": "h2"
+      },
+      "left": 25,
+      "right": 49,
+      "textLeft": 25,
+      "textRight": 49,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Peça falhou? Replaneje.",
+      "size": 46,
+      "top": 123,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 39,
+      "n": 11
+     },
+     {
+      "x": 18,
+      "n": 10
+     },
+     {
+      "x": 82,
+      "n": 8
+     }
+    ],
+    "leftBlocks": 29,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "23 thin rule(s)/divider line(s): article 276px | article 277px | article 276px | article 277px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "outlined-box",
+   "width": 1440,
+   "message": "7 boxes drawn with a 1px outline.",
+   "fix": "Define a surface by its fill (one tone step from the page) or leave the content unboxed.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "icon-cards",
+   "width": 1440,
+   "message": "1 row(s) of identical cards each topped with a small icon (4 cards).",
+   "fix": "Replace with one composed section from the direction: a narrative split, a list set in large type, or real imagery per item.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "10 different font sizes (12, 13, 14, 15, 16, 17, 36, 43, 63, 72).",
+   "fix": "A page needs about five: display, heading, lead, body, small."
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 1 picture(s) on the page (1 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "4 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The margins differ: 92px on the left, 113px on the right, at 1440px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page."
+  },
+  {
+   "level": "FAIL",
+   "id": "blank-gap",
+   "width": 1440,
+   "message": "2 stretch(es) of the page hold nothing at all: 388px at 2448px; 424px at 3572px (the screen is 900px tall).",
+   "fix": "Close the gap: a section gap is 120–240px on desktop and 72–112px on a phone. Look for a min-height: 100vh on a short section, an empty grid row, a hidden element still holding its space, or a reveal that never fired. A deliberate rest is a placed picture or colour field, not nothing."
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 1440,
+   "message": "The h1 is a bare name (\"Peça falhou? Replaneje.\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "untitled-section",
+   "width": 1440,
+   "message": "A section carries text but no heading: section.landing-faq at 4745px.",
+   "fix": "Name it with a short heading unless it is the continuation of the section above.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "still-page",
+   "width": 1440,
+   "message": "Little motion: 11 element(s) moved while the page loaded and scrolled.",
+   "fix": "Give every section an entrance for its parts (not one fade of the whole block) and add one moving picture: a looping clip or a slow move on a photograph."
+  },
+  {
+   "level": "FAIL",
+   "id": "off-centre",
+   "width": 768,
+   "message": "The page sits off-centre: its content comes to 18px from the left edge but only to 74px from the right, at 768px.",
+   "fix": "Give the page one pair of equal margins. Check the wrapper for a max-width without margin-inline: auto, a grid with an empty last column, or padding on one side only. If one side is meant to hold air, it must still be closed by something that reaches the margin (a picture, the navigation's last item, a figure).",
+   "alsoAt": [
+    390
+   ]
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\desktop-page-01.jpg",
+    "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\desktop-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\tablet-page-01.jpg",
+    "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\tablet-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\mobile-page-01.jpg",
+    "C:\\Projects\\whiteLabel3dAgency\\Agencia 3d\\.taste-skill\\inspect\\mobile-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}
