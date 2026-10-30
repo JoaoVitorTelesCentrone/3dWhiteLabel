@@ -10,9 +10,15 @@ export type Database = {
   public: {
     Tables: {
       sales_leads: {
-        Row: { id: string; name: string; company: string; email: string; phone: string | null; message: string | null; source: string; status: string; created_at: string };
-        Insert: { id?: string; name: string; company: string; email: string; phone?: string | null; message?: string | null; source?: string; status?: string; created_at?: string };
-        Update: Partial<Pick<Database["public"]["Tables"]["sales_leads"]["Row"], "status">>;
+        Row: { id: string; name: string; company: string; email: string; phone: string | null; message: string | null; source: string; status: string; assigned_to: string | null; utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; demo_scheduled_at: string | null; proposal_sent_at: string | null; created_at: string };
+        Insert: { id?: string; name: string; company: string; email: string; phone?: string | null; message?: string | null; source?: string; status?: string; assigned_to?: string | null; utm_source?: string | null; utm_medium?: string | null; utm_campaign?: string | null; demo_scheduled_at?: string | null; proposal_sent_at?: string | null; created_at?: string };
+        Update: Partial<Pick<Database["public"]["Tables"]["sales_leads"]["Row"], "status" | "assigned_to" | "utm_source" | "utm_medium" | "utm_campaign" | "demo_scheduled_at" | "proposal_sent_at">>;
+        Relationships: [];
+      };
+      sales_funnel_events: {
+        Row: { id: number; event_name: string; page_path: string; utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; created_at: string };
+        Insert: { id?: number; event_name: string; page_path: string; utm_source?: string | null; utm_medium?: string | null; utm_campaign?: string | null; created_at?: string };
+        Update: never;
         Relationships: [];
       };
       profiles: {

@@ -5,7 +5,7 @@
 **Sua Empresa 3D** — plataforma white label para operações de impressão 3D. O nome da plataforma aparece na administração interna; cada operação cliente usa sua própria marca e domínio.
 
 **Tagline principal:**
-> Do orçamento à peça entregue.
+> Do pedido à peça entregue.
 
 **Personalidade da marca:** clara, técnica e confiável. A comunicação explica o trabalho da operação sem competir com a marca do cliente nem recorrer a promessas genéricas.
 

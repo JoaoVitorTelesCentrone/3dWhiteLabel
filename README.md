@@ -143,4 +143,4 @@ O MVP não mantém estoque de produtos acabados nem uma etapa independente de p�
 
 ## Estratégia comercial em 1 parágrafo
 
-Licença única de R$ 1.497–4.997 (percepção de "meu próprio software") + plano Care de R$ 99/mês (hospedagem, backup, suporte) + customizações e integrações sob orçamento. 100 clientes ≈ R$ 150 mil de licenças + ~R$ 10 mil/mês de recorrência. Detalhes e plano de monetização rápida em `MONETIZACAO.md`.
+Oferta Start documentada: licença única de R$ 1.497 + Care opcional de R$ 99/mês para hospedagem, backup, monitoramento, atualizações e suporte; serviços, integrações e domínio próprio são definidos em proposta. Os valores precisam ser confirmados antes de cada proposta. Metas de vendas antigas em `MONETIZACAO.md` são hipóteses históricas, não resultados comprovados.

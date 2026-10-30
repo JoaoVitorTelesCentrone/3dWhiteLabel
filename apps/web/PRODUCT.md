@@ -40,7 +40,7 @@ The mechanism a neighbor could not truthfully copy: every tenant gets the produc
 
 ## Brand Commitments
 
-`IDENTIDADE-VISUAL.md` is binding: token palette (`--brand-primary #FF5A1F`, `--brand-accent #FFB25A`, `--bg #0E1013`, `--bg-surface #1A1D23`, `--bg-elevated #242832`, `--text-primary #F4F5F7`, `--text-muted #9BA1AB`), tagline "Do orçamento à peça entregue.", industrial-direct voice, logo usage rules (`assets/agencia3d-logo.png`), dark mode first. Sua Empresa 3D logo appears only in the internal admin, the sales site, and a removable "Powered by" footer.
+`IDENTIDADE-VISUAL.md` is binding: token palette (`--brand-primary #FF5A1F`, `--brand-accent #FFB25A`, `--bg #0E1013`, `--bg-surface #1A1D23`, `--bg-elevated #242832`, `--text-primary #F4F5F7`, `--text-muted #9BA1AB`), tagline "Do pedido à peça entregue.", industrial-direct voice, logo usage rules (`assets/agencia3d-logo.png`), dark mode first. Sua Empresa 3D logo appears only in the internal admin, the sales site, and a removable "Powered by" footer.
 
 ## Evidence on Hand
 
@@ -48,6 +48,8 @@ The mechanism a neighbor could not truthfully copy: every tenant gets the produc
 - Product and architecture docs in the repo root (README, ARQUITETURA, DATABASE, PERMISSOES, ROADMAP, ESTRUTURA, IDENTIDADE-VISUAL).
 - Local Supabase with a demo tenant for development; `dev-login` route for auth bypass in dev.
 - No real customer testimonials, benchmarks, or pricing evidence — future work must not fabricate any.
+- Commercial LP uses a fictional demo tenant and explicit fake-data labeling; brand examples are fictional and illustrate configuration only.
+- The marketing funnel records page views, demo CTA clicks, form starts/submissions, UTM campaign values, and manually updated demo/proposal milestones. It stores no visitor identifier or contact fields in event rows.
 
 ## Product Principles
 

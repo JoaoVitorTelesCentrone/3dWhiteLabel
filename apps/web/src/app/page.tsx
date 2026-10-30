@@ -1,144 +1,181 @@
+import Image from "next/image";
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
+import { FunnelTracker } from "@/components/funnel-tracker";
 import { redirect } from "next/navigation";
-import { ArrowRight, Boxes, Check, CircleDollarSign, Factory, Layers3, PackageCheck, UsersRound } from "lucide-react";
+import { ArrowDown, ArrowRight, Check, Layers3 } from "lucide-react";
 import { getRequestUserId } from "@/lib/auth/session";
 
 export const metadata: Metadata = {
   title: "Gestão para empresas de impressão 3D | Sua Empresa 3D",
-  description: "Organize pedidos, produção, materiais, clientes e resultados da sua operação de impressão 3D em um só lugar.",
+  description: "Organize pedidos, produção, materiais, entregas e custos previstos da sua empresa de impressão 3D em um só lugar.",
 };
 
-const pains = [
-  { icon: UsersRound, title: "Pedidos espalhados", copy: "O combinado fica entre conversas, anotações e planilhas difíceis de acompanhar." },
-  { icon: Factory, title: "Produção sem visão", copy: "Descobrir o que está na fila, imprimindo ou atrasado toma tempo todos os dias." },
-  { icon: CircleDollarSign, title: "Margem no escuro", copy: "Material, despesas e recebimentos não se encontram na hora de medir o resultado." },
-];
-
-const workflow = [
-  ["Pedido confirmado", "Registre cliente, itens, valor, prazo e endereço no mesmo fluxo."],
-  ["Produção acompanhada", "Mova cada job pela fila e veja o que precisa de atenção."],
-  ["Resultado visível", "Acompanhe estoque, receitas, despesas e margem estimada."],
+const flow = [
+  ["Pedido aprovado", "Cliente, produto, quantidade e valor ficam no mesmo registro."],
+  ["Produção em andamento", "Jobs e material reservado ficam ligados à ordem de produção."],
+  ["Falha registrada. Reposição planejada.", "Informe peças boas e defeituosas. Planeje novamente a quantidade que falta."],
+  ["Entrega e recebimento", "Registre a expedição, a entrega e os recebimentos do pedido."],
 ];
 
 const included = [
-  "Clientes e histórico de pedidos", "Pedidos e entregas", "Fila e status de produção",
-  "Materiais e produtos prontos", "Financeiro e margens estimadas", "Relatórios essenciais",
+  "Clientes e histórico de pedidos",
+  "Fila e andamento da produção",
+  "Materiais reservados e consumidos",
+  "Expedição e entrega",
+  "Recebimentos e despesas",
+  "Relatórios com margem estimada",
 ];
 
 const faqs = [
-  ["O sistema fica com a minha marca?", "Sim. Configuramos nome, logo e cores da sua empresa na implantação."],
-  ["Preciso usar todos os módulos?", "Não. Avaliamos sua rotina e ativamos os módulos que fazem sentido para a operação."],
-  ["Como funciona a demonstração?", "Você recebe acesso a um ambiente com dados fictícios para conhecer o fluxo sem expor informações da sua empresa."],
-  ["O que está incluído no valor?", "A licença Start inclui a configuração inicial, sua marca e os módulos essenciais de gestão. Funcionalidades sob medida são avaliadas separadamente."],
+  ["O que vou ver na demonstração?", "Um pedido fictício percorrendo o fluxo de produção até a entrega. A conversa é guiada e usa dados de exemplo; não precisa criar uma conta."],
+  ["O que o sistema acompanha hoje?", "Pedidos, clientes, produção, materiais, expedição, entregas, recebimentos, despesas e relatórios com margem estimada."],
+  ["Como vocês registram falhas e reposições?", "Ao concluir um job, a equipe informa quantas peças ficaram boas e defeituosas. Se faltar quantidade, pode planejar outro job para completar o pedido."],
+  ["A margem mostrada é o lucro final?", "Não. O sistema mostra margem estimada e registra recebimentos, despesas e custos de material separadamente."],
+  ["Como funciona preço e implantação?", "Depois de entender a operação, apresentamos escopo e valores separados para licença, implantação, hospedagem e suporte. Importação, treinamento adicional, domínio próprio e integrações precisam de escopo próprio."],
 ];
 
 export default async function HomePage() {
   if (await getRequestUserId()) redirect("/dashboard");
 
-  const host = (await headers()).get("host")?.toLowerCase();
-  const demoUrl = process.env.NEXT_PUBLIC_DEMO_URL || "/login";
-  const salesContactUrl = process.env.NEXT_PUBLIC_SALES_CONTACT_URL || "/contato";
-
-  if (process.env.NODE_ENV === "development" && process.env.AGENCIA3D_LOCAL_DEMO_AUTO_LOGIN === "true" && host === "demo.localhost:3005") {
-    redirect("/dev-login");
-  }
+  const salesContactUrl = "/contato";
 
   return (
-    <main className="offer-page landing-page">
+    <main className="offer-page landing-page" id="inicio">
+      <FunnelTracker />
       <nav className="landing-nav" aria-label="Navegação principal">
         <Link href="/" className="landing-brand" aria-label="Sua Empresa 3D — início">
           <span aria-hidden="true"><Layers3 /></span><strong>Sua Empresa 3D</strong>
         </Link>
-        <div><a href="#como-funciona">Como funciona</a><a href="#recursos">Recursos</a><a href="#investimento">Investimento</a></div>
-        <a className="landing-nav-cta" href={salesContactUrl}>Solicitar demonstração</a>
+        <div>
+          <a href="#fluxo">Como funciona</a>
+          <a href="#recursos">O que acompanha</a>
+          <a href="#investimento">Próximo passo</a>
+        </div>
+        <a className="landing-nav-cta" href={salesContactUrl}>Demonstração <ArrowRight aria-hidden="true" /></a>
       </nav>
 
       <section className="landing-hero" aria-labelledby="landing-title">
         <div className="landing-hero-copy">
-          <p className="landing-kicker"><span /> O sistema da sua empresa 3D</p>
-          <h1 id="landing-title">Pare de caçar pedidos. Controle sua operação 3D.</h1>
-          <p className="landing-lead">Pedidos, produção, materiais e financeiro no mesmo fluxo — com a sua marca.</p>
+          <h1 id="landing-title">Peça falhou? Replaneje.</h1>
+          <p className="landing-lead">Gestão para impressão 3D: registre peças boas e defeituosas, planeje reposições e acompanhe pedidos até a entrega.</p>
           <div className="landing-actions">
-            <a className="landing-primary" href={salesContactUrl}>Ver o sistema em ação <ArrowRight aria-hidden="true" /></a>
-            <a className="landing-secondary" href={demoUrl}>Acessar demonstração</a>
+            <a className="landing-primary" href={salesContactUrl}>Pedir demonstração <ArrowRight aria-hidden="true" /></a>
+            <a className="landing-secondary" href="#fluxo">Ver o fluxo de um pedido <ArrowDown aria-hidden="true" /></a>
           </div>
-          <ul className="landing-assurance" aria-label="Condições da oferta">
-            <li><Check /> Pagamento único</li><li><Check /> Sua marca no sistema</li><li><Check /> Implantação assistida</li>
+          <ul className="landing-assurance" aria-label="Informações sobre o produto">
+            <li><Check /> Sua marca no sistema</li>
+            <li><Check /> Começa no pedido aprovado</li>
+            <li><Check /> Dados da demo são fictícios</li>
           </ul>
         </div>
 
-        <div className="landing-product" aria-label="Prévia do painel de gestão">
-          <div className="landing-product-badge"><i /> Operação em tempo real</div>
-          <div className="landing-product-bar"><i /><i /><i /><span>painel.suaempresa3d</span></div>
-          <div className="landing-product-shell">
-            <aside aria-hidden="true"><span className="landing-mini-brand"><Layers3 /></span><i className="active" /><i /><i /><i /></aside>
-            <div className="landing-dashboard">
-              <header><div><small>Visão geral</small><strong>Bom dia, Ana</strong></div><span>Outubro</span></header>
-              <div className="landing-stats">
-                <article><small>Pedidos ativos</small><strong>24</strong><span>6 para esta semana</span></article>
-                <article><small>Em produção</small><strong>12</strong><span>3 impressoras livres</span></article>
-              </div>
-              <div className="landing-pipeline">
-                <header><strong>Produção</strong><small>12 jobs ativos</small></header>
-                <div>
-                  <article><span>Fila</span><b>Suporte articulado</b><b>Protótipo A-12</b></article>
-                  <article><span>Imprimindo</span><b className="hot">Lote de conectores</b><b>Engrenagem técnica</b></article>
-                  <article><span>Prontos</span><b>Miniaturas — lote 8</b><b>Gabinete personalizado</b></article>
-                </div>
-              </div>
-            </div>
+        <figure className="landing-proof">
+          <div className="landing-proof-topline">
+            <span><i /> Tela do produto</span>
+            <span>Ambiente de demonstração</span>
           </div>
-          <div className="landing-float-card"><PackageCheck /><span>Pedido #184</span><strong>Pronto para entrega</strong></div>
+          <div className="landing-proof-image">
+            <Image
+              src="/assets/production-status-polished.png"
+              alt="Tela do produto com pedidos separados por etapa de produção. Empresa, pessoas e pedidos são dados fictícios."
+              width={1600}
+              height={1000}
+              priority
+              sizes="(max-width: 1024px) 94vw, 54vw"
+            />
+          </div>
+          <figcaption><strong>A fila de produção, em um só lugar.</strong><span>Ambiente de demonstração com dados fictícios.</span></figcaption>
+        </figure>
+      </section>
+
+      <section className="landing-flow" id="fluxo" aria-labelledby="flow-title">
+        <div className="landing-flow-heading">
+          <h2 id="flow-title">Falha? Planeje a reposição.</h2>
+          <p>Registre o resultado do job e planeje a quantidade que falta. Quando houver peças boas suficientes, o pedido pode seguir para expedição.</p>
+        </div>
+        <div className="landing-flow-track">
+          <svg className="landing-flow-filament landing-flow-filament-desktop" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true">
+            <path className="landing-flow-filament-base" pathLength="1" d="M4 10 H996" />
+            <path className="landing-flow-filament-draw" pathLength="1" d="M4 10 H996" />
+          </svg>
+          <svg className="landing-flow-filament landing-flow-filament-mobile" viewBox="0 0 20 1000" preserveAspectRatio="none" aria-hidden="true">
+            <path className="landing-flow-filament-base" pathLength="1" d="M10 4 V996" />
+            <path className="landing-flow-filament-draw" pathLength="1" d="M10 4 V996" />
+          </svg>
+          {flow.map(([title, copy], index) => (
+            <article key={title} style={{ "--flow-index": index } as CSSProperties}>
+              <span className="landing-flow-node"><i /></span>
+              <h3>{title}</h3>
+              <p>{copy}</p>
+            </article>
+          ))}
+        </div>
+        <div className="landing-flow-footnote"><span /> O fluxo principal começa no pedido aprovado. Orçamento é opcional.</div>
+      </section>
+
+      <section className="landing-control" id="recursos" aria-labelledby="control-title">
+        <div className="landing-control-aside">
+          <svg className="landing-control-layer-art" viewBox="0 0 220 220" aria-hidden="true">
+            <path className="landing-layer-outline" d="M110 30 172 63 110 96 48 63Z M48 63V143L110 178 172 143V63" />
+            <path className="landing-layer-seams" d="m48 83 62 33 62-33M48 103l62 33 62-33M48 123l62 33 62-33" />
+            <path className="landing-layer-highlight" pathLength="1" d="M110 30 172 63 110 96 48 63Z" />
+          </svg>
+        </div>
+        <div className="landing-control-copy">
+          <h2 id="control-title">Cada peça aprovada conta.</h2>
+          <p>Ao concluir um job, a equipe informa o resultado. Se a quantidade boa ainda não atende ao pedido, pode planejar outra rodada de produção. O sistema registra material e mantém o progresso ligado ao pedido.</p>
+          <ul>{included.map((item) => <li key={item}><span aria-hidden="true" /><span>{item}</span><Check aria-hidden="true" /></li>)}</ul>
+          <p className="landing-control-note">Margens são estimativas. Recebimentos e despesas aparecem como registros separados.</p>
         </div>
       </section>
 
-      <section className="landing-problems" aria-labelledby="problems-title">
-        <div className="landing-section-heading"><p>Menos improviso</p><h2 id="problems-title">A empresa cresce. A desorganização não precisa crescer junto.</h2></div>
-        <div className="landing-card-grid">{pains.map(({ icon: Icon, title, copy }) => <article key={title}><Icon /><h3>{title}</h3><p>{copy}</p></article>)}</div>
+      <section className="landing-brand-proof" aria-labelledby="brand-proof-title">
+        <div><h2 id="brand-proof-title">Sua marca.</h2><p>Configure nome, cores e logo da empresa. Os exemplos abaixo são fictícios. Domínio próprio recebe escopo separado.</p></div>
+        <div className="landing-brand-pair" aria-label="Exemplos fictícios de personalização da marca">
+          <article className="landing-brand-sample landing-brand-sample--orange"><span className="landing-brand-mark">OC</span><div><strong>Oficina Camada</strong><small>Pedidos · Produção · Entregas</small></div><i>Fila de produção</i></article>
+          <article className="landing-brand-sample landing-brand-sample--blue"><span className="landing-brand-mark">FL</span><div><strong>Forma Lab</strong><small>Pedidos · Produção · Entregas</small></div><i>Fila de produção</i></article>
+        </div>
       </section>
 
-      <section className="landing-workflow" id="como-funciona" aria-labelledby="workflow-title">
-        <div className="landing-section-heading"><p>Um fluxo claro</p><h2 id="workflow-title">Do pedido confirmado à peça entregue.</h2></div>
-        <div className="landing-steps">{workflow.map(([title, copy], index) => <article key={title}><span>{index + 1}</span><div><h3>{title}</h3><p>{copy}</p></div></article>)}</div>
-      </section>
-
-      <section className="landing-features" id="recursos" aria-labelledby="features-title">
-        <div className="landing-features-copy">
-          <p className="landing-kicker"><span /> Feito para a sua rotina</p>
-          <h2 id="features-title">A informação certa aparece onde o trabalho acontece.</h2>
-          <p>Você deixa de reconstruir a operação toda vez que precisa responder um cliente, planejar a fila ou conferir o caixa.</p>
-          <ul>{included.map((item) => <li key={item}><Check /> {item}</li>)}</ul>
-        </div>
-        <div className="landing-feature-visual">
-          <div className="landing-visual-head"><Boxes /><span>Resumo da operação</span><small>Atualizado agora</small></div>
-          <div className="landing-visual-number"><small>Pedidos no mês</small><strong>86</strong><span>+14% no período</span></div>
-          <div className="landing-visual-rows"><div><span>Taxa de conclusão</span><strong>92%</strong></div><div><span>Entregas no prazo</span><strong>89%</strong></div><div><span>Materiais com estoque baixo</span><strong>3</strong></div></div>
-          <p>Dados ilustrativos do ambiente de demonstração.</p>
-        </div>
+      <section className="landing-demo-steps" aria-labelledby="demo-steps-title">
+        <div><h2 id="demo-steps-title">Traga um pedido.</h2><p>Conte como a sua operação funciona. Percorremos um exemplo fictício e mostramos o que o sistema cobre hoje.</p></div>
+        <ol><li><span><strong>Descreva um pedido</strong><small>Sem compartilhar dados pessoais de clientes.</small></span></li><li><span><strong>Siga as etapas</strong><small>Produção, falha, reposição e entrega em dados fictícios.</small></span></li><li><span><strong>Avalie o encaixe</strong><small>Se fizer sentido, você recebe uma proposta com escopo e valores separados.</small></span></li></ol>
       </section>
 
       <section className="landing-offer" id="investimento" aria-labelledby="offer-title">
-        <div><p>Licença Start</p><h2 id="offer-title">Comece com a operação organizada e a sua marca aplicada.</h2><p>Implantação assistida, configuração inicial e módulos essenciais para colocar o sistema em uso.</p></div>
+        <div className="landing-offer-copy">
+          <h2 id="offer-title">Veja o fluxo antes de decidir.</h2>
+          <p>A demonstração mostra o que o produto faz hoje. Se houver encaixe, a proposta separa licença, implantação, hospedagem e suporte.</p>
+          <div className="landing-scope-note"><p>Importação de dados, treinamento adicional, domínio próprio e integrações precisam de definição e valor separados.</p></div>
+        </div>
         <div className="landing-price-card">
-          <span>Pagamento único</span><strong><small>R$</small> 1.497</strong>
-          <ul><li><Check /> Configuração da empresa</li><li><Check /> Nome, logo e cores</li><li><Check /> Acesso do proprietário</li><li><Check /> Orientação inicial</li></ul>
-          <a href={salesContactUrl}>Solicitar demonstração <ArrowRight /></a><small>Care opcional por R$ 99/mês.</small>
+          <strong className="landing-price-promise">Veja o produto antes de decidir.</strong>
+          <ul>
+            <li><Check /> Pedido e ordem de produção</li>
+            <li><Check /> Jobs, falha e reposição</li>
+            <li><Check /> Expedição e recebimento</li>
+            <li><Check /> Dados fictícios, sem criar uma conta</li>
+          </ul>
+          <a href={salesContactUrl}>Pedir demonstração <ArrowRight aria-hidden="true" /></a>
+          <div className="landing-care"><p>Receba uma proposta com escopo, implantação, licença, hospedagem e suporte descritos separadamente.</p></div>
         </div>
       </section>
 
       <section className="landing-faq" aria-labelledby="faq-title">
-        <div className="landing-section-heading"><p>Antes de começar</p><h2 id="faq-title">Perguntas frequentes.</h2></div>
-        <div>{faqs.map(([question, answer]) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</div>
+        <h2 className="landing-faq-heading" id="faq-title">Perguntas comuns</h2>
+        <div className="landing-faq-list">
+          {faqs.map(([question, answer]) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}
+        </div>
       </section>
 
       <section className="landing-closing" aria-labelledby="closing-title">
-        <div><Layers3 aria-hidden="true" /><h2 id="closing-title">Veja como sua operação pode funcionar em um só lugar.</h2><p>Conte um pouco sobre a empresa e receba acesso ao ambiente de demonstração.</p></div>
-        <a href={salesContactUrl}>Quero conhecer <ArrowRight /></a>
+        <div className="landing-closing-copy"><h2 id="closing-title">Depois da aprovação, o que vem?</h2><p>Peça uma demonstração guiada com dados fictícios. Você avalia o fluxo antes de decidir se vale avançar.</p></div>
+        <a href={salesContactUrl}>Pedir demonstração <ArrowRight aria-hidden="true" /></a>
       </section>
 
-      <footer className="landing-footer"><span>Sua Empresa 3D</span><div><Link href="/privacidade">Privacidade</Link><Link href="/termos">Termos de uso</Link></div></footer>
+      <footer className="landing-footer"><Link href="/" className="landing-footer-brand"><Layers3 aria-hidden="true" /> Sua Empresa 3D</Link><div><Link href="/privacidade">Privacidade</Link><Link href="/termos">Termos de uso</Link></div><span>Gestão feita para a rotina da impressão 3D.</span></footer>
     </main>
   );
 }

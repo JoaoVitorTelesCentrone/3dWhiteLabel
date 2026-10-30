@@ -1,4 +1,6 @@
-# MONETIZACAO.md — Modelo de receita e plano de monetização rápida
+# MONETIZACAO.md — Modelo de receita e plano de monetização
+
+> **Estado comercial:** a tabela de preço Start e Care abaixo é a oferta documentada para a demo. As metas temporais e de vendas da seção 5 foram hipóteses do plano inicial; não são resultados, compromissos atuais nem instruções para uma pré-venda.
 
 ## 1. Princípio
 
@@ -22,6 +24,8 @@ Licença ≠ Hospedagem ≠ Manutenção   → 3 decisões, 3 receitas
 
 Modelos 3D, receitas, QR Code, planner, portal do cliente, multiunidade e integrações não fazem parte da licença Start atual. Só devem aparecer em proposta quando houver escopo, prazo e aceite específicos.
 
+**Configuração padrão incluída no Start:** nome, logo e cores da empresa, criação do acesso do proprietário e ativação dos módulos incluídos. Importação de cadastros existentes, configuração operacional ampliada e treinamento adicional são serviços separados.
+
 ### Care (manutenção + hospedagem) — R$ 99/mês
 
 Hospedagem, backup diário, monitoramento, atualizações, suporte, correções, recuperação de dados. Vendido como **conveniência**, nunca como obrigação para usar a licença. Sem Care: o cliente pode exportar dados e hospedar por conta (raro na prática — é o argumento que converte).
@@ -30,7 +34,7 @@ Hospedagem, backup diário, monitoramento, atualizações, suporte, correções,
 
 | Serviço | Faixa |
 |---|---|
-| Implantação assistida (importação de dados + configuração + marca) | R$ 497–997 |
+| Implantação assistida (importação de dados + configuração operacional ampliada) | R$ 497–997 |
 | Integração simples (WhatsApp, marketplace) | R$ 500–1.500 |
 | Integração ERP (Bling, Omie) | R$ 1.500–3.000 |
 | Relatório/dashboard customizado | R$ 300–800 |
@@ -49,9 +53,9 @@ Sua Empresa 3D Start:  R$ 1.497 único + R$ 99/mês opcional
 
 Mensagem: *"Você não aluga mais uma ferramenta. Você compra o sistema da sua empresa, com a sua marca."*
 
-## 5. Plano de monetização rápida (0–6 meses)
+## 5. Plano inicial (hipóteses históricas; não usar como previsão atual)
 
-**Objetivo: primeira receita na semana 8, R$ 30 mil em 6 meses.**
+Os marcos a seguir registram a hipótese original de lançamento. Atualize somente com dados reais de vendas, custos e pilotos. Não apresente as metas como tração comprovada.
 
 ### Semana 1–4 — Pré-venda antes do MVP pronto
 - Landing page (marca Sua Empresa 3D) + lista de espera.

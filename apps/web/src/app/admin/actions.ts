@@ -184,13 +184,32 @@ export async function syncCustomDomain(formData: FormData) {
 }
 
 export async function updateSalesLead(formData: FormData) {
-  const parsed = z.object({ id: z.uuid(), status: z.enum(["new", "contacted", "qualified", "closed"]) }).safeParse({
-    id: formData.get("id"), status: formData.get("status"),
+  const parsed = z.object({
+    id: z.uuid(),
+    status: z.enum(["new", "contacted", "qualified", "demo_scheduled", "demo_completed", "proposal_sent", "closed"]),
+    assignedTo: z.union([z.uuid(), z.literal("")]).transform((value) => value || null),
+  }).safeParse({
+    id: formData.get("id"), status: formData.get("status"), assignedTo: formData.get("assignedTo") ?? "",
   });
   if (!parsed.success) return;
   const actor = await requirePlatformAdmin();
   const admin = createAdminClient();
-  const { error } = await admin.from("sales_leads").update({ status: parsed.data.status }).eq("id", parsed.data.id);
-  if (!error) await admin.from("platform_audit_events").insert({ actor_id: actor.id, action: "sales.lead.update", after_state: parsed.data });
+  if (parsed.data.assignedTo) {
+    const { data: assignee } = await admin.from("platform_admins").select("id").eq("id", parsed.data.assignedTo).eq("active", true).maybeSingle();
+    if (!assignee) return;
+  }
+  const { data: previous } = await admin.from("sales_leads").select("status,demo_scheduled_at,proposal_sent_at").eq("id", parsed.data.id).maybeSingle();
+  if (!previous) return;
+  const now = new Date().toISOString();
+  const hasReachedDemo = ["demo_scheduled", "demo_completed", "proposal_sent"].includes(parsed.data.status);
+  const { error } = await admin.from("sales_leads").update({
+    status: parsed.data.status, assigned_to: parsed.data.assignedTo,
+    demo_scheduled_at: previous.demo_scheduled_at ?? (hasReachedDemo ? now : null),
+    proposal_sent_at: previous.proposal_sent_at ?? (parsed.data.status === "proposal_sent" ? now : null),
+  }).eq("id", parsed.data.id);
+  if (!error) await admin.from("platform_audit_events").insert({
+    actor_id: actor.id, action: "sales.lead.update",
+    after_state: { lead_id: parsed.data.id, status: parsed.data.status, assigned_to: parsed.data.assignedTo },
+  });
   revalidatePath("/admin");
 }

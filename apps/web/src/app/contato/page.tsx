@@ -5,7 +5,7 @@ import { ContactForm } from "./contact-form";
 
 export const metadata: Metadata = {
   title: "Solicitar demonstração | Sua Empresa 3D",
-  description: "Peça acesso a uma demonstração guiada da plataforma Sua Empresa 3D.",
+  description: "Peça uma demonstração guiada e veja como organizar pedidos, produção e entregas na Sua Empresa 3D.",
 };
 
 export default function ContactPage() {
@@ -15,16 +15,19 @@ export default function ContactPage() {
       <div className="contact-layout">
         <section className="contact-intro" aria-labelledby="contact-title">
           <div className="contact-brand"><span><Layers3 /></span> Sua Empresa 3D</div>
-          <p className="contact-kicker">Demonstração do sistema</p>
-          <h1 id="contact-title">Veja sua operação de impressão 3D em um só lugar.</h1>
-          <p>Preencha os dados ao lado. Vamos entender sua rotina e preparar uma demonstração com o fluxo mais próximo do seu negócio.</p>
-          <ul><li><Check /> Ambiente com dados fictícios</li><li><Check /> Visão completa dos módulos</li><li><Check /> Sem compromisso de contratação</li></ul>
-          <div className="contact-time"><Clock3 /><span><strong>Leva menos de 2 minutos</strong><small>Pedimos apenas o necessário para entrar em contato.</small></span></div>
+          <p className="contact-kicker">Demonstração guiada</p>
+          <h1 id="contact-title">Vamos acompanhar um pedido seu.</h1>
+          <p>Preencha seus dados e combinamos uma demonstração com o fluxo mais próximo da sua rotina.</p>
         </section>
         <section className="contact-form-card" aria-label="Formulário de demonstração">
-          <div className="contact-form-head"><span>Solicite seu acesso</span><small>Campos com * são obrigatórios</small></div>
+          <div className="contact-form-head"><span>Peça sua demonstração</span><small>Campos com * são obrigatórios</small></div>
           <ContactForm />
         </section>
+        <aside className="contact-proof" aria-label="O que esperar da demonstração">
+          <span><Check /> Ambiente com dados fictícios</span>
+          <span><Check /> Sem compromisso de contratação</span>
+          <small><Clock3 /> Leva menos de 2 minutos preencher. Vamos usar os dados informados para combinar o próximo passo.</small>
+        </aside>
       </div>
     </main>
   );
